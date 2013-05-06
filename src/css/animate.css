@@ -1,0 +1,16 @@
+@-webkit-keyframes slideLeftIn {
+	0% { -webkit-transform: translateX(100%)}
+	100% { -webkit-transform: translateX(0%)}
+}
+@-webkit-keyframes slideLeftOut {
+	0% { -webkit-transform: translateX(0%)}
+	100% { -webkit-transform: translateX(-100%)}
+}
+@-webkit-keyframes slideRightIn {
+	0% { -webkit-transform: translateX(-100%)}
+	100% { -webkit-transform: translateX(0%) }
+}
+@-webkit-keyframes slideRightOut {
+	0% { -webkit-transform: translateX(0)}
+	100% { -webkit-transform: translateX(100%)}
+}
