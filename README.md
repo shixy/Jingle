@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-comming soon!!
+_(Coming soon)_
 
 ## Documentation
 _(Coming soon)_
