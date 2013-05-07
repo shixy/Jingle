@@ -106,10 +106,6 @@ a {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* Removes the dark touch outlines on links */
 }
 
-nav{
-    position: absolute !important;
-    z-index: 1 !important;
-}
 aside{
     background: #393939;
     color: #fff;
@@ -132,9 +128,6 @@ aside{
     background-color: #fff;
     -webkit-overflow-scrolling: touch;
     z-index: 1;
-}
-nav:not(.hide) ~ .section-container{
-    bottom: 51px;
 }
 
 section{
@@ -180,12 +173,6 @@ article.active{
     padding: 10px;
 }
 
-body>nav{
-    height:51px;
-}
-body>nav.hide{
-    display: none;
-}
 header,footer{
     position: absolute !important;
 }
@@ -208,4 +195,10 @@ header ~ article{
     aside ~ nav {
         left:264px !important;
     }
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
 }

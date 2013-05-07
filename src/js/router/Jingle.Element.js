@@ -4,7 +4,6 @@ Jingle.Element = (function(J){
         'SEGMENTED' : '.segmented-controller li'
     }
     var init = function(){
-        $(window).on('')
     }
     return {
         init : init

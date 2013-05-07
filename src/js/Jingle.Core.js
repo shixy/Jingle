@@ -1,22 +1,17 @@
-(function(){
-    var Jingle = function(){
-        this.dom = {
-        };
-        this.hasLaunched = false;
-        this.launchCompleted = false;
-
-        this.settings = {
-            transitionType : 'slide',
-            transitionTime : 250,
-            transitionTimingFunc : 'ease-out'
-        };
-        this.launch = function(opts){
-            $.extend(this.settings,opts);
-            this.Router.init();
-           // this.Events.init();
-        }
-        this.hasTouch = 'ontouchstart' in window;
-        this.isPhone = $(window).width()<768;
+var Jingle = J = {
+    settings : {
+        transitionType : 'slide',
+        transitionTime : 250,
+        transitionTimingFunc : 'ease-out'
+    },
+    mode : window.innerWidth < 800 ? "phone" : "tablet",
+    hasTouch : 'ontouchstart' in window,
+    hasLaunched : false,
+    launchCompleted : false,
+    isMenuOpen : false,
+    launch : function(opts){
+        $.extend(this.settings,opts);
+        this.Router.init();
+        this.Markup.init();
     }
-    window.J = window.Jingle = new Jingle();
-})();
+}

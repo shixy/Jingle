@@ -1,7 +1,7 @@
 /**
  * 框架的运作机制
  */
-Jingle.Router = (function(J){
+Jingle.Router = (function(){
     var TARGET_SELECTOR = 'a[data-target]';
     var _history = [];
 
@@ -88,12 +88,13 @@ Jingle.Router = (function(J){
     }
 
     var _toggleMenu = function(){
-        J.menuShow?J.Menu.hide():J.Menu.show();
+        J.isMenuOpen?J.Menu.hide():J.Menu.show();
     }
 
     return {
         init : init,
-        turnTo : _showSection
+        turnTo : _showSection,
+        back : back
     }
 
-})(Jingle)
+})()

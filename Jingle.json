@@ -22,7 +22,7 @@
     }
   ],
   "dependencies": {
-    "jquery": "*"
+    "zepto": "*"
   },
   "keywords": []
 }

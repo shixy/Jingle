@@ -7,7 +7,7 @@ Jingle.Menu = (function(J){
         $(SELECTOR.MENU).animate({
             translateX : '0%'
         }, J.settings.transitionTime,'linear',function(){
-            J.menuShow = true;
+            J.isMenuOpen = true;
         });
         $(SELECTOR.SECTION_CONTAINER).animate({
             translateX : '264px'
@@ -17,7 +17,7 @@ Jingle.Menu = (function(J){
         $(SELECTOR.MENU).animate({
             translateX : '-100%'
         },J.settings.transitionTime,'linear',function(){
-            J.menuShow = false;
+            J.isMenuOpen = false;
         });
         $(SELECTOR.SECTION_CONTAINER).animate({
             translateX : 0

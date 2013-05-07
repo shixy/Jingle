@@ -1,7 +1,7 @@
 /* General button styles
 -------------------------------------------------- */
 
-[class*="button"] {
+.button{
   position: relative;
   display: inline-block;
   padding: 4px 12px;
@@ -22,7 +22,7 @@
 }
 
 /* Active */
-[class*="button"]:active {
+.button:active {
   padding-top: 5px;
   padding-bottom: 3px;
   color: #333;
@@ -35,15 +35,15 @@
 -------------------------------------------------- */
 
 /* Overriding styles for buttons with modifiers  */
-.button-main,
-.button-positive,
-.button-negative {
+.button.main,
+.button.positive,
+.button.negative {
   color: #fff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, .3);
 }
 
 /* Main button */
-.button-main {
+.button.main {
   background-color: #1eafe7;
   background-image: -webkit-linear-gradient(top, #1eafe7 0, #1a97c8 100%);
   background-image: linear-gradient(to bottom, #1eafe7 0, #1a97c8 100%);
@@ -51,7 +51,7 @@
 }
 
 /* Positive button  */
-.button-positive {
+.button.positive {
   background-color: #34ba15;
   background-image: -webkit-linear-gradient(top, #34ba15 0, #2da012 100%);
   background-image: linear-gradient(to bottom, #34ba15 0, #2da012 100%);
@@ -59,7 +59,7 @@
 }
 
 /* Negative button  */
-.button-negative {
+.button.negative {
   background-color: #e71e1e;
   background-image: -webkit-linear-gradient(top, #e71e1e 0,#c71a1a 100%);
   background-image: linear-gradient(to bottom, #e71e1e 0, #c71a1a 100%);
@@ -67,23 +67,23 @@
 }
 
 /* Active state for buttons with modifiers */
-.button-main:active,
-.button-positive:active,
-.button-negative:active {
+.button.main:active,
+.button.positive:active,
+.button.negative:active {
   color: #fff;
 }
-.button-main:active {
+.button.main:active {
   background-color: #0876b1;
 }
-.button-positive:active {
+.button.positive:active {
   background-color: #298f11;
 }
-.button-negative:active {
+.button.negative:active {
   background-color: #b21a1a;
 }
 
 /* Block level buttons (full width buttons) */
-.button-block {
+.button.block {
   display: block;
   padding: 11px 0 13px;
   margin-bottom: 10px;
@@ -91,7 +91,7 @@
 }
 
 /* Active state for block level buttons */
-.button-block:active {
+.button.block:active {
   padding: 12px 0;
 }
 
@@ -99,7 +99,7 @@
 -------------------------------------------------- */
 
 /* Generic styles for all counts within buttons */
-[class*="button"] [class*="count"] {
+.button .count {
   padding-top: 2px;
   padding-bottom: 2px;
   margin-right: -4px;
@@ -112,7 +112,7 @@
 /* Position counts within block level buttons
    Note: These are absolutely positioned so that text of button isn't "pushed" by count and always
    stays at true center of button */
-.button-block [class*="count"] {
+.button.block .count{
   position: absolute;
   right: 0;
   padding-top: 4px;
