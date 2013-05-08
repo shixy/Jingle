@@ -1,9 +1,10 @@
 ;(function(){
-    function slider(el){
+    function slider(selector,noDots){
         var gestureStarted = false,
             index = 0,
             speed = 300,
-            wrapper = $(el),
+            wrapper = $(selector),
+            dots,
             container,
             slides,
             slideNum,
@@ -25,8 +26,30 @@
                     'display':'table-cell',
                     'verticalAlign' : 'top'
             })
+            if(!noDots)_initDots();
             _slide(0, 0);
         };
+
+        var _initDots = function(){
+            dots = wrapper.find('.dots');
+            if(dots.length>0){
+                dots.show();
+            }else{
+                var dotsWidth = slideNum*30+20+2;
+                var html = '<div class="dots"><ul>';
+                for(var i=0;i<slideNum;i++){
+                    html +='<li index="'+i+'"><a href="#"></a></li>'
+                }
+                html += '</ul></div>';
+                wrapper.append(html);
+                dots = wrapper.find('.dots');
+                dots.children().css('width',dotsWidth+'px');
+                dots.find('li').on('tap',function(){
+                    var index = $(this).attr('index');
+                    _slide(parseInt(index), speed);
+                })
+            }
+        }
 
         /**
          * 滑动到指定卡片
@@ -40,21 +63,22 @@
                 translateX : -(i * slideWidth)+'px'
             },duration)
             index = i;
+            if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
         };
 
         /**
          * 绑定滑动事件
          */
         var _bindEvents = function() {
-            container.on(J.Constants.Events.startEvent,_touchStart,false);
-            container.on(J.Constants.Events.moveEvent,_touchMove,false);
-            container.on(J.Constants.Events.endEvent,_touchEnd,false);
+            container.on('touchstart',_touchStart,false);
+            container.on('touchmove',_touchMove,false);
+            container.on('touchend',_touchEnd,false);
             //屏幕旋转时重新计算大小
             $(window).on('resize',_init);
         };
 
         var  _touchStart = function(event) {
-            var e = J.hasTouch?event.touches[0]:event;
+            var e = event.touches[0];
             start = {
                 pageX: e.pageX,
                 pageY: e.pageY,
@@ -70,7 +94,7 @@
 
         var _touchMove = function(event) {
             if(!gestureStarted)return;
-            var e = J.hasTouch?event.touches[0]:event;
+            var e = event.touches[0];
             deltaX = e.pageX - start.pageX;
             if ( typeof isScrolling == 'undefined') {
                 //根据X、Y轴的偏移量判断用户的意图是左右滑动还是上下滑动
@@ -82,7 +106,7 @@
                 deltaX = deltaX / factor;
                 var pos = (deltaX - index * slideWidth);
                 container[0].style.webkitTransform = 'translateX('+pos+'px)';
-                e.stopPropagation();
+                event.stopPropagation();
             }
         };
 

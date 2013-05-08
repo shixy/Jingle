@@ -1,7 +1,7 @@
 Jingle.Menu = (function(J){
     var SELECTOR = {
         MENU : 'body>aside',
-        SECTION_CONTAINER : '.section-container'
+        SECTION_CONTAINER : '#section-container'
     }
     var showMenu = function(){
         $(SELECTOR.MENU).animate({

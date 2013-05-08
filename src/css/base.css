@@ -118,7 +118,7 @@ aside{
     z-index: 3;
 }
 
-.section-container{
+#section-container{
     position: absolute;
     overflow: hidden;
     top:0;
@@ -189,7 +189,7 @@ header ~ article{
     aside{
         -webkit-transform : translateX(0) !important;
     }
-    aside ~ .section-container {
+    aside ~ #section-container {
         left:264px !important;
     }
     aside ~ nav {

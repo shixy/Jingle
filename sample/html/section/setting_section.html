@@ -1,0 +1,42 @@
+<section id="setting_section" data-transition="slide">
+    <header data-title="设置">
+        <nav >
+            <a href="#back" data-router="section" data-label="back" data-icon="left"></a>
+        </nav>
+    </header>
+
+    <article class="active list scroll" id="setting_article">
+        <form>
+        <ul>
+            <li>
+                <div class="right">
+                    <input type="range" id="network-2g" name="network-2g" min="0" max="1" class="checkbox" value="0">
+                </div>
+                <strong class="text bold">非WIFI网络提醒</strong>
+                <small>当网络接入点不是WIFI时对用户进行提醒</small>
+            </li>
+            <li>
+                <div class="right">
+                    <input type="range" id="auto-save" name="auto-save" min="0" max="1" class="checkbox" value="0">
+                </div>
+                <strong class="text bold">自动保存离线数据</strong>
+                <small>自动保存用户访问过的数据到手机</small>
+            </li>
+            <li>
+                <div class="right">
+                    <input type="range" id="auto-login"  name="auto-login" min="0" max="1" class="checkbox" value="0">
+                </div>
+                <strong class="text bold">自动登录</strong>
+                <small>用户成功登录后，下次会自动登录</small>
+            </li>
+            <li>
+                <div class="right">
+                    <input type="range" id="auto-update" name="auto-update" min="0" max="1" class="checkbox" value="0">
+                </div>
+                <strong class="text bold">自动更新版本</strong>
+                <small>有新版本时，提示用户是否更新</small>
+            </li>
+        </ul>
+        </form>
+    </article>
+</section>

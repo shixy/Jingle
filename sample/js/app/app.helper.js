@@ -92,7 +92,7 @@ var AHelper = {
 //    },
     getArticleOffset : function(){
       if(!App.articleOffset){
-          var screenOffset = $('.section-container').offset();
+          var screenOffset = $('#section-container').offset();
           var width = screenOffset.width;
           var height = screenOffset.height-44;
           App.articleOffset = {

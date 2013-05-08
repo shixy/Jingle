@@ -12,7 +12,7 @@ Jingle.Router = (function(){
         var tapEvent = J.Constants.Events.tap;
         $(window).on('popstate', _popstateHandler);
         $(document).on(tapEvent,TARGET_SELECTOR,_targetHandler);
-        add2History('#main');
+        add2History('#index_section');
     }
     var _initHistory = function(){
 
@@ -42,6 +42,9 @@ Jingle.Router = (function(){
         var href = $(this).attr('href');
         switch(target){
             case 'section' :
+                if($.contains($('aside')[0], e.target)){
+                    J.Menu.hide();
+                }
                 _showSection(href);
                 break;
             case 'article' :
@@ -59,6 +62,9 @@ Jingle.Router = (function(){
     var _showSection  = function(hash){
         var currentPage = $(_history[0]);
         add2History(hash);
+        if($(hash).length === 0){
+            J.Page.load(hash);
+        }
         _changePage(currentPage,hash);
     }
     var back = function(){

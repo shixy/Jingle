@@ -2,30 +2,23 @@
  * 页面跳转相关
  */
 Jingle.Page = (function(J){
-    var formatHash = function(hash){
-        return hash.indexOf('#') == 0 ? hash : '#'+hash;
+
+    var _formatHash = function(hash){
+        return hash.indexOf('#') == 0 ? hash.substr(1) : hash;
     }
-    /**
-     * 根据hash值跳转页面
-     * @param hash
-     */
-    var go = function(hash){
-        var hash = formatHash(hash);
-        window.location.hash = hash;
-    }
+
     /**
      * ajax远程加载页面
-     * @param pageId  远程页面ID
-     * @url  远程页面地址
      */
-    var loadPage = function(pageId,url){
-        if($('#'+pageId).length>0){
-            go(pageId);
-            return;
-        }
-        $.get(J.pageFolder+url,function(html){
-            $('body').append($(html));
-            go(pageId);
+    var loadPage = function(hash){
+        //TODO need loading block
+        $.ajax({
+            url : J.settings.sectionPath+_formatHash(hash)+'.html',
+            timeout : 5000,
+            async : false,
+            success : function(html){
+                $('#section-container').append(html);
+            }
         })
     }
     /**
@@ -67,8 +60,7 @@ Jingle.Page = (function(J){
         //TODO
     }
     return {
-        go : go,
-        loadPage : loadPage,
+        load : loadPage,
         loadPageByTmpl : loadPageByTmpl
     }
 })(Jingle)

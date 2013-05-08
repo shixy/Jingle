@@ -229,73 +229,6 @@ App.page('index',function(){
     }
     return exports;
 });
-App.page('res_usage',function(){
-    var exports = {};
-    var carousel;
-    exports.init = function(){
-        _subscribeEvents();
-        _renderChart();
-    }
-
-    var _renderChart = function(){
-        _renderCPUChart();
-        _renderMMChart();
-        _renderSRChart();
-        _renderVMChart();
-    }
-    var _renderCPUChart = function(){
-        var data = [
-            {name:'OA',value:'20',color:'#4572a7'},
-            {name:'订单',value:'10',color:'#aa4643'},
-            {name:'营销',value:'30',color:'#89a54e'},
-            {name:'协同',value:'20',color:'#80699b'}
-        ];
-        var chartCfg = AHelper.getDountCfg(data,'cpu_usage_canvas','CPU');
-        new iChart.Donut2D(chartCfg).draw();
-    }
-    var _renderMMChart = function(){
-        var data = [
-            {name:'OA',value:'20',color:'#4572a7'},
-            {name:'订单',value:'10',color:'#aa4643'},
-            {name:'营销',value:'30',color:'#89a54e'},
-            {name:'协同',value:'20',color:'#80699b'}
-        ];
-        var chartCfg = AHelper.getDountCfg(data,'mm_usage_canvas','内存');
-        new iChart.Donut2D(chartCfg).draw();
-    }
-    var _renderSRChart = function(){
-        var data = [
-            {name:'OA',value:'20',color:'#4572a7'},
-            {name:'订单',value:'10',color:'#aa4643'},
-            {name:'营销',value:'30',color:'#89a54e'},
-            {name:'协同',value:'20',color:'#80699b'}
-        ];
-        var chartCfg = AHelper.getDountCfg(data,'sr_usage_canvas','存储');
-        new iChart.Donut2D(chartCfg).draw();
-    }
-    var _renderVMChart = function(){
-        var data = [
-            {name:'OA',value:'20',color:'#4572a7'},
-            {name:'订单',value:'10',color:'#aa4643'},
-            {name:'营销',value:'30',color:'#89a54e'},
-            {name:'协同',value:'20',color:'#80699b'}
-        ];
-        var chartCfg = AHelper.getDountCfg(data,'vm_num_canvas','虚拟机');
-        new iChart.Donut2D(chartCfg).draw();
-    }
-
-    var _subscribeEvents = function(){
-        carousel = Lungo.Element.Carousel($('#res_usage_article')[0]);
-        Lungo.Events.init({
-            'tap #res_usage_section > header [data-direction=left]': carousel.prev ,
-            'tap #res_usage_section > header [data-direction=right]': carousel.next
-        });
-    }
-    exports.load = function(){
-        carousel.refresh();
-    }
-    return exports;
-});
 App.page('alarm',function(){
    var exports = {};
     exports.init = function(){
@@ -414,7 +347,7 @@ App.page('res_allocate',function(){
         _subscribeEvents();
     }
     var _subscribeEvents = function(){
-       Lungo.Element.Carousel($('#res_allocate_article')[0]);
+       new J.Slider('#res_allocate_article');
     }
     var _renderChart = function(){
         var pv=[],ip=[],t;

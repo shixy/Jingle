@@ -2,7 +2,8 @@ var Jingle = J = {
     settings : {
         transitionType : 'slide',
         transitionTime : 250,
-        transitionTimingFunc : 'ease-out'
+        transitionTimingFunc : 'ease-out',
+        sectionPath : 'html/section/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
     hasTouch : 'ontouchstart' in window,
@@ -58,30 +59,23 @@ Jingle.Markup = (function(){
  * 页面跳转相关
  */
 Jingle.Page = (function(J){
-    var formatHash = function(hash){
-        return hash.indexOf('#') == 0 ? hash : '#'+hash;
+
+    var _formatHash = function(hash){
+        return hash.indexOf('#') == 0 ? hash.substr(1) : hash;
     }
-    /**
-     * 根据hash值跳转页面
-     * @param hash
-     */
-    var go = function(hash){
-        var hash = formatHash(hash);
-        window.location.hash = hash;
-    }
+
     /**
      * ajax远程加载页面
-     * @param pageId  远程页面ID
-     * @url  远程页面地址
      */
-    var loadPage = function(pageId,url){
-        if($('#'+pageId).length>0){
-            go(pageId);
-            return;
-        }
-        $.get(J.pageFolder+url,function(html){
-            $('body').append($(html));
-            go(pageId);
+    var loadPage = function(hash){
+        //TODO need loading block
+        $.ajax({
+            url : J.settings.sectionPath+_formatHash(hash)+'.html',
+            timeout : 5000,
+            async : false,
+            success : function(html){
+                $('#section-container').append(html);
+            }
         })
     }
     /**
@@ -123,8 +117,7 @@ Jingle.Page = (function(J){
         //TODO
     }
     return {
-        go : go,
-        loadPage : loadPage,
+        load : loadPage,
         loadPageByTmpl : loadPageByTmpl
     }
 })(Jingle)
@@ -142,7 +135,7 @@ Jingle.Router = (function(){
         var tapEvent = J.Constants.Events.tap;
         $(window).on('popstate', _popstateHandler);
         $(document).on(tapEvent,TARGET_SELECTOR,_targetHandler);
-        add2History('#main');
+        add2History('#index_section');
     }
     var _initHistory = function(){
 
@@ -172,6 +165,9 @@ Jingle.Router = (function(){
         var href = $(this).attr('href');
         switch(target){
             case 'section' :
+                if($.contains($('aside')[0], e.target)){
+                    J.Menu.hide();
+                }
                 _showSection(href);
                 break;
             case 'article' :
@@ -189,6 +185,9 @@ Jingle.Router = (function(){
     var _showSection  = function(hash){
         var currentPage = $(_history[0]);
         add2History(hash);
+        if($(hash).length === 0){
+            J.Page.load(hash);
+        }
         _changePage(currentPage,hash);
     }
     var back = function(){
@@ -265,7 +264,7 @@ Jingle.Transition = (function(J){
 Jingle.Menu = (function(J){
     var SELECTOR = {
         MENU : 'body>aside',
-        SECTION_CONTAINER : '.section-container'
+        SECTION_CONTAINER : '#section-container'
     }
     var showMenu = function(){
         $(SELECTOR.MENU).animate({
@@ -293,11 +292,12 @@ Jingle.Menu = (function(J){
     }
 })(Jingle)
 ;(function(){
-    function slider(el){
+    function slider(selector,noDots){
         var gestureStarted = false,
             index = 0,
             speed = 300,
-            wrapper = $(el),
+            wrapper = $(selector),
+            dots,
             container,
             slides,
             slideNum,
@@ -319,8 +319,30 @@ Jingle.Menu = (function(J){
                     'display':'table-cell',
                     'verticalAlign' : 'top'
             })
+            if(!noDots)_initDots();
             _slide(0, 0);
         };
+
+        var _initDots = function(){
+            dots = wrapper.find('.dots');
+            if(dots.length>0){
+                dots.show();
+            }else{
+                var dotsWidth = slideNum*30+20+2;
+                var html = '<div class="dots"><ul>';
+                for(var i=0;i<slideNum;i++){
+                    html +='<li index="'+i+'"><a href="#"></a></li>'
+                }
+                html += '</ul></div>';
+                wrapper.append(html);
+                dots = wrapper.find('.dots');
+                dots.children().css('width',dotsWidth+'px');
+                dots.find('li').on('tap',function(){
+                    var index = $(this).attr('index');
+                    _slide(parseInt(index), speed);
+                })
+            }
+        }
 
         /**
          * 滑动到指定卡片
@@ -334,21 +356,22 @@ Jingle.Menu = (function(J){
                 translateX : -(i * slideWidth)+'px'
             },duration)
             index = i;
+            if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
         };
 
         /**
          * 绑定滑动事件
          */
         var _bindEvents = function() {
-            container.on(J.Constants.Events.startEvent,_touchStart,false);
-            container.on(J.Constants.Events.moveEvent,_touchMove,false);
-            container.on(J.Constants.Events.endEvent,_touchEnd,false);
+            container.on('touchstart',_touchStart,false);
+            container.on('touchmove',_touchMove,false);
+            container.on('touchend',_touchEnd,false);
             //屏幕旋转时重新计算大小
             $(window).on('resize',_init);
         };
 
         var  _touchStart = function(event) {
-            var e = J.hasTouch?event.touches[0]:event;
+            var e = event.touches[0];
             start = {
                 pageX: e.pageX,
                 pageY: e.pageY,
@@ -364,7 +387,7 @@ Jingle.Menu = (function(J){
 
         var _touchMove = function(event) {
             if(!gestureStarted)return;
-            var e = J.hasTouch?event.touches[0]:event;
+            var e = event.touches[0];
             deltaX = e.pageX - start.pageX;
             if ( typeof isScrolling == 'undefined') {
                 //根据X、Y轴的偏移量判断用户的意图是左右滑动还是上下滑动
@@ -376,7 +399,7 @@ Jingle.Menu = (function(J){
                 deltaX = deltaX / factor;
                 var pos = (deltaX - index * slideWidth);
                 container[0].style.webkitTransform = 'translateX('+pos+'px)';
-                e.stopPropagation();
+                event.stopPropagation();
             }
         };
 
