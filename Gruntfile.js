@@ -2,8 +2,9 @@ module.exports = function(grunt){
 	grunt.initConfig({
         pkg : grunt.file.readJSON('package.json'),
 		concat : {
-            'dist/Jingle.debug.js' : ['src/js/Jingle.Core.js','src/js/router/*.js','src/js/*.js','src/element/*.js','src/plugin/*.js'],
-            'dist/Jingle.css' : 'src/css/*.css'
+            'dist/Jingle.debug.js' :
+                ['src/js/Jingle.js','src/js/module/*.js','src/js/element/*.js','src/js/plugin/*.js'],
+            'dist/Jingle.css' : ['src/css/base.css','src/css/module/*.css']
 		},
         uglify : {
             target : {
@@ -22,8 +23,8 @@ module.exports = function(grunt){
         copy : {
             target : {
                 files : [
-                    {expand: true,cwd: 'dist/',src: ['Jingle.min.js'],dest: 'sample/js/lib/'},
-                    {expand: true,cwd: 'dist/',src: ['Jingle.min.css'],dest: 'sample/css/'}
+                    {expand: true,cwd: 'dist/',src: ['Jingle.debug.js'],dest: 'sample/js/lib/'},
+                    {expand: true,cwd: 'dist/',src: ['Jingle.css'],dest: 'sample/css/'}
                 ]
             }
         }
