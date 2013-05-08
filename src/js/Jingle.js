@@ -1,7 +1,7 @@
 var Jingle = J = {
     settings : {
         transitionType : 'slide',
-        transitionTime : 250,
+        transitionTime : 300,
         transitionTimingFunc : 'ease-out',
         sectionPath : 'html/section/'
     },

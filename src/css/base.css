@@ -95,7 +95,7 @@ html {
 }
 
 body {
-  font: 14px/1.25 "Helvetica Neue", sans-serif;
+  font: 14px/1.25, "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #222;
   background-color: #393939;
 }
@@ -173,15 +173,20 @@ article.active{
     padding: 10px;
 }
 
-header,footer{
-    position: absolute !important;
+header,footer,.header-secondary{
+    position: absolute;
 }
 footer ~ article {
   bottom: 51px;
 }
-
 header ~ article{
     top:44px;
+}
+.header-secondary{
+    top:44px;
+}
+.header-secondary ~ article{
+    top:74px;
 }
 
 

@@ -127,13 +127,18 @@
     <script type="text/javascript" src="js/lib/zepto.js"></script>
     <script type="text/javascript" src="js/lib/touch.js"></script>
     <script type="text/javascript" src="js/lib/ichart.1.1.js"></script>
-    <script type="text/javascript" src="js/lib/jq.desktopBrowsers.js"></script>
+    <!--<script type="text/javascript" src="js/lib/jq.desktopBrowsers.js"></script>-->
     <script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
     <!--- app --->
     <script type="text/javascript" src="js/app/app.js"></script>
     <script type="text/javascript" src="js/app/app.page.js"></script>
     <script type="text/javascript" src="js/app/app.helper.js"></script>
     <script type="text/javascript">
+        if(!((window.DocumentTouch&&document instanceof DocumentTouch)||'ontouchstart' in window)){
+            var script=document.createElement("script");
+            script.src="js/lib/jq.desktopBrowsers.js";
+            var tag=$("head").append(script);
+        }
     $(function () {
         Jingle.launch({
 

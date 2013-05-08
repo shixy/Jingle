@@ -1,7 +1,7 @@
 var Jingle = J = {
     settings : {
         transitionType : 'slide',
-        transitionTime : 250,
+        transitionTime : 300,
         transitionTimingFunc : 'ease-out',
         sectionPath : 'html/section/'
     },
@@ -132,9 +132,10 @@ Jingle.Router = (function(){
      * 初始化events、state
      */
     var init = function(){
-        var tapEvent = J.Constants.Events.tap;
         $(window).on('popstate', _popstateHandler);
-        $(document).on(tapEvent,TARGET_SELECTOR,_targetHandler);
+        $(document).on('tap','a',function(e){e.preventDefault()});
+        $(document).on('click','a',function(e){e.preventDefault()});
+        $(document).on('tap',TARGET_SELECTOR,_targetHandler);
         add2History('#index_section');
     }
     var _initHistory = function(){

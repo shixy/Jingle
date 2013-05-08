@@ -2,7 +2,6 @@
 -------------------------------------------------- */
 
 header,footer{
-  position: fixed;
   right: 0;
   left: 0;
   z-index: 10;
@@ -14,9 +13,14 @@ header,footer{
 footer {
   bottom: 0;
 }
-/**TODO header扩展栏 例如查询 快捷操作等 **/
 .header-secondary{
-
+    left: 0;
+    right : 0;
+    height: 30px;
+    line-height: 30px;
+    font-weight: 600;
+    background-color: #222;
+    color: #fff;
 }
 /**TODO footer扩展栏 一般用于更多设置 **/
 .footer-secondary{

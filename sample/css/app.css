@@ -2,8 +2,8 @@ a{
     text-decoration: none;
     color: #000;
 }
-.indented {
-    padding: 10px;
+.indented > * {
+    margin: 10px;
 }
 sub,sup{
     font-size: 5px;

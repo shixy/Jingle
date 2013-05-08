@@ -75,10 +75,7 @@ App.page('index',function(){
                 }
                 $(this).addClass('active').siblings().removeClass('active');
                 var target = $('#index_container').children().hide().get(i);
-                $(target).show().addClass('animated '+animate);
-                setTimeout(function(){
-                    $(target).removeClass('animated').removeClass(animate);
-                },1000);
+                $(target).show().animate(animate);
                 current = i;
             });
         });
@@ -98,34 +95,26 @@ App.page('index',function(){
         $('#btn_index_grid').on('tap',function(){
             if(!$(this).hasClass('active')){
                 $('#btn_index_grid,#index_grid_article').addClass('active').siblings().removeClass('active');
-                $('#index_grid_article').addClass('animated bounceInDown fast');
-                setTimeout(function(){
-                    $('#index_grid_article').removeClass('animated').removeClass('bounceInDown').removeClass('fast');
-                },1000)
+                $('#index_grid_article').animate('bounceInDown');
             }
             _renderHealth();
         });
         $('#btn_index_chart').on('tap',function(){
             if(!$(this).hasClass('active')){
                 $('#btn_index_chart,#index_chart_article').addClass('active').siblings().removeClass('active');
-                $('#index_chart_article').addClass('animated bounceInDown fast');
-                setTimeout(function(){
-                    $('#index_chart_article').removeClass('animated').removeClass('bounceInDown').removeClass('fast');
-                },1000)
+                $('#index_grid_index_chart_articlearticle').animate('bounceInDown');
                 _renderChart();
             }
         });
         $('#bizSysContainer li .content').on('tap',function(e){
-           Lungo.Router.section('#biz_sys_section');
+            J.Router.turnTo('#biz_sys_section');
         });
         $('#bizSysContainer li .title').on('tap',function(e){
             var tip = $(this).find('.health-tip');
-            tip.show().addClass('animated bounceIn');
+            tip.show().animate('bounceIn');
             setTimeout(function(){
-                tip.addClass('bounceOut');
-                setTimeout(function(){
-                    tip.hide().attr('class','health-tip');
-                },1000)
+                tip.animate('bounceOut');
+                setTimeout(function(){tip.hide();},300);
             },4000);
         });
         _renderHealth();
@@ -173,12 +162,6 @@ App.page('index',function(){
         new iChart.ColumnMulti2D(config).draw();
     }
     var _lockAside = function(){
-        var screenWidth = Lungo.Core.environment().screen.width;
-        if(screenWidth>= 1000){
-            $('section').style('width',screenWidth-200+'px').style('margin-left','200px');
-            $('#aside_setting').style('width','200px').addClass('show');
-            $('a[href="#aside_setting"]').hide();
-        }
     }
 
     var _renderUsageChart = function(){
@@ -236,17 +219,15 @@ App.page('alarm',function(){
         _renderChart();
     }
     var _subscribeEvents = function(){
-        var carousel = Lungo.Element.Carousel($('#alarm_article')[0]);
-        var carouselTrend = Lungo.Element.Carousel($('#alarm_trend_article')[0]);
-        Lungo.Events.init({
-            'load #alarm_article':  function(){
-                _renderChart();
-                carousel.refresh();
-            },
-            'load #alarm_trend_article' : function(){
-                _renderTrendChart();
-                carouselTrend.refresh();
-            }
+        var carousel = new J.Slider('#alarm_article');
+        var carouselTrend = new J.Slider('#alarm_trend_article');
+        $('#alarm_article').on('load',function(){
+            _renderChart();
+            carousel.refresh();
+        });
+        $('#alarm_trend_article').on('load',function(){
+            _renderTrendChart();
+            carouselTrend.refresh();
         });
     }
     var _renderChart = function(){
@@ -266,7 +247,7 @@ App.page('alarm',function(){
         var businessChartCfg = AHelper.getPieCfg(businessData,'busiSysAlarmChart',true);
         businessChartCfg.listeners = {
             'bound':function(){
-                Lungo.Router.section('alarm_list_section');
+                J.Router.turnTo('#alarm_list_section');
             }
         };
         businessChartCfg.sub_option.listeners = {
@@ -280,7 +261,7 @@ App.page('alarm',function(){
         var resChartCfg = AHelper.getPieCfg(resData,'resAlarmChart',true);
         resChartCfg.listeners = {
             'bound':function(){
-                Lungo.Router.section('alarm_list_section');
+                J.Slider.turnTo('#alarm_list_section');
             }
         };
         resChartCfg.sub_option.listeners = {
@@ -395,7 +376,7 @@ App.page('res_period',function(){
         _subscribeEvents();
     }
     var _subscribeEvents = function(){
-        Lungo.Element.Carousel($('#res_period_article')[0]);
+        new J.Slider('#res_period_article');
     }
     var _renderChart = function(){
         var data = [
@@ -425,7 +406,7 @@ App.page('biz_sys',function(){
     exports.init = function(){
         $('#biz_alarm_list_anchor').on('tap',function(e){
             if(e.target.id == 'biz_alarm_trend_anchor'){
-                Lungo.Router.section('#alarm_section');
+                J.Router.turnTo('#alarm_section');
             }else{
                 toggleEl(this,'biz_alarm_list_container');
             }
@@ -434,22 +415,14 @@ App.page('biz_sys',function(){
             toggleEl(this,'biz_vm_list_container');
         })
         $('#biz_vm_list_container li').on('tap',function(){
-            Lungo.Router.section('vm_section');
+            J.Router.turnTo('vm_section');
         })
 
     }
     function toggleEl(_this,elId){
         var el = $('#'+elId);
-        if(el.style('display') == 'none'){
-            el.show().addClass('animated fadeInDown');
-            $(_this).children('.icon').addClass('up');
-        }else{
-            el.addClass('fadeOutUp');
-            $(_this).children('.icon').removeClass('up');
-            setTimeout(function(){
-                el.hide().removeClass('animated').removeClass('fadeInDown').removeClass('fadeOutUp');
-            },1000);
-        }
+        el.toggle();
+        $(_this).children('.icon').toggleClass('up');
     }
     return exports;
 });
