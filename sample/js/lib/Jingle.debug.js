@@ -133,13 +133,15 @@ Jingle.Router = (function(){
      */
     var init = function(){
         $(window).on('popstate', _popstateHandler);
+        //取消所有锚点的tap click的默认事件，由框架来控制
         $(document).on('tap','a',function(e){e.preventDefault()});
         $(document).on('click','a',function(e){e.preventDefault()});
+
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
-        add2History('#index_section');
+        _initHistory();
     }
     var _initHistory = function(){
-
+        add2History('#index_section');
     }
 
     /**
@@ -188,6 +190,7 @@ Jingle.Router = (function(){
         add2History(hash);
         if($(hash).length === 0){
             J.Page.load(hash);
+            J.Markup.init(hash);
         }
         _changePage(currentPage,hash);
     }

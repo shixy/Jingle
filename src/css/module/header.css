@@ -1,0 +1,86 @@
+header {
+    top: 0;
+    display: -webkit-box;
+    display: box;
+    background-color: #0093d5;
+    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 #03b1ff, inset 0 -1px 0 #007db5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 #03b1ff, inset 0 -1px 0 #007db5;
+    color: #fff;
+}
+header > *{
+    -webkit-box-flex : 0;
+    box-flex : 0;
+}
+header nav.left{
+    position: absolute;
+    left:0;
+    top:0;
+    z-index: 2;
+}
+header nav.right{
+    position: absolute;
+    right:0;
+    top:0;
+    z-index: 2;
+}
+header .title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 44px;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0 -1px rgba(0, 0, 0, .5);
+    white-space: nowrap;
+    z-index: 1;
+}
+
+header .button,header button{
+    height: 35px;
+    line-height: 35px;
+    margin: 5px;
+    padding: 0 5px;
+}
+header .button,
+header button {
+    background-color: #007db5;
+    -webkit-box-shadow: 0 1px 0 #03b1ff, inset 0 1px 0 #00608a;
+    -moz-box-shadow: 0 1px 0 #03b1ff, inset 0 1px 0 #00608a;
+    box-shadow: 0 1px 0 #03b1ff, inset 0 1px 0 #00608a;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+header .button:active,
+header button:active {
+    background-color: #005880;
+}
+header nav{
+    padding: 0 5px;
+}
+header nav a{
+    float: left;
+}
+header nav a:not(.button) {
+    height: 44px;
+    color: #00608a;
+    -webkit-text-shadow: 0 1px 0 #20baff;
+    -moz-text-shadow: 0 1px 0 #20baff;
+    text-shadow: 0 1px 0 #20baff;
+}
+header nav a:not(.button):active {
+    color: #004a6b;
+}
+
+header nav a:not(.button) > .icon {
+    font-size: 1.8em
+}
+
+.header-secondary{
+    background-color: #222;
+    color: #fff;
+}

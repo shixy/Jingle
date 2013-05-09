@@ -9,7 +9,6 @@
 
 
     <link rel="stylesheet" href="css/Jingle.css">
-    <link rel="stylesheet" href="css/icon.css">
     <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/app.css">
 </head>
@@ -21,44 +20,46 @@
             <li><a href="#alarm_section" data-target="section">告警分布</a></li>
             <li><a href="#res_allocate_section" data-target="section">资源分配趋势</a></li>
             <li><a href="#res_period_section" data-target="section">资源使用对比</a></li>
+            <li><a href="#buttons" data-target="section">buttons</a></li>
         </ul>
     </aside>
     <div id="section-container">
         <section id="index_section" class="active">
             <header>
-                <nav>
-                    <a class="button" data-target="menu" href="#">Menu</a>
+                <nav class="left">
+                    <a data-target="menu" data-icon="map" href="#"></a>
                 </nav>
                 <h1 class="title">全局概览</h1>
-                <nav>
+                <nav class="right">
+                    <a href="#" class="button" data-icon="refresh"></a>
+                    <a href="#" data-icon="right"></a>
                 </nav>
             </header>
             <article class="active indented" id="index_article">
                 <ul class="box">
                     <li class="blue active">
-                        <p class="title">业务系统</p>
-
                         <p class="text">8</p>
+                        <p class="title">业务系统</p>
                     </li>
                     <li class="orange">
+                        <p class="text">20</p>
                         <p class="title">虚拟机</p>
 
-                        <p class="text">20</p>
                     </li>
                     <li class="violet">
+                        <p class="text">40</p>
                         <p class="title">CPU</p>
 
-                        <p class="text">40</p>
                     </li>
                     <li class="wine">
+                        <p class="text">1000</p>
                         <p class="title">内存</p>
 
-                        <p class="text">1000</p>
                     </li>
                     <li class="dark-green">
+                        <p class="text">1000</p>
                         <p class="title">存储</p>
 
-                        <p class="text">1000</p>
                     </li>
                 </ul>
                 <div id="index_container">

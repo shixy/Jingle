@@ -67,6 +67,7 @@ Jingle.Router = (function(){
         add2History(hash);
         if($(hash).length === 0){
             J.Page.load(hash);
+            J.Markup.init(hash);
         }
         _changePage(currentPage,hash);
     }

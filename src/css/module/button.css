@@ -1,0 +1,57 @@
+.button, button {
+    display: inline-block;
+    padding: 10px 16px;
+    border: none;
+    cursor: pointer;
+    color: #fff !important;
+    font-family: inherit;
+    font-size: 1.05em;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+}
+
+.button:disabled, button:disabled, .button.disabled, button.disabled {
+    background: rgba(255, 255, 255, 0.2);
+    color: #999 !important
+}
+
+.button.small, button.small {
+    height: 30px;
+    padding: 0 8px;
+    font-size: .9em;
+    line-height: 28px
+}
+.button,button {
+    color: #fff;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+    border: solid 1px rgba(0,0,0,0.1);
+    background-color: #007db5;
+}
+.button:active,button:active {
+    -webkit-box-shadow: inset 0 0 128px rgba(0,0,0,0.25);
+    box-shadow: inset 0 0 128px rgba(0,0,0,0.25);
+    border-color: none;
+}
+.button.secondary,article button.secondary {
+    color: #666 !important;
+}
+.button[disabled],button[disabled] {
+    background-color: #000;
+}
+button.secondary,.button.secondary{
+    background-color: #bfbfbf;
+}
+button.accept,.button.accept {
+    background-color: #3fb58e;
+}
+button.cancel,.button.cancel {
+    background-color: #ee6557;
+}
+.button.block{
+    width:100%;
+}

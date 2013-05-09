@@ -1,209 +1,57 @@
-html,
-body,
-div,
-span,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-section,
-summary,
-time,
-audio,
-video {
-  padding: 0;
-  margin: 0;
-  border: 0;
+a, abbr, address, article, aside, audio, b, blockquote, body, caption, cite, code, dd, del, dfn, dialog, div, dl, dt, em, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, p, pre, q, samp, section, small, span, strong, sub, sup, table, tbody, td, tfoot, th, thead, time, tr, ul, var, video {
+    border: 0;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    font-size: 100%;
+    font-weight: normal
 }
-* {
-    -webkit-tap-highlight-color: rgba(255, 255, 255, 0.5);
-    -webkit-touch-callout: none;
-    -webkit-box-sizing: border-box;
+body {
     margin: 0;
     padding: 0;
-    -webkit-box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-box-orient: vertical;
+    -webkit-box-align: stretch;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    display: -webkit-box;
+}
+
+body * {
     box-sizing: border-box;
-}
-
-html {
-  -webkit-text-size-adjust: 100%;
-      -ms-text-size-adjust: 100%;
-}
-
-body {
-  font: 14px/1.25, "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #222;
-  background-color: #393939;
+    margin: 0;
+    padding: 0;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0)
 }
 
 a {
-  color:inherit;
-  text-decoration: none;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0); /* Removes the dark touch outlines on links */
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-aside{
-    background: #393939;
-    color: #fff;
-    position: absolute;
-    width: 264px;
-    top:0;
-    bottom:0;
-    z-index:11;
-    -webkit-transform : translateX(-100%);
-    z-index: 3;
+a:hover {
+    opacity: 1
 }
 
-#section-container{
-    position: absolute;
-    overflow: hidden;
-    top:0;
-    left:0;
-    right:0;
-    bottom: 0;
-    background-color: #fff;
-    -webkit-overflow-scrolling: touch;
-    z-index: 1;
+img {
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+    vertical-align: middle;
+    font-size: 0
 }
 
-section{
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: none;
-    overflow: hidden;
-    background-color: #fff;
-    -webkit-overflow-scrolling: touch;
-    z-index: 2
-}
-section.active{
-    z-index: 3;
-    display: block;
-}
-section>*{
-    -webkit-transform: translateZ(0px);
-    transform: translateZ(0px);
+table {
+    border-collapse: collapse;
+    border-spacing: 0
 }
 
-article{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 100%;
-    visibility: hidden;
-    display: none;
-    height: auto;
-    overflow-x: hidden;
-    overflow-y: auto;
-    z-index: 0;
-    background-color: #fff;
+th, td, caption {
+    vertical-align: top;
+    text-align: left
 }
-article.active{
-    visibility: visible;
-    display: block;
-    z-index: 1;
-}
-.article-padded {
-    padding: 10px;
-}
-
-header,footer,.header-secondary{
-    position: absolute;
-}
-footer ~ article {
-  bottom: 51px;
-}
-header ~ article{
-    top:44px;
-}
-.header-secondary{
-    top:44px;
-}
-.header-secondary ~ article{
-    top:74px;
-}
-
-
-@media screen and (min-width:20000px){
-    aside{
-        -webkit-transform : translateX(0) !important;
-    }
-    aside ~ #section-container {
-        left:264px !important;
-    }
-    aside ~ nav {
-        left:264px !important;
-    }
-}
-.left{
-    float: left;
-}
-.right{
-    float: right;
+.indented > *{
+    margin: 10px;
 }

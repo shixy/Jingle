@@ -1,0 +1,103 @@
+/**
+     ******************************
+     *       *        header      *
+     *       **********************
+     *       *                    *
+     * aside *                    *
+     *       *      article       *
+     *       *                    *
+     *       *                    *
+     *       **********************
+     *       *       footer       *
+     ******************************
+
+**/
+
+aside{
+    position: absolute;
+    width: 264px;
+    top:0;
+    bottom:0;
+    z-index:11;
+    -webkit-transform : translateX(-100%);
+    z-index: 3;
+}
+
+#section-container{
+    position: absolute;
+    overflow: hidden;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
+    background-color: #fff;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1;
+}
+
+section{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+    overflow: hidden;
+    background-color: #fff;
+    -webkit-overflow-scrolling: touch;
+    z-index: 2
+}
+section.active{
+    z-index: 3;
+    display: block;
+}
+article{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    visibility: hidden;
+    display: none;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 0;
+    background-color: #fff;
+}
+article.active{
+    visibility: visible;
+    display: block;
+    z-index: 1;
+}
+header,footer,.header-secondary{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    z-index: 1
+}
+header{
+    top:0;
+    height: 44px;
+    line-height: 44px;
+}
+.header-secondary{
+    top:44px;
+    height: 30px;
+    line-height: 30px;
+}
+footer{
+    bottom: 0;
+    height: 51px;
+}
+footer ~ article {
+    bottom: 51px;
+}
+header ~ article{
+    top:44px;
+}
+.header-secondary{
+    top:44px;
+}
+.header-secondary ~ article{
+    top:74px;
+}

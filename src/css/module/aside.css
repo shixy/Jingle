@@ -1,3 +1,7 @@
+aside{
+    background: #393939;
+    color: #fff;
+}
 aside>header{
     overflow: hidden;
     line-height: 44px;
@@ -17,10 +21,11 @@ aside>ul.menu{
     left:0;
     right:0;
 }
-ul.menu li {
-    padding: 10px 20px;
+aside>ul.menu li {
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
-ul.menu li a {
+aside>ul.menu li a {
+    padding: 10px 20px;
+    display: block;
     color: #fff;
 }
