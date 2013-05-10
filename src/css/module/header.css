@@ -77,7 +77,7 @@ header nav a:not(.button):active {
 }
 
 header nav a:not(.button) > .icon {
-    font-size: 1.8em
+    font-size: 1.5em
 }
 
 .header-secondary{

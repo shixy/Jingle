@@ -59,6 +59,9 @@ sub,sup{
     font-size: 24px;
     font-weight: 600;
 }
+.group_list{
+    background-color:#fff;
+}
 
 .group_list .title{
     font-size: 20px;font-weight: 600;height:60px;line-height: 60px;float: left;width:70px;
@@ -171,47 +174,6 @@ sub,sup{
 .button.disable{
     color: #808080 !important;
 }
-.carousel{
-    width:400%;
-}
-.carousel>div{
-    float: left;
-    width:25%;
-}
-
-.dots{
-    width:100%;height: 20px;position:absolute;left: 0;bottom: 50px;z-index: 999;
-    opacity: 0.7;
-}
-.dots ul{
-    margin:0 auto;
-    width: 112px;
-    height: 20px;
-    padding: 0px 10px;
-    display: -webkit-box;
-    border: 1px solid #b2adaf;
-    background-color: #eee;
-    border-radius: 10px;
-}
-.dots ul li{
-    list-style: none;
-    -webkit-box-flex : 1;
-    height: 20px;
-    padding:5px 10px;
-}
-.dots ul li a{
-    display: block;
-    width: 10px;height: 10px;
-    border-radius: 10px;
-    background: #141414;
-    box-shadow: inset 0 1px 3px -1px #28b4ea,0 1px 2px rgba(0,0,0,.5);
-
-}
-.dots ul li.active a{
-    box-shadow: inset 0 1px 3px -1px #28b4ea,0 1px 2px rgba(0,0,0,.5);
-    background-color: #1293dc;
-    background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0%,#1293dc),color-stop(100%,#0f6297));
-}
 
 .vm-grid {
     border-radius: 5px;
@@ -261,4 +223,45 @@ sub,sup{
 }
 .border{
     border: 1px solid #c8c8c8;
+}
+
+.icon-container{
+    width:100%;
+}
+.icon-container > *{
+    margin:10px;
+    float: left;
+    width: 7em;
+    height: 85px;
+    background-color: #eee;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.icon-container .icon{
+    font-size: 2em;
+    width:100%;
+    text-align: center;
+    padding:5px;
+}
+
+#index_container{
+    position: absolute;
+    left: 0;
+    top: 80px;
+    bottom: 0;
+    right: 0;
+}
+#index_container > *{
+    position: absolute;
+    top:0;bottom: 0;left: 0;
+    z-index : 1;
+    overflow: hidden;
+}
+#index_container > .hiding{
+    z-index: 2;
+}
+#index_container > .active{
+    z-index : 3;
 }

@@ -63,6 +63,7 @@ Jingle.Router = (function(){
     }
 
     var _showSection  = function(hash){
+        if(_history[0] === hash)return;
         var currentPage = $(_history[0]);
         add2History(hash);
         if($(hash).length === 0){
@@ -88,6 +89,7 @@ Jingle.Router = (function(){
     var _showArticle = function(href){
         var article = $(href);
         var activeArticle = article.siblings('.active');
+        if(activeArticle.attr('id') === href)return;
         activeArticle.animate('bounceOutUp',1000,'linear',function(){
             $(this).removeClass('active');
             article.addClass('active');

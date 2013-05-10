@@ -1,6 +1,7 @@
 aside{
     background: #393939;
     color: #fff;
+    font-size: 15px;
 }
 aside>header{
     overflow: hidden;

@@ -69,13 +69,15 @@ App.page('index',function(){
         var len = boxList.length;
         boxList.each(function(i){
             $(this).on('tap',function(){
-                var animate = 'bounceInLeft';
+                var animate = 'slideRightIn';
                 if(i > current){
-                    animate = 'bounceInRight';
+                    animate = 'slideLeftIn';
                 }
                 $(this).addClass('active').siblings().removeClass('active');
-                var target = $('#index_container').children().hide().get(i);
-                $(target).show().animate(animate);
+                var currBox = $('#index_container .active').removeClass('active').addClass('hiding');
+                var target = $('#index_container').children().get(i);
+                currBox.animate('fadeOut','400','linear',function(){currBox.removeClass('hiding')});
+                $(target).addClass('active').animate(animate);
                 current = i;
             });
         });

@@ -17,6 +17,12 @@ body {
     -webkit-box-align: stretch;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     display: -webkit-box;
+    background-color: #222;
+    font-family: STHeiti,"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 1.3em;
+    letter-spacing: -0.05em;
 }
 
 body * {
@@ -52,6 +58,10 @@ th, td, caption {
     vertical-align: top;
     text-align: left
 }
-.indented > *{
-    margin: 10px;
+
+.fr{
+    float:right;
+}
+.fl{
+    float:left;
 }

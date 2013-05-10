@@ -238,7 +238,7 @@ Jingle.Transition = (function(J){
     }
 
     var _doTransition = function(current, target, transitionName){
-        var duration = J.settings.transitionTime = 250;
+        var duration = J.settings.transitionTime;
         var easing = J.settings.transitionTimingFunc;
         target.addClass('active');
         current.animate(transitionName[0],duration,easing,function(){
