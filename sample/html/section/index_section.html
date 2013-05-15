@@ -1,17 +1,11 @@
-<section id="index_section" data-transition="slide">
-    <header data-title="湖南烟草一体化管控平台">
+<section id="index_section">
+    <header>
         <nav class="left">
-            <a href="#aside_setting" data-router="aside" data-icon="menu"></a>
+            <a data-target="menu" data-icon="menu" href="#"></a>
         </nav>
-        <nav class="right" style="padding-right: 3px;">
-            <ul class="segmented-controller">
-                <li data-icon="grid" class="active" id="btn_index_grid"></li>
-                <li data-icon="bars" id="btn_index_chart"></li>
-            </ul>
-        </nav>
+        <h1 class="title">全局概览</h1>
     </header>
-
-    <article class="active indented scroll" id="index_grid_article">
+    <article class="active indented" id="index_article">
         <ul class="box">
             <li class="blue active">
                 <p class="title">业务系统</p>
@@ -20,74 +14,85 @@
             <li class="orange">
                 <p class="title">虚拟机</p>
                 <p class="text">20</p>
+
             </li>
             <li class="violet">
                 <p class="title">CPU</p>
                 <p class="text">40</p>
+
             </li>
             <li class="wine">
                 <p class="title">内存</p>
                 <p class="text">1000</p>
+
             </li>
             <li class="dark-green">
                 <p class="title">存储</p>
                 <p class="text">1000</p>
+
             </li>
         </ul>
         <div id="index_container">
-            <ul class="list group_list" id="bizSysContainer" style="display: block;">
-                <li data-count="10" class="arrow">
+            <div style="border-radius: 5px;background:#7F8C8D;height: 70px;">
+                hello
+            </div>
+            <ul class="group_list active" id="bizSysContainer">
+                <li  class="arrow">
                     <div class="title">
                         OA
                         <div class="progress"></div>
                         <div class="health-tip">健康值<span>100</span></div>
                     </div>
                     <div class="content">
-                        <a href="#">CPU:<span >20</span>个</a>
-                        <a href="#">内存<span >160</span>GB </a>
-                        <a href="#">存储<span >20</span>TB</a>
+                        <a href="#">CPU:<span>20</span>个</a>
+                        <a href="#">内存<span>160</span>GB </a>
+                        <a href="#">存储<span>20</span>TB</a>
                         <a href="#">虚拟机<span>30</span>个</a>
                     </div>
                 </li>
                 <li data-count="6" class="arrow">
-                    <div class="title">订单<div class="progress"></div><div class="health-tip">健康值<span>100</span></div></div>
+                    <div class="title">订单
+                        <div class="progress"></div>
+                        <div class="health-tip">健康值<span>100</span></div>
+                    </div>
                     <div class="content">
-                        <a href="#">CPU:<span >20</span>个</a>
-                        <a href="#">内存<span >160</span>GB </a>
-                        <a href="#">存储<span >20</span>TB</a>
+                        <a href="#">CPU:<span>20</span>个</a>
+                        <a href="#">内存<span>160</span>GB </a>
+                        <a href="#">存储<span>20</span>TB</a>
                         <a href="#">虚拟机<span>30</span>个</a>
                     </div>
                 </li>
                 <li data-count="18" class="arrow">
-                    <div class="title">营销<div class="progress"></div><div class="health-tip">健康值<span>100</span></div></div>
+                    <div class="title">营销
+                        <div class="progress"></div>
+                        <div class="health-tip">健康值<span>100</span></div>
+                    </div>
                     <div class="content">
-                        <a href="#">CPU:<span >20</span>个</a>
-                        <a href="#">内存<span >160</span>GB </a>
-                        <a href="#">存储<span >20</span>TB</a>
+                        <a href="#">CPU:<span>20</span>个</a>
+                        <a href="#">内存<span>160</span>GB </a>
+                        <a href="#">存储<span>20</span>TB</a>
                         <a href="#">虚拟机<span>30</span>个</a>
                     </div>
                 </li>
                 <li data-count="9" class="arrow">
-                    <div class="title">协同<div class="progress"></div><div class="health-tip">健康值<span>100</span></div></div>
+                    <div class="title">协同
+                        <div class="progress"></div>
+                        <div class="health-tip">健康值<span>100</span></div>
+                    </div>
                     <div class="content">
-                        <a href="#">CPU:<span >20</span>个</a>
-                        <a href="#">内存<span >160</span>GB </a>
-                        <a href="#">存储<span >20</span>TB</a>
+                        <a href="#">CPU:<span>20</span>个</a>
+                        <a href="#">内存<span>160</span>GB </a>
+                        <a href="#">存储<span>20</span>TB</a>
                         <a href="#">虚拟机<span>30</span>个</a>
                     </div>
                 </li>
 
             </ul>
-            <div id="vm_num_canvas" style="display: none;">
+            <div id="vm_num_canvas" >
             </div>
-            <div id="cpu_usage_canvas" style="display: none;"></div>
-            <div id="mm_usage_canvas" style="display: none;"></div>
-            <div id="sr_usage_canvas" style="display: none;"></div>
+            <div id="cpu_usage_canvas" ></div>
+            <div id="mm_usage_canvas" ></div>
+            <div id="sr_usage_canvas" ></div>
         </div>
-
-
-    </article>
-    <article class="scroll" id="index_chart_article">
-        <div id="chartModeDiv"> </div>
     </article>
 </section>

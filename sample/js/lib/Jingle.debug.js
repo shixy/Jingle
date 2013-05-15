@@ -2,7 +2,7 @@ var Jingle = J = {
     settings : {
         transitionType : 'slide',
         transitionTime : 300,
-        transitionTimingFunc : 'ease-out',
+        transitionTimingFunc : 'linear',
         sectionPath : 'html/section/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
@@ -12,8 +12,19 @@ var Jingle = J = {
     isMenuOpen : false,
     launch : function(opts){
         $.extend(this.settings,opts);
-        this.Router.init();
+        this.Router.init('#login_section');
         this.Markup.init();
+        $('#login_section').trigger('pageshow');
+    },
+    anim : function(el,animName,duration,ease,callback){
+        var d, e,c;
+        var len = arguments.length;
+        for(var i = 2;i<len;i++){
+            var a = arguments[i];
+            var t = $.type(a);
+            t == 'number'?(d=a):(t=='string'?(e=a):(t=='function')?(c=a):null);
+        }
+        $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
     }
 }
 Jingle.Constants = (function(J){
@@ -131,17 +142,14 @@ Jingle.Router = (function(){
     /**
      * 初始化events、state
      */
-    var init = function(){
+    var init = function(initHash){
         $(window).on('popstate', _popstateHandler);
         //取消所有锚点的tap click的默认事件，由框架来控制
         $(document).on('tap','a',function(e){e.preventDefault()});
         $(document).on('click','a',function(e){e.preventDefault()});
 
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
-        _initHistory();
-    }
-    var _initHistory = function(){
-        add2History('#index_section');
+        add2History(initHash);
     }
 
     /**
@@ -174,7 +182,7 @@ Jingle.Router = (function(){
                 _showSection(href);
                 break;
             case 'article' :
-                _showArticle(href);
+                _showArticle(href,e);
                 break;
             case 'menu' :
                 _toggleMenu();
@@ -186,6 +194,7 @@ Jingle.Router = (function(){
     }
 
     var _showSection  = function(hash){
+        if(_history[0] === hash)return;
         var currentPage = $(_history[0]);
         add2History(hash);
         if($(hash).length === 0){
@@ -208,16 +217,17 @@ Jingle.Router = (function(){
         _history.unshift(hash);
         window.history.pushState({hash:hash},'',hash);
     }
-    var _showArticle = function(href){
+    var _showArticle = function(href,e){
         var article = $(href);
         var activeArticle = article.siblings('.active');
-        activeArticle.animate('bounceOutUp',1000,'linear',function(){
-            $(this).removeClass('active');
-            article.addClass('active');
-            article.animate('bounceInDown',1000,'linear',function(){
-
-            })
-        })
+        if(activeArticle.attr('id') === href)return;
+        $(e.target).addClass('active').siblings().removeClass('active');
+        activeArticle.removeClass('active');
+        article.addClass('active');
+        J.anim(article,'bounceIn',300,function(){
+            article.trigger('load');
+            activeArticle.trigger('unload');
+        });
     }
 
     var _toggleMenu = function(){
@@ -234,17 +244,20 @@ Jingle.Router = (function(){
 Jingle.Transition = (function(J){
 
     var TRANSITION = {
-        slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']]
+        //[back,in]
+        slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],
+        scale : [['scaleOut','none'],['none','scaleIn']]
     }
 
     var _doTransition = function(current, target, transitionName){
-        var duration = J.settings.transitionTime;
-        var easing = J.settings.transitionTimingFunc;
         target.addClass('active');
-        current.animate(transitionName[0],duration,easing,function(){
-            _finishTransition(current, target);
-        });
-        target.animate(transitionName[1],duration,easing);
+        if(transitionName[0] == 'none'){
+            J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
+        }else{
+            J.anim(current,transitionName[0],function(){_finishTransition(current, target)});
+            J.anim(target,transitionName[1]);
+        }
+
     }
 
     var _finishTransition = function(current, target) {
@@ -256,7 +269,8 @@ Jingle.Transition = (function(J){
     var run = function(current,target,isBack){
         current = $(current);
         target = $(target);
-        var type = current.attr('data-transition')|| J.settings.transitionType;
+        var type = isBack?current.attr('data-transition'):target.attr('data-transition');
+        type = type|| J.settings.transitionType;
         var transitionName  = isBack ? TRANSITION[type][0] : TRANSITION[type][1];
         _doTransition(current,target,transitionName);
     }
@@ -420,8 +434,14 @@ Jingle.Menu = (function(J){
             e.stopPropagation();
         };
 
+
         _init();
         _bindEvents();
+
+        this.refresh = function(){
+            container.attr('style','');
+            _init();
+        };
 
         this.prev = function() {
             if (index) _slide(index-1, speed);

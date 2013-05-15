@@ -1,17 +1,20 @@
 Jingle.Transition = (function(J){
 
     var TRANSITION = {
-        slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']]
+        //[back,in]
+        slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],
+        scale : [['scaleOut','none'],['none','scaleIn']]
     }
 
     var _doTransition = function(current, target, transitionName){
-        var duration = J.settings.transitionTime;
-        var easing = J.settings.transitionTimingFunc;
         target.addClass('active');
-        current.animate(transitionName[0],duration,easing,function(){
-            _finishTransition(current, target);
-        });
-        target.animate(transitionName[1],duration,easing);
+        if(transitionName[0] == 'none'){
+            J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
+        }else{
+            J.anim(current,transitionName[0],function(){_finishTransition(current, target)});
+            J.anim(target,transitionName[1]);
+        }
+
     }
 
     var _finishTransition = function(current, target) {
@@ -23,7 +26,8 @@ Jingle.Transition = (function(J){
     var run = function(current,target,isBack){
         current = $(current);
         target = $(target);
-        var type = current.attr('data-transition')|| J.settings.transitionType;
+        var type = isBack?current.attr('data-transition'):target.attr('data-transition');
+        type = type|| J.settings.transitionType;
         var transitionName  = isBack ? TRANSITION[type][0] : TRANSITION[type][1];
         _doTransition(current,target,transitionName);
     }

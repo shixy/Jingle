@@ -123,8 +123,14 @@
             e.stopPropagation();
         };
 
+
         _init();
         _bindEvents();
+
+        this.refresh = function(){
+            container.attr('style','');
+            _init();
+        };
 
         this.prev = function() {
             if (index) _slide(index-1, speed);

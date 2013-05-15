@@ -1,25 +1,21 @@
 <section id="alarm_section" data-transition="slide">
-    <header data-title="当前告警信息分布">
+    <header>
         <nav class="left">
-            <a href="#back" data-router="section" data-label="back" data-icon="left"></a>
+            <a href="#back" data-target="back" data-icon="undo">返回</a>
         </nav>
-        <nav class="right">
-            <a href="#" class="button" data-icon="refresh"></a>
-        </nav>
+        <h1 class="title">当前告警分布</h1>
     </header>
     <footer>
-        <nav>
-            <a id="btnShowAlarm" href="#alarm_article" data-router="article" data-icon="pie" class="active">分布</a>
-            <a id="btnShowAlarmTrend" href="#alarm_trend_article" data-router="article" data-icon="bars">走势</a>
-        </nav>
+        <a id="btnShowAlarm" href="#alarm_article" data-target="article" data-icon="pie" class="active">分布</a>
+        <a id="btnShowAlarmTrend" class="label-right" href="#alarm_trend_article" data-target="article" data-icon="bars">走势</a>
     </footer>
-    <article class="active" id="alarm_article" data-control="carousel">
+    <article class="active" id="alarm_article">
         <div>
             <div id="busiSysAlarmChart"></div>
             <div id="resAlarmChart"></div>
         </div>
     </article>
-    <article id="alarm_trend_article" data-control="carousel">
+    <article id="alarm_trend_article">
         <div>
             <div id="busiSysTrendChart"></div>
             <div id="resTrendChart"></div>

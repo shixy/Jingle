@@ -1,12 +1,8 @@
-a{
-    text-decoration: none;
-    color: #000;
-}
 .indented > * {
-    margin: 10px;
+    margin: 5px 10px;
 }
 sub,sup{
-    font-size: 5px;
+    font-size: 10px;
 }
 .box{
     display: -webkit-box;
@@ -51,7 +47,7 @@ sub,sup{
 }
 .box li .title{
     color: #fbf4ff;
-    font-size: 10px;
+    font-size: 12px;
     padding-bottom: 3px;
 }
 .box li .text{
@@ -78,8 +74,9 @@ sub,sup{
     bottom: 0;
     width: 100%;
     height: 0;
-    background-color: #009ad6;
-    opacity: 0.3;
+    background-color: #27AE60;
+    opacity: 0.5;
+    background-image:-webkit-linear-gradient(0deg,rgba(255,255,255,0),rgba(255,255,255,0.7),rgba(255,255,255,0));
 }
 .group_list .title .health-tip{
     position: absolute;
@@ -93,19 +90,10 @@ sub,sup{
     font-size: 20px;font-weight: 600;
 }
  section .group_list li{
-    border-radius: 5px 5px 0 0;background-color: #009ad6;padding: 10px 0 0 0;
+    border-radius: 5px 5px 0 0;background-color: #009ad6;
     border: solid 1px #C8C8C8;
     border-top: none;
     margin-bottom: 10px;
-}
-.group_list li .count{
-    position: absolute;
-    right: 5px;
-    top:0;
-    margin-top: -8px;
-    width: 22px;height: 22px;line-height: 22px;
-    background-color: #ec6d51 !important;
-    border-radius: 22px;
 }
 .group_list .content{
     margin-left: 70px;height: 60px;
@@ -114,46 +102,10 @@ sub,sup{
 }
 
 .group_list .content a{
-    width:25%;float:left;height: 60px;line-height: 60px;
+    width:25%;float:left;height: 60px;line-height: 60px;color: #222;
 }
 .group_list a span{
     font-size: 1.5em;font-weight: bold;color: #0093D5;padding:0 4px 0 8px;
-}
-
-/* Segmented controllers
--------------------------------------------------- */
-
-.segmented-controller {
-    display: -webkit-box;
-    height: 33px;
-    line-height: 33px;
-    margin-top: 5px;
-    overflow: hidden;
-    font-size: 1.5em;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
-    list-style: none;
-    background-color: #1eb0e9;
-    background-image: -webkit-linear-gradient(top, #1eb0e9 0, #0984c6 100%);
-    border: 1px solid #0e5895;
-    border-radius: 3px;
-    box-shadow: 0 1px rgba(255, 255, 255, .25);
-}
-
-/* Section within controller */
-.segmented-controller li {
-    overflow: hidden;
-    text-align: center;
-    white-space: nowrap;
-    box-shadow: inset 1px 0 rgba(255, 255, 255, .5);
-    -webkit-box-flex: 1;
-    padding:1px 12px;
-}
-
-
-/* Active segment of controller */
-.segmented-controller li.active {
-    background-color: #0082c4;
-    box-shadow: inset 0 1px 6px rgba(0, 0, 0, .3);
 }
 
 
@@ -177,9 +129,10 @@ sub,sup{
 
 .vm-grid {
     border-radius: 5px;
-    height: 50px;
+    height: 100px;
     display: -webkit-box;
     color: #fff;
+    position: relative;
 }
 .vm-grid .title{
     margin: 10px 0;
@@ -187,30 +140,30 @@ sub,sup{
     width: 50px;
     font-size: 14px;
     height: 30px;line-height: 30px;
-    border-right: 1px solid #eee;
     -webkit-box-flex : 0;
 }
 .vm-grid .content{
     -webkit-box-flex : 1;
-    font-size: 30px;
-    height: 50px;line-height: 50px;
+    font-size: 40px;
+    height: 100px;line-height: 100px;
     font-weight: 600;
     padding-left: 10px;
+    min-width: 110px;
 }
 .vm-grid .icon{
-    line-height: 50px;
     font-size: 16px;
     color: #fff;
-    width: 30px;
+    position: absolute;
+    right: 5px;top:5px;
 }
-.vm-grid.expand{
-    border-radius: 5px 5px 0 0 ;
-    margin-bottom: 0;
+.vm-grid .icon-tip{
+    position: absolute;
+    color: #fff;
+    right: 25px;top:5px;
+    background-color: #3498DB;
+    border-radius: 3px;
+    padding: 1px 3px;
 }
-.vm-grid.expand+ul{
-    margin-top: 0;
-}
-
 .grid-container{
    display: -webkit-box;
 }
@@ -255,7 +208,7 @@ sub,sup{
 }
 #index_container > *{
     position: absolute;
-    top:0;bottom: 0;left: 0;
+    top:0;bottom: 0;left: 0;right: 0;
     z-index : 1;
     overflow: hidden;
 }

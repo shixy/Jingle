@@ -8,17 +8,14 @@ Jingle.Router = (function(){
     /**
      * 初始化events、state
      */
-    var init = function(){
+    var init = function(initHash){
         $(window).on('popstate', _popstateHandler);
         //取消所有锚点的tap click的默认事件，由框架来控制
         $(document).on('tap','a',function(e){e.preventDefault()});
         $(document).on('click','a',function(e){e.preventDefault()});
 
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
-        _initHistory();
-    }
-    var _initHistory = function(){
-        add2History('#index_section');
+        add2History(initHash);
     }
 
     /**
@@ -51,7 +48,7 @@ Jingle.Router = (function(){
                 _showSection(href);
                 break;
             case 'article' :
-                _showArticle(href);
+                _showArticle(href,e);
                 break;
             case 'menu' :
                 _toggleMenu();
@@ -86,17 +83,17 @@ Jingle.Router = (function(){
         _history.unshift(hash);
         window.history.pushState({hash:hash},'',hash);
     }
-    var _showArticle = function(href){
+    var _showArticle = function(href,e){
         var article = $(href);
         var activeArticle = article.siblings('.active');
         if(activeArticle.attr('id') === href)return;
-        activeArticle.animate('bounceOutUp',1000,'linear',function(){
-            $(this).removeClass('active');
-            article.addClass('active');
-            article.animate('bounceInDown',1000,'linear',function(){
-
-            })
-        })
+        $(e.target).addClass('active').siblings().removeClass('active');
+        activeArticle.removeClass('active');
+        article.addClass('active');
+        J.anim(article,'bounceIn',300,function(){
+            article.trigger('load');
+            activeArticle.trigger('unload');
+        });
     }
 
     var _toggleMenu = function(){

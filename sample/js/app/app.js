@@ -80,7 +80,3 @@ var App = (function(){
     }
     return exports;
 }())
-
-$(document).ready(function(){
-    App.run();
-})

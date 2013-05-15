@@ -60,7 +60,7 @@ article{
     display: none;
     height: auto;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
     z-index: 0;
     background-color: #fff;
 }

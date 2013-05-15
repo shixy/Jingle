@@ -237,7 +237,6 @@ var AHelper = {
             border:false,
             background_color:'#f4f5f5',
             animation:true,
-            percent:true,
             showpercent:true,
             z_index : 9,
             legend:{
@@ -250,6 +249,14 @@ var AHelper = {
                 valign:'top',
                 row:1,
                 column:'max'
+            },coordinate:{
+                scale:[{
+                    listeners:{
+                        parseText:function(t,x,y){
+                            return {text:t*100+"%"}
+                        }
+                    }
+                }]
             }
         }
     },

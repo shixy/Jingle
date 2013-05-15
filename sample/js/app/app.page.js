@@ -7,29 +7,29 @@
 App.page('login',function(){
     var exports = {};
     exports.init = function(){
-        $('#btn-login').bind('tap',_login);
+        //todo  check native status. eg.network、 newVersion
+        $('#login_form').submit(_login);
+        setTimeout(_autoLogin,1);
     }
-    exports.load = function(){
-       // RsAPI.auth.logout();
+    var _login = function(){
+        var username = $('#username').val();
+        var pwd = $('#password').val();
+        if(username == '' || pwd == ''){
+            alert('请填写完整的信息！');
+        }else{
+            var auth = {username : username ,password : pwd};
+            window.localStorage.setItem('auth',JSON.stringify(auth));
+            //TODO  login rest api
+            J.Router.turnTo('#index_section');
+        }
+        return false;
+    }
+    var _autoLogin = function(){
         var auth = localStorage.getItem('auth');
         if(auth){
             auth = JSON.parse(auth);
             $('#username').val(auth.username);
             $('#password').val(auth.password);
-        }
-    }
-    var _login = function(){
-        var username = $('#username').val();
-        var pwd = $('#password').val();
-        var offline = $('#btn_offline').val();
-        if(!App.offline){//只有在在线的情况下，此选项可用
-            App.offline = offline == '1';
-        }
-        $.ui.loadContent("#index_section",false,false,"slide");
-    }
-    exports.autoLogin = function(){
-        var isAutoLogin = localStorage.getItem("auto-login");
-        if(isAutoLogin == 1){
             _login();
         }
     }
@@ -63,10 +63,15 @@ App.page('index',function(){
     var exports = {};
     var data_health = [70,60,20,40];
     exports.init = function(){
-       // _lockAside();
+        _subscribeEvents();
+        _renderIndex();
+        _renderUsageChart();
+    }
+    var _subscribeEvents = function(){
         var boxList = $('#index_section .box li');
         var current = 0;
         var len = boxList.length;
+        //nav box events
         boxList.each(function(i){
             $(this).on('tap',function(){
                 var animate = 'slideRightIn';
@@ -81,6 +86,7 @@ App.page('index',function(){
                 current = i;
             });
         });
+        //swipe events
         $('#index_container').on('swipeLeft',function(){
             if(J.isMenuOpen){
                 J.Menu.hide();
@@ -93,34 +99,32 @@ App.page('index',function(){
                 }else if(current>0){
                     $(boxList.get(current-1)).trigger('tap');
                 }
-        })
-        $('#btn_index_grid').on('tap',function(){
-            if(!$(this).hasClass('active')){
-                $('#btn_index_grid,#index_grid_article').addClass('active').siblings().removeClass('active');
-                $('#index_grid_article').animate('bounceInDown');
-            }
-            _renderHealth();
-        });
-        $('#btn_index_chart').on('tap',function(){
-            if(!$(this).hasClass('active')){
-                $('#btn_index_chart,#index_chart_article').addClass('active').siblings().removeClass('active');
-                $('#index_grid_index_chart_articlearticle').animate('bounceInDown');
-                _renderChart();
-            }
-        });
+            });
+        // biz sys info events
         $('#bizSysContainer li .content').on('tap',function(e){
             J.Router.turnTo('#biz_sys_section');
         });
+        //health events
         $('#bizSysContainer li .title').on('tap',function(e){
             var tip = $(this).find('.health-tip');
-            tip.show().animate('bounceIn');
+            tip.show().animate('scaleIn');
             setTimeout(function(){
-                tip.animate('bounceOut');
+                tip.animate('scaleOut');
                 setTimeout(function(){tip.hide();},300);
             },4000);
         });
+    }
+    /**
+     * render 全局概览信息
+     * @private
+     */
+    var _renderIndex = function(){
+        //render boxlist
+        //todo 获取总数据，以下为模拟数据
+        //render 业务系统
+        //todo 获取业务系统数据列表
         _renderHealth();
-        _renderUsageChart();
+
     }
     var _renderHealth = function(){
         $('#bizSysContainer li').each(function(i,el){
@@ -163,53 +167,21 @@ App.page('index',function(){
         config.showpercent = false;
         new iChart.ColumnMulti2D(config).draw();
     }
-    var _lockAside = function(){
-    }
-
     var _renderUsageChart = function(){
-        _renderCPUChart();
-        _renderMMChart();
-        _renderSRChart();
-        _renderVMChart();
-    }
-    var _renderCPUChart = function(){
-        var data = [
+        //todo 获取资源分配数据
+        var cpudata = mmdata = srdata = vmdata = [
             {name:'OA',value:'20',color:'#4572a7'},
             {name:'订单',value:'10',color:'#aa4643'},
             {name:'营销',value:'30',color:'#89a54e'},
             {name:'协同',value:'20',color:'#80699b'}
         ];
-        var chartCfg = AHelper.getDountCfg(data,'cpu_usage_canvas','CPU');
-        new iChart.Donut2D(chartCfg).draw();
+        _renderPieChart(cpudata,'cpu_usage_canvas','CPU');
+        _renderPieChart(mmdata,'mm_usage_canvas','内存');
+        _renderPieChart(srdata,'sr_usage_canvas','存储');
+        _renderPieChart(vmdata,'vm_num_canvas','虚拟机');
     }
-    var _renderMMChart = function(){
-        var data = [
-            {name:'OA',value:'20',color:'#4572a7'},
-            {name:'订单',value:'10',color:'#aa4643'},
-            {name:'营销',value:'30',color:'#89a54e'},
-            {name:'协同',value:'20',color:'#80699b'}
-        ];
-        var chartCfg = AHelper.getDountCfg(data,'mm_usage_canvas','内存');
-        new iChart.Donut2D(chartCfg).draw();
-    }
-    var _renderSRChart = function(){
-        var data = [
-            {name:'OA',value:'20',color:'#4572a7'},
-            {name:'订单',value:'10',color:'#aa4643'},
-            {name:'营销',value:'30',color:'#89a54e'},
-            {name:'协同',value:'20',color:'#80699b'}
-        ];
-        var chartCfg = AHelper.getDountCfg(data,'sr_usage_canvas','存储');
-        new iChart.Donut2D(chartCfg).draw();
-    }
-    var _renderVMChart = function(){
-        var data = [
-            {name:'OA',value:'20',color:'#4572a7'},
-            {name:'订单',value:'10',color:'#aa4643'},
-            {name:'营销',value:'30',color:'#89a54e'},
-            {name:'协同',value:'20',color:'#80699b'}
-        ];
-        var chartCfg = AHelper.getDountCfg(data,'vm_num_canvas','虚拟机');
+    var _renderPieChart = function(data,id,text){
+        var chartCfg = AHelper.getDountCfg(data,id,text);
         new iChart.Donut2D(chartCfg).draw();
     }
     return exports;
@@ -218,7 +190,7 @@ App.page('alarm',function(){
    var exports = {};
     exports.init = function(){
         _subscribeEvents();
-        _renderChart();
+        $('#alarm_article').trigger('load');
     }
     var _subscribeEvents = function(){
         var carousel = new J.Slider('#alarm_article');
@@ -373,12 +345,31 @@ App.page('res_allocate',function(){
 
 App.page('res_period',function(){
     var exports = {};
+    var searchDate = new Date();
     exports.init = function(){
-        _renderChart();
-        _subscribeEvents();
-    }
-    var _subscribeEvents = function(){
         new J.Slider('#res_period_article');
+        _renderBar();
+        _renderChart();
+    }
+    /**
+     * render quick search bar
+     */
+    var _renderBar = function(){
+        var today = new Date();
+        searchDate.setDate(today.getDate()-1);
+        var dateStr = AHelper.formatDate(searchDate,'yyyy-MM-dd');
+        var $bar = $('#per_qs_bar a');
+        $bar.eq(1).text(dateStr);
+        $bar.eq(0).on('tap',function(){
+            searchDate.setDate(searchDate.getDate()-1);
+            $bar.eq(1).text(AHelper.formatDate(searchDate,'yyyy-MM-dd'));
+            //todo getChartData and reRender
+        });
+        $bar.eq(-1).on('tap',function(){
+            searchDate.setDate(searchDate.getDate()+1);
+            $bar.eq(1).text(AHelper.formatDate(searchDate,'yyyy-MM-dd'));
+            //todo getChartData and reRender
+        });
     }
     var _renderChart = function(){
         var data = [
@@ -393,10 +384,10 @@ App.page('res_period',function(){
                 color:'#aa4643'
             }
         ];
-        var config = AHelper.getBarCfg(data,'cpuPeriodChart',["QA","营销","订单","协同"]);
+        var config = AHelper.getBarCfg(data,'cpuPeriodChart',["OA","营销","订单","协同"]);
         config.title = "CPU使用率对比";
         new iChart.ColumnMulti2D(config).draw();
-        var config = AHelper.getBarCfg(data,'mmPeriodChart',["QA","营销","订单","协同"]);
+        var config = AHelper.getBarCfg(data,'mmPeriodChart',["OA","营销","订单","协同"]);
         config.title = "内存使用率对比";
         new iChart.ColumnMulti2D(config).draw();
     }
@@ -406,25 +397,19 @@ App.page('res_period',function(){
 App.page('biz_sys',function(){
     var exports = {};
     exports.init = function(){
-        $('#biz_alarm_list_anchor').on('tap',function(e){
-            if(e.target.id == 'biz_alarm_trend_anchor'){
-                J.Router.turnTo('#alarm_section');
-            }else{
-                toggleEl(this,'biz_alarm_list_container');
-            }
-        })
-        $('#biz_vm_list_anchor').on('tap',function(){
-            toggleEl(this,'biz_vm_list_container');
-        })
-        $('#biz_vm_list_container li').on('tap',function(){
-            J.Router.turnTo('vm_section');
-        })
-
+        _subscribeEvents();
+        _render();
     }
-    function toggleEl(_this,elId){
-        var el = $('#'+elId);
-        el.toggle();
-        $(_this).children('.icon').toggleClass('up');
+    var _subscribeEvents = function(){
+        $('#biz_vm_block,#biz_cpu_block,#biz_mm_block').on('tap',function(){
+            J.Router.turnTo('#biz_vm_list_section');
+        });
+        $('#biz_alarm_block').on('tap',function(){
+            J.Router.turnTo('#alarm_list_section');
+        });
+    }
+    var _render = function(){
+        //todo get biz_sys datas
     }
     return exports;
 });

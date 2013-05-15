@@ -68,6 +68,7 @@ header nav a{
 header nav a:not(.button) {
     height: 44px;
     color: #00608a;
+    font-weight: 600;
     -webkit-text-shadow: 0 1px 0 #20baff;
     -moz-text-shadow: 0 1px 0 #20baff;
     text-shadow: 0 1px 0 #20baff;
@@ -77,10 +78,23 @@ header nav a:not(.button):active {
 }
 
 header nav a:not(.button) > .icon {
-    font-size: 1.5em
+    font-size: 1.5em;
+    float:left;
 }
 
 .header-secondary{
     background-color: #222;
     color: #fff;
+    display: -webkit-box;
+    display: box;
+    text-align: center;
+}
+.header-secondary > a{
+    -webkit-box-flex : 1;
+    box-flex : 1;
+    display: block;
+}
+.header-secondary > a[data-icon]{
+    -webkit-box-flex : 0;
+    box-flex : 0;
 }

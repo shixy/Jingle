@@ -9,7 +9,6 @@
 
 
     <link rel="stylesheet" href="css/Jingle.css">
-    <link rel="stylesheet" href="css/animate.css">
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
@@ -17,112 +16,23 @@
         <header><span class="title">菜单</span></header>
         <ul class="menu">
             <li><a href="#index_section" data-target="section">全局概览</a></li>
+            <li><a href="#res_period_section" data-target="section">资源使用对比</a></li>
             <li><a href="#alarm_section" data-target="section">告警分布</a></li>
             <li><a href="#res_allocate_section" data-target="section">资源分配趋势</a></li>
-            <li><a href="#res_period_section" data-target="section">资源使用对比</a></li>
             <li><a href="#buttons" data-target="section">buttons</a></li>
             <li><a href="#icon_section" data-target="section">icons</a></li>
             <li><a href="#list_section" data-target="section">list</a></li>
         </ul>
     </aside>
     <div id="section-container">
-        <section id="index_section" class="active">
-            <header>
-                <nav class="left">
-                    <a data-target="menu" data-icon="menu" href="#"></a>
-                </nav>
-                <h1 class="title">全局概览</h1>
-                <nav class="right">
-                    <a href="#" class="button" data-icon="loop"></a>
-                    <a href="#" data-icon="arrow-right"></a>
-                </nav>
-            </header>
-            <article class="active indented" id="index_article">
-                <ul class="box">
-                    <li class="blue active">
-                        <p class="title">业务系统</p>
-                        <p class="text">8</p>
-                    </li>
-                    <li class="orange">
-                        <p class="title">虚拟机</p>
-                        <p class="text">20</p>
-
-                    </li>
-                    <li class="violet">
-                        <p class="title">CPU</p>
-                        <p class="text">40</p>
-
-                    </li>
-                    <li class="wine">
-                        <p class="title">内存</p>
-                        <p class="text">1000</p>
-
-                    </li>
-                    <li class="dark-green">
-                        <p class="title">存储</p>
-                        <p class="text">1000</p>
-
-                    </li>
-                </ul>
-                <div id="index_container">
-                    <ul class="list group_list active" id="bizSysContainer">
-                        <li data-count="10" class="arrow">
-                            <div class="title">
-                                OA
-                                <div class="progress"></div>
-                                <div class="health-tip">健康值<span>100</span></div>
-                            </div>
-                            <div class="content">
-                                <a href="#">CPU:<span>20</span>个</a>
-                                <a href="#">内存<span>160</span>GB </a>
-                                <a href="#">存储<span>20</span>TB</a>
-                                <a href="#">虚拟机<span>30</span>个</a>
-                            </div>
-                        </li>
-                        <li data-count="6" class="arrow">
-                            <div class="title">订单
-                                <div class="progress"></div>
-                                <div class="health-tip">健康值<span>100</span></div>
-                            </div>
-                            <div class="content">
-                                <a href="#">CPU:<span>20</span>个</a>
-                                <a href="#">内存<span>160</span>GB </a>
-                                <a href="#">存储<span>20</span>TB</a>
-                                <a href="#">虚拟机<span>30</span>个</a>
-                            </div>
-                        </li>
-                        <li data-count="18" class="arrow">
-                            <div class="title">营销
-                                <div class="progress"></div>
-                                <div class="health-tip">健康值<span>100</span></div>
-                            </div>
-                            <div class="content">
-                                <a href="#">CPU:<span>20</span>个</a>
-                                <a href="#">内存<span>160</span>GB </a>
-                                <a href="#">存储<span>20</span>TB</a>
-                                <a href="#">虚拟机<span>30</span>个</a>
-                            </div>
-                        </li>
-                        <li data-count="9" class="arrow">
-                            <div class="title">协同
-                                <div class="progress"></div>
-                                <div class="health-tip">健康值<span>100</span></div>
-                            </div>
-                            <div class="content">
-                                <a href="#">CPU:<span>20</span>个</a>
-                                <a href="#">内存<span>160</span>GB </a>
-                                <a href="#">存储<span>20</span>TB</a>
-                                <a href="#">虚拟机<span>30</span>个</a>
-                            </div>
-                        </li>
-
-                    </ul>
-                    <div id="vm_num_canvas" >
-                    </div>
-                    <div id="cpu_usage_canvas" ></div>
-                    <div id="mm_usage_canvas" ></div>
-                    <div id="sr_usage_canvas" ></div>
-                </div>
+        <section id="login_section" class="active">
+            <article class="active" style="background-color: #3498DB">
+                <img src="images/logo.png" style="display: block;margin:80px auto 0;">
+                <form style="padding: 20px;" id="login_form">
+                    <input type="text" placeholder="用户名" id="username" data-icon="home" value="">
+                    <input type="password" placeholder="密码" id="password" value="">
+                    <button class="button block" type="submit" data-icon="lock" style="padding:10px 5px;" >登录</button>
+                </form>
             </article>
         </section>
     </div>
@@ -143,10 +53,10 @@
             var tag=$("head").append(script);
         }
     $(function () {
+        App.run();
         Jingle.launch({
 
         });
-        $('#index_section').trigger('pageshow');
     })
 </script>
 </body>

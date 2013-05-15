@@ -55,3 +55,6 @@ button.cancel,.button.cancel {
 .button.block{
     width:100%;
 }
+.button .icon, button .icon{
+    float:left;
+}

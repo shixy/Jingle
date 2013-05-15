@@ -1,12 +1,12 @@
 <section id="biz_sys_section" data-transition="slide">
     <header>
         <nav class="left">
-            <a href="#" data-icon="arrow-left" data-target="back">Back</a>
+            <a href="#" data-icon="undo" data-target="back">返回</a>
         </nav>
         <h1 class="title"> 业务系统</h1>
     </header>
 
-    <article class=" indented active scroll" id="biz_sys_article">
+    <article class="indented active scroll" id="biz_sys_article">
         <div style="border-bottom: 2px silver solid;height: 25px;">
             <strong style="font-size: 30px;font-weight: bold;color: #78ba00;float: left;">OA</strong>
             <p style="font-size: 10px;color: #808080;margin: 5px 0 0 10px;float:left;">对OA的一些简单描述</p>
@@ -19,75 +19,42 @@
             </div>
         </div>
         <div class="grid-container">
-            <div class="vm-grid" style="background-color: #009ad6">
+            <div class="vm-grid" id="biz_alarm_block" style="background-color: #EA5506">
+                <div class="title">告警</div>
+                <div class="content">5</div>
+                <div class="icon arrow-up-right"></div>
+            </div>
+            <div class="vm-grid" style="background-color: #2C3E50">
+                <div class="title">服务器</div>
+                <div class="content">10</div>
+                <div class="icon arrow-up-right"></div>
+            </div>
+        </div>
+        <div class="grid-container">
+            <div class="vm-grid" id="biz_vm_block" style="background-color: #009ad6">
+                <div class="title">虚拟机</div>
+                <div class="content">20</div>
+                <div class="icon arrow-up-right"></div>
+            </div>
+            <div class="vm-grid" id="biz_cpu_block" style="background-color: #F39C12">
                 <div class="title">CPU</div>
                 <div class="content">20</div>
+                <div class="icon arrow-up-right"></div>
+                <div class="icon-tip">top10</div>
             </div>
-            <div class="vm-grid" style="background-color:#009ad6 ">
+
+        </div>
+        <div class="grid-container">
+            <div class="vm-grid" id="biz_mm_block" style="background-color:#16A085 ">
                 <div class="title">内存</div>
                 <div class="content" >20<sub>GB</sub></div>
+                <div class="icon arrow-up-right"></div>
+                <div class="icon-tip">top10</div>
             </div>
-            <div class="vm-grid" style="background-color: #009ad6">
+            <div class="vm-grid" style="background-color: #7F8C8D">
                 <div class="title">存储</div>
                 <div class="content">20<sub>TB</sub></div>
             </div>
         </div>
-        <div class="vm-grid expand" id="biz_alarm_list_anchor" style="background-color: #EA5506">
-            <div class="title">告警</div>
-            <div class="content">5
-                <span class="icon stats" id="biz_alarm_trend_anchor" style="font-size: 20px;padding: 10px;"></span>
-            </div>
-            <div class="icon down"></div>
-        </div>
-        <ul class="list border" id="biz_alarm_list_container" style="display: none;">
-            <li>
-                <div class="right ">2013-04-03 16:51</div>
-                <strong>cisco2800Router</strong>
-                <p>违反可用性阈值上限(100%).未能达到100%的请求发送。</p>
-            </li>
-            <li>
-                <div class="right ">2013-04-03 16:51</div>
-                <strong>cisco2800Router</strong>
-                <p>违反可用性阈值上限(100%).未能达到100%的请求发送。</p>
-            </li>
-            <li>
-                <div class="right ">2013-04-03 16:51</div>
-                <strong>cisco2800Router</strong>
-                <p>违反可用性阈值上限(100%).未能达到100%的请求发送。</p>
-            </li>
-            <li>
-                <div class="right ">2013-04-03 16:51</div>
-                <strong>cisco2800Router</strong>
-                <p>违反可用性阈值上限(100%).未能达到100%的请求发送。</p>
-            </li>
-        </ul>
-        <div class="vm-grid expand" id="biz_vm_list_anchor" style="background-color: #009ad6">
-            <div class="title">虚拟机</div>
-            <div class="content">5</div>
-            <div class="icon down"></div>
-        </div>
-        <ul class="list border" id="biz_vm_list_container" style="display: none;">
-            <li>
-                <div class="tag right">运行中</div>
-                <strong>虚拟机1</strong>
-                <p>操作系统：winXP sp1</p>
-            </li>
-            <li>
-                <div class="tag right">已关闭</div>
-                <strong>虚拟机1</strong>
-                <p>操作系统：ubuntu11</p>
-            </li>
-            <li>
-                <div class="tag right">运行中</div>
-                <strong>虚拟机1</strong>
-                <p>操作系统：winXP sp1</p>
-            </li>
-            <li>
-                <div class="tag right">运行中</div>
-                <strong>虚拟机1</strong>
-                <p>操作系统：winXP sp1</p>
-            </li>
-        </ul>
-
     </article>
 </section>

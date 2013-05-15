@@ -32,11 +32,12 @@ input[type="color"],
   height: 40px;
   padding: 10px;
   margin-bottom: 10px;
-  background-color: #fff;
   border: 1px solid rgba(0, 0, 0, .2);
   border-radius: 3px;
-  box-shadow: 0 1px 1px rgba(255, 255, 255, .2), inset 0 1px 1px rgba(0, 0, 0, .1);
-  -webkit-appearance: none;
+  -webkit-box-shadow: 0 1px 1px rgba(255, 255, 255, .2), inset 0 1px 1px rgba(0, 0, 0, .1);
+    box-shadow: 0 1px 1px rgba(255, 255, 255, .2), inset 0 1px 1px rgba(0, 0, 0, .1);    -webkit-appearance: none;
+    -webkit-user-select: text;
+    -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
   outline: none;
 }
