@@ -1,8 +1,30 @@
+document.addEventListener('deviceready', onDeviceReady, false);
+function onDeviceReady(){
+    navigator.splashscreen.hide();
+    //注册后退按钮
+    document.addEventListener("backbutton", function (e) {
+        if(J.isMenuOpen){
+            J.Menu.hide();
+        }else{//TODO 处理popup事件
+            var sectionId = $('section.active').attr('id');
+            if(sectionId == 'login_section' || sectionId == 'index_section'){
+                if(confirm('是否退出程序？')){
+                    navigator.app.exitApp();
+                }else{
+                    return;
+                }
+            }else{
+                J.Router.back();
+            }
+        }
+    }, false);
+}
 var App = (function(){
     var exports ={};
     var pages = {},userCache = {};
     exports.offline=false;
     exports.run = function(){
+        _subscribeAsideEvents();
         $.each(pages,function(k,v){
             var sectionId = '#'+k+'_section';
             $('body').delegate(sectionId,'pageshow',function(e){
@@ -17,6 +39,7 @@ var App = (function(){
                 }
             });
         });
+        Jingle.launch();
     };
     exports.cacheUserInfo = function(userInfo){
         userCache['UID'] = userInfo.cloudUserInfo.id;
@@ -77,6 +100,14 @@ var App = (function(){
     }
     exports.updateApp = function(path){
         window.plugins.updateApp.checkAndUpdate(path);
+    }
+    var _subscribeAsideEvents = function(){
+        $('#btn_change_user').tap(function(){
+            J.Router.turnTo('#login_section');
+        });
+        $('#btn_exit_app').tap(function(){
+            navigator.app.exitApp();
+        });
     }
     return exports;
 }())

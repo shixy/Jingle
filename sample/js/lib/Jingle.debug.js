@@ -2,7 +2,7 @@ var Jingle = J = {
     settings : {
         transitionType : 'slide',
         transitionTime : 300,
-        transitionTimingFunc : 'linear',
+        transitionTimingFunc : 'ease-in-out',
         sectionPath : 'html/section/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
@@ -14,6 +14,7 @@ var Jingle = J = {
         $.extend(this.settings,opts);
         this.Router.init('#login_section');
         this.Markup.init();
+        setTimeout(function(){ window.scrollTo(0, 1); }, 100);
         $('#login_section').trigger('pageshow');
     },
     anim : function(el,animName,duration,ease,callback){
@@ -172,17 +173,15 @@ Jingle.Router = (function(){
     }
     var _targetHandler = function(e){
         e.preventDefault();
-        var target = $(this).attr('data-target');
-        var href = $(this).attr('href');
+        var _this = $(this);
+        var target = _this.attr('data-target');
+        var href = _this.attr('href');
         switch(target){
             case 'section' :
-                if($.contains($('aside')[0], e.target)){
-                    J.Menu.hide();
-                }
                 _showSection(href);
                 break;
             case 'article' :
-                _showArticle(href,e);
+                _showArticle(href,_this);
                 break;
             case 'menu' :
                 _toggleMenu();
@@ -194,6 +193,9 @@ Jingle.Router = (function(){
     }
 
     var _showSection  = function(hash){
+        if(J.isMenuOpen){
+            J.Menu.hide();
+        }
         if(_history[0] === hash)return;
         var currentPage = $(_history[0]);
         add2History(hash);
@@ -217,14 +219,12 @@ Jingle.Router = (function(){
         _history.unshift(hash);
         window.history.pushState({hash:hash},'',hash);
     }
-    var _showArticle = function(href,e){
+    var _showArticle = function(href,el){
         var article = $(href);
-        var activeArticle = article.siblings('.active');
-        if(activeArticle.attr('id') === href)return;
-        $(e.target).addClass('active').siblings().removeClass('active');
-        activeArticle.removeClass('active');
-        article.addClass('active');
-        J.anim(article,'bounceIn',300,function(){
+        if(article.hasClass('active'))return;
+        el.addClass('active').siblings('.active').removeClass('active');
+        var activeArticle = article.addClass('active').siblings('.active').removeClass('active');
+        J.anim(article,'scaleIn',300,function(){
             article.trigger('load');
             activeArticle.trigger('unload');
         });
@@ -250,18 +250,25 @@ Jingle.Transition = (function(J){
     }
 
     var _doTransition = function(current, target, transitionName){
-        target.addClass('active');
         if(transitionName[0] == 'none'){
+            current.removeClass('active').addClass('activing');
+            target.addClass('active');
             J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
-        }else{
+        }else if(transitionName[1] == 'none'){
+            target.addClass('activing');
             J.anim(current,transitionName[0],function(){_finishTransition(current, target)});
-            J.anim(target,transitionName[1]);
+        }else{
+            current.removeClass('active').addClass('activing');
+            target.addClass('active');
+            J.anim(current,transitionName[0]);
+            J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
         }
 
     }
 
     var _finishTransition = function(current, target) {
-        current.removeClass('active');
+        current.removeClass('activing active');
+        target.removeClass('activing').addClass('active');
         current.trigger('pagehide');
         target.trigger('pageshow');
     }

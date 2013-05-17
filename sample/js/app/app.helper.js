@@ -104,7 +104,7 @@ var AHelper = {
     },
     //饼图默认配置
     getPieCfg : function(data,renderId,hasFooter){
-        var offset = AHelper.getArticleOffset(hasFooter);
+        var offset = AHelper.getArticleOffset();
         return {
             data : data,
             render : renderId,
@@ -160,7 +160,8 @@ var AHelper = {
         return {
             data : data,
             render : renderId,
-            background_color:'#5d3a05',
+            background_color:'#34495E',
+            gradient:true,
             border:false,
             showpercent:true,
             donutwidth:0.5,
@@ -269,6 +270,8 @@ var AHelper = {
             align:'center',
             width:offset.width,
             height:offset.height,
+            padding:'10px 10px 35px 10px',
+            background_color:'#f4f5f5',
             legend : {
                 enable : true,
                 row:1,//设置在一行上显示，与column配合使用
@@ -288,12 +291,6 @@ var AHelper = {
                     color:'#9f9f9f',
                     width:[0,0,2,2]
                 },
-                grids:{
-                    vertical:{
-                        way:'share_alike',
-                        value:5
-                    }
-                },
                 scale:[{
                     position:'left',
                     start_scale:0,
@@ -303,7 +300,13 @@ var AHelper = {
                     scale_color:'#9f9f9f'
                 },{
                     position:'bottom',
-                    labels:labels
+                    labels:labels,
+                    label : {
+                        fontsize:9,
+                        textAlign:'right',
+                        textBaseline:'middle',
+                        rotate:-45
+                    }
                 }]
             }
         }

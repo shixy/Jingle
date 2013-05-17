@@ -38,17 +38,15 @@ Jingle.Router = (function(){
     }
     var _targetHandler = function(e){
         e.preventDefault();
-        var target = $(this).attr('data-target');
-        var href = $(this).attr('href');
+        var _this = $(this);
+        var target = _this.attr('data-target');
+        var href = _this.attr('href');
         switch(target){
             case 'section' :
-                if($.contains($('aside')[0], e.target)){
-                    J.Menu.hide();
-                }
                 _showSection(href);
                 break;
             case 'article' :
-                _showArticle(href,e);
+                _showArticle(href,_this);
                 break;
             case 'menu' :
                 _toggleMenu();
@@ -60,6 +58,9 @@ Jingle.Router = (function(){
     }
 
     var _showSection  = function(hash){
+        if(J.isMenuOpen){
+            J.Menu.hide();
+        }
         if(_history[0] === hash)return;
         var currentPage = $(_history[0]);
         add2History(hash);
@@ -83,14 +84,12 @@ Jingle.Router = (function(){
         _history.unshift(hash);
         window.history.pushState({hash:hash},'',hash);
     }
-    var _showArticle = function(href,e){
+    var _showArticle = function(href,el){
         var article = $(href);
-        var activeArticle = article.siblings('.active');
-        if(activeArticle.attr('id') === href)return;
-        $(e.target).addClass('active').siblings().removeClass('active');
-        activeArticle.removeClass('active');
-        article.addClass('active');
-        J.anim(article,'bounceIn',300,function(){
+        if(article.hasClass('active'))return;
+        el.addClass('active').siblings('.active').removeClass('active');
+        var activeArticle = article.addClass('active').siblings('.active').removeClass('active');
+        J.anim(article,'scaleIn',300,function(){
             article.trigger('load');
             activeArticle.trigger('unload');
         });

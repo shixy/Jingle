@@ -229,7 +229,7 @@ App.page('alarm',function(){
                 return d.get('value');
             }
         };
-        businessChartCfg.height = AHelper.getArticleOffset().height - 44;
+        businessChartCfg.height -= 51;
         new iChart.Pie2D(businessChartCfg).draw();
 
         var resChartCfg = AHelper.getPieCfg(resData,'resAlarmChart',true);
@@ -243,7 +243,7 @@ App.page('alarm',function(){
                 return d.get('value');
             }
         };
-        resChartCfg.height = AHelper.getArticleOffset().height - 44;
+        resChartCfg.height -= 51;
         new iChart.Pie2D(resChartCfg).draw();
     }
     var _renderTrendChart = function(){
@@ -284,11 +284,11 @@ App.page('alarm',function(){
 
         var labels = ["2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06"];
         var config = AHelper.getLineCfg(data,'busiSysTrendChart',labels);
-        config.height = AHelper.getArticleOffset().height - 44;
+        config.height -= 51;
         config.title='业务维度';
         new iChart.LineBasic2D(config).draw();
         var config = AHelper.getLineCfg(data2,'resTrendChart',labels);
-        config.height = AHelper.getArticleOffset().height - 44;
+        config.height -= 51;
         config.title = '环境维度';
         new iChart.LineBasic2D(config).draw();
     }
@@ -332,12 +332,15 @@ App.page('res_allocate',function(){
         var labels = ["2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06"];
         var config = AHelper.getLineCfg(data,'cpu_allocate_chart',labels);
         config.title = 'CPU';
+        config.height -=30;
         new iChart.LineBasic2D(config).draw();
         var config = AHelper.getLineCfg(data,'mm_allocate_chart',labels);
         config.title = '内存';
+        config.height -=30;
         new iChart.LineBasic2D(config).draw();
         var config = AHelper.getLineCfg(data,'sr_allocate_chart',labels);
         config.title = '存储';
+        config.height -=30;
         new iChart.LineBasic2D(config).draw();
     }
     return exports;
@@ -385,9 +388,11 @@ App.page('res_period',function(){
             }
         ];
         var config = AHelper.getBarCfg(data,'cpuPeriodChart',["OA","营销","订单","协同"]);
+        config.height -=30;
         config.title = "CPU使用率对比";
         new iChart.ColumnMulti2D(config).draw();
         var config = AHelper.getBarCfg(data,'mmPeriodChart',["OA","营销","订单","协同"]);
+        config.height -=30;
         config.title = "内存使用率对比";
         new iChart.ColumnMulti2D(config).draw();
     }

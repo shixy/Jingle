@@ -7,18 +7,25 @@ Jingle.Transition = (function(J){
     }
 
     var _doTransition = function(current, target, transitionName){
-        target.addClass('active');
         if(transitionName[0] == 'none'){
+            current.removeClass('active').addClass('activing');
+            target.addClass('active');
             J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
-        }else{
+        }else if(transitionName[1] == 'none'){
+            target.addClass('activing');
             J.anim(current,transitionName[0],function(){_finishTransition(current, target)});
-            J.anim(target,transitionName[1]);
+        }else{
+            current.removeClass('active').addClass('activing');
+            target.addClass('active');
+            J.anim(current,transitionName[0]);
+            J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
         }
 
     }
 
     var _finishTransition = function(current, target) {
-        current.removeClass('active');
+        current.removeClass('activing active');
+        target.removeClass('activing').addClass('active');
         current.trigger('pagehide');
         target.trigger('pageshow');
     }

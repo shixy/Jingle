@@ -66,6 +66,28 @@ th, td, caption {
 .fl{
     float:left;
 }
+/******colors**********/
+.turquoise{background-color: #1ABC9C}
+.green-sea{background-color: #16A085}
+.emerland{background-color: #78ba00}
+.nephritis{background-color: #27AE60}
+.peter-river{background-color: #3498DB}
+.belize-hole{background-color: #2980B9}
+.amethyst{background-color: #9B59B6}
+.wisteria{background-color: #8E44AD}
+.wet-asphalt{background-color: #2C3E50}
+.midnight-blue{background-color: #2C3E50}
+.concrete{background-color: #95A5A6}
+.asbestos{background-color: #7F8C8D}
+.clouds{background-color: #ECF0F1 }
+.sliver{background-color:#BDC3C7 }
+.alizarin{background-color:#E74C3C }
+.pomegranate{background-color:#C0392B }
+.carrot{background-color:#E67E22 }
+.pumpkin{background-color:#D35400 }
+.sun-flower{background-color:#F1C40F }
+.orange{background-color:#F39C12 }
+.violet{background-color: #9f00a7}
 @-webkit-keyframes slideLeftIn {
 	0% { -webkit-transform: translateX(100%)}
 	100% { -webkit-transform: translateX(0%)}
@@ -98,8 +120,15 @@ aside{
     background: #393939;
     color: #fff;
     font-size: 15px;
+    display: -webkit-box;
+    display: box;
+    box-orient:vertical;
+    -webkit-box-orient:vertical;
 }
-aside>header{
+aside > *{
+    -webkit-box-flex : 0;
+}
+aside .header{
     overflow: hidden;
     line-height: 44px;
     border-bottom: 1px solid #000;
@@ -112,11 +141,8 @@ aside>header{
     font-size: 20px;
     font-weight: bold;
 }
-aside>ul.menu{
-    position: absolute;
-    top:44px;
-    left:0;
-    right:0;
+aside>ul.center{
+    -webkit-box-flex : 1;
 }
 aside>ul.menu li {
     border-bottom: 1px solid rgba(0, 0, 0, .1);
@@ -125,6 +151,20 @@ aside>ul.menu li a {
     padding: 10px 20px;
     display: block;
     color: #fff;
+}
+aside>ul.menu a:active{
+    background-color: #2980B9;
+}
+aside > ul.menu li a .icon{
+    float:left;
+}
+aside>ul.menu li.anchor{
+    padding: 2px 10px;
+    color: #8b9195;
+    font-size: 12px;
+}
+aside .footer{
+    height: 44px;
 }
 .button, button {
     display: inline-block;
@@ -347,7 +387,8 @@ footer{
     bottom:0;
     display: -webkit-box;
     display: box;
-    background-color: #222;
+    background-color: #393939;
+    background-image: -webkit-linear-gradient(top, #393939 0, #2b2b2b 100%);
     color: #fff;
 }
 footer > a{
@@ -356,11 +397,10 @@ footer > a{
     display: block;
     text-align: center;
     color: #fff;
-    font-size: 11px;
+    font-size: 12px;
 }
 footer > a.active{
-    background-color: #1d1d1d;
-    box-shadow: inset 0 3px 0 #0093d5;
+    box-shadow: inset 0 10px 30px rgba(0, 0, 0, .8);
 }
 footer .icon{
     float: none;
@@ -370,6 +410,9 @@ footer .icon{
     padding-top: 5px;
     margin-bottom: 8px;
     font-size: 25px;
+}
+footer .active .icon{
+    color: #3498DB;
 }
 footer > a.label-right{
     text-align: left;
@@ -1211,6 +1254,10 @@ section{
     z-index: 2
 }
 section.active{
+    z-index: 4;
+    display: block;
+}
+section.activing{
     z-index: 3;
     display: block;
 }

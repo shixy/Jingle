@@ -13,15 +13,15 @@
 </head>
 <body>
     <aside>
-        <header><span class="title">菜单</span></header>
-        <ul class="menu">
-            <li><a href="#index_section" data-target="section">全局概览</a></li>
-            <li><a href="#res_period_section" data-target="section">资源使用对比</a></li>
-            <li><a href="#alarm_section" data-target="section">告警分布</a></li>
-            <li><a href="#res_allocate_section" data-target="section">资源分配趋势</a></li>
-            <li><a href="#buttons" data-target="section">buttons</a></li>
-            <li><a href="#icon_section" data-target="section">icons</a></li>
-            <li><a href="#list_section" data-target="section">list</a></li>
+        <div class="header">菜单</div>
+        <ul class="center menu">
+            <li><a href="#index_section" data-icon="next" data-target="section">全局概览</a></li>
+            <li><a href="#res_period_section" data-icon="next" data-target="section">资源使用对比</a></li>
+            <li><a href="#alarm_section" data-icon="next" data-target="section">告警分布</a></li>
+            <li><a href="#res_allocate_section" data-icon="next" data-target="section">资源分配趋势</a></li>
+            <li class="anchor">设置</li>
+            <li><a href="#" data-icon="switch" id="btn_change_user">退出账号</a></li>
+            <li><a href="#" data-icon="exit" id="btn_exit_app">退出程序</a></li>
         </ul>
     </aside>
     <div id="section-container">
@@ -54,9 +54,6 @@
         }
     $(function () {
         App.run();
-        Jingle.launch({
-
-        });
     })
 </script>
 </body>

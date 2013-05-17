@@ -48,6 +48,10 @@ section{
     z-index: 2
 }
 section.active{
+    z-index: 4;
+    display: block;
+}
+section.activing{
     z-index: 3;
     display: block;
 }

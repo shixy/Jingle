@@ -2,7 +2,7 @@ var Jingle = J = {
     settings : {
         transitionType : 'slide',
         transitionTime : 300,
-        transitionTimingFunc : 'linear',
+        transitionTimingFunc : 'ease-in-out',
         sectionPath : 'html/section/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
@@ -14,6 +14,7 @@ var Jingle = J = {
         $.extend(this.settings,opts);
         this.Router.init('#login_section');
         this.Markup.init();
+        setTimeout(function(){ window.scrollTo(0, 1); }, 100);
         $('#login_section').trigger('pageshow');
     },
     anim : function(el,animName,duration,ease,callback){
