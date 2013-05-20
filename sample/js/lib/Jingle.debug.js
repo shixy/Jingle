@@ -10,6 +10,7 @@ var Jingle = J = {
     hasLaunched : false,
     launchCompleted : false,
     isMenuOpen : false,
+    hasPopupOpen : false,
     launch : function(opts){
         $.extend(this.settings,opts);
         this.Router.init('#login_section');
@@ -26,7 +27,38 @@ var Jingle = J = {
             t == 'number'?(d=a):(t=='string'?(e=a):(t=='function')?(c=a):null);
         }
         $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
+    },
+    showMask : function(text,cancelCallback){
+        if($.type(text) == 'function'){
+            cancelCallback = text;
+            text = null;
+        }
+        text = text || 'Loading...';
+        this.Toast.show('loading',text,cancelCallback);
+    },
+    hideMask : function(){
+        this.Toast.hide();
+    },
+    showToast : function(text,type){
+        type = type || 'toast';
+        this.Toast.show(type,text);
+    },
+    hideToast : function(){
+        this.Toast.hide();
+    },
+    alert : function(title){
+        this.Popup.alert(title);
+    },
+    confirm : function(title,okCall,cancelCall){
+        this.Popup.confirm(title,okCall,cancelCall);
+    },
+    popup : function(html,pos,closeable){
+        this.Popup.show(html,pos,closeable);
+    },
+    hidePopup : function(){
+        this.Popup.hide();
     }
+
 }
 Jingle.Constants = (function(J){
     return {
@@ -241,6 +273,69 @@ Jingle.Router = (function(){
     }
 
 })()
+Jingle.Toast = (function(){
+    var TEMPLATE = {
+        toast : '<a href="#">{value}</a>',
+        success : '<i class="icon checkmark-circle"></i>{value}',
+        error : '<i class="icon cancel-circle"></i>{value}',
+        info : '<i class="icon info-2"></i>{value}',
+        loading : '<i class="icon spinner"></i><p>{value}</p><div id="tag_close_toast" class="icon cancel-circle"></div>'
+    }
+    var toast_type = 'toast';
+    var _toast,_mask;
+    var timer;
+    var _closeToastCallback = function(){};
+    var _init = function(){
+        $('body').append('<div id="jingle_toast"></div><div id="jingle_toast_mask"></div>');
+        _mask = $('#jingle_toast_mask');
+        _toast = $('#jingle_toast');
+        _subscribeCloseTag();
+    }
+    var hide = function(){
+        if(toast_type == 'loading'){
+            _toast.hide();
+            _mask.hide();
+        }else if(toast_type =='toast'){
+            J.anim(_toast,'scaleOut',function(){
+                _toast.hide();
+            });
+        }else{
+            J.anim(_toast,'slideUpOut',function(){
+                _toast.hide();
+            });
+        }
+
+    }
+    var show = function(type,text,closeCallback){
+        if(timer) clearTimeout(timer);
+        toast_type = type;
+        _toast.attr('class',type).html(TEMPLATE[type].replace('{value}',text)).show();
+        if(type == 'loading'){
+            _mask.show();
+            if(closeCallback)_closeToastCallback=closeCallback;
+        }else if(type =='toast'){
+            J.anim(_toast,'scaleIn');
+            timer = setTimeout(hide,3000);
+        }else{
+            J.anim(_toast,'slideDownIn');
+            timer = setTimeout(hide,3000);
+        }
+
+    }
+    var _subscribeCloseTag = function(){
+        _toast.on('tap','#tag_close_toast',function(){
+            hide();
+            _closeToastCallback();
+        })
+    }
+
+    _init();
+
+    return {
+        show : show,
+        hide : hide
+    }
+})();
 Jingle.Transition = (function(J){
 
     var TRANSITION = {
@@ -286,6 +381,106 @@ Jingle.Transition = (function(J){
     }
 
 })(Jingle)
+Jingle.Popup = (function(){
+    var POSITION = {
+        'top':{
+            top:0
+        },
+        'top-second':{
+            top:'44px'
+        },
+        'center':{
+            top:'30%',
+            left:'10%',
+            right:'10%',
+            'border-radius' : '5px'
+        },
+        'bottom' : {
+            bottom:0
+        },
+        'bottom-second':{
+            bottom : '51px'
+        }
+    };
+    var ANIM = {
+        top : ['slideDownIn','slideUpOut'],
+        bottom : ['slideUpIn','slideDownOut'],
+        default : ['scaleIn','scaleOut']
+    };
+    var _popup,_mask;
+    var transition;
+    var _init = function(){
+        $('body').append('<div id="jingle_popup"></div><div id="jingle_popup_mask"></div>');
+        _mask = $('#jingle_popup_mask');
+        _popup = $('#jingle_popup');
+        _subscribeEvents();
+    }
+    var show = function(html,pos,closeable){
+        var pos_type = $.type(pos);
+        _mask.show();
+        _popup.html(html).show();;
+        J.Markup.init(_popup);
+        if(pos_type == 'object'){
+            _popup.css(pos);
+        }else if(pos_type == 'string'){
+            _popup.css(POSITION[pos])
+        }else{
+            console.error('错误的参数！');
+            return;
+        }
+        if(closeable){
+            _popup.append('<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>');
+        }
+        if(pos.indexOf('top')>-1){
+            transition = ANIM['top'];
+        }else if(pos.indexOf('bottom')>-1){
+            transition = ANIM['bottom'];
+        }else{
+            transition = ANIM['default'];
+        }
+        J.anim(_popup,transition[0]);
+        _popup.trigger('show');
+        J.hasPopupOpen = true;
+    }
+    var hide = function(callback){
+        _mask.hide();
+        J.anim(_popup,transition[1],function(){
+            _popup.hide();
+            J.hasPopupOpen = false;
+            _popup.trigger('hide');
+            callback.call();
+        });
+    }
+    var _subscribeEvents = function(){
+        _mask.on('tap',hide);
+        _popup.on('tap','[data-target="closePopup"]',function(){
+            hide();
+        });
+    }
+    _init();
+
+    var alert = function(title){
+        var markup = '<div class="title">'+title+'</div><div id="popup_btn_container"><button data-target="closePopup" data-icon="checkmark">OK</button></div>'
+        show(markup,'center',false);
+    }
+    var confirm = function(title,okCall,cancelCall){
+        var markup = '<div class="title">'+title+'</div><div id="popup_btn_container"><button data-icon="checkmark">确定</button><button class="cancel" data-icon="close">取消</button></div>'
+        show(markup,'center',true);
+        $('#popup_btn_container [data-icon="checkmark"]').tap(function(){
+            hide(okCall);
+        });
+        $('#popup_btn_container [data-icon="close"]').tap(function(){
+            hide(cancelCall);
+        });
+    }
+
+    return {
+        show : show,
+        hide : hide,
+        alert : alert,
+        confirm : confirm
+    }
+})();
 Jingle.Menu = (function(J){
     var SELECTOR = {
         MENU : 'body>aside',

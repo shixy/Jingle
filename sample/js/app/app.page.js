@@ -113,6 +113,10 @@ App.page('index',function(){
                 setTimeout(function(){tip.hide();},300);
             },4000);
         });
+
+        $('#testToast').tap(function(){
+            J.confirm('恭喜，已经成功执行！',function(){J.alert('确定')},function(){J.alert('取消')});
+        });
     }
     /**
      * render 全局概览信息

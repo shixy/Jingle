@@ -181,6 +181,16 @@
 .icon.users:before {
     content: "\53";
 }
+@-webkit-keyframes spinner {
+	0% { -webkit-transform: rotate(0deg); }
+	50% { -webkit-transform: rotate(90deg); }
+    100% { -webkit-transform: rotate(180deg); }
+}
+.icon.spinner{
+    display: inline-block;
+    -webkit-animation: spinner .5s infinite linear;
+    animation: spinner .5s infinite linear;
+}
 .icon.spinner:before {
     content: "\54";
 }

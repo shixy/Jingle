@@ -89,23 +89,23 @@ th, td, caption {
 .orange{background-color:#F39C12 }
 .violet{background-color: #9f00a7}
 @-webkit-keyframes slideLeftIn {
-	0% { -webkit-transform: translateX(100%)}
-	100% { -webkit-transform: translateX(0%)}
+	0% { -webkit-transform: translate3d(100%,0,0)}
+	100% { -webkit-transform: translate3d(0,0,0)}
 }
 @-webkit-keyframes slideLeftOut {
-	0% { -webkit-transform: translateX(0%)}
-	50% { -webkit-transform: translateX(-50%)}
-	100% { -webkit-transform: translateX(-100%)}
+	0% { -webkit-transform: translate3d(0,0,0)}
+	50% { -webkit-transform: translate3d(-50%,0,0)}
+	100% { -webkit-transform: translate3d(-100%,0,0)}
 }
 @-webkit-keyframes slideRightIn {
-	0% { -webkit-transform: translateX(-100%)}
-	50% { -webkit-transform: translateX(-50%) }
-	100% { -webkit-transform: translateX(0%) }
+	0% { -webkit-transform: translate3d(-100%,0,0)}
+	50% { -webkit-transform: translate3d(-50%,0,0) }
+	100% { -webkit-transform: translate3d(0%,0,0) }
 }
 @-webkit-keyframes slideRightOut {
-	0% { -webkit-transform: translateX(0)}
-	50% { -webkit-transform: translateX(50%)}
-	100% { -webkit-transform: translateX(100%)}
+	0% { -webkit-transform: translate3d(0,0,0)}
+	50% { -webkit-transform: translate3d(50%,0,0)}
+	100% { -webkit-transform: translate3d(100%,0,0)}
 }
 @-webkit-keyframes scaleIn {
 	0% {opacity: 0;-webkit-transform: scale(.3)}
@@ -115,6 +115,23 @@ th, td, caption {
 	0% {opacity: 1;-webkit-transform: scale(1)}
 	100% {opacity: 0;-webkit-transform: scale(.2)}
 }
+@-webkit-keyframes slideDownIn {
+	0% {-webkit-transform: translate3d(0,-100%,0)}
+	100% {-webkit-transform: translate3d(0,0,0)}
+}
+@-webkit-keyframes slideUpOut {
+	0% {-webkit-transform: translate3d(0,0,0)}
+	100% {-webkit-transform: translate3d(0,-100%,0)}
+}
+@-webkit-keyframes slideDownOut {
+	0% {-webkit-transform: translate3d(0,0,0)}
+	100% {-webkit-transform: translate3d(0,100%,0)}
+}
+@-webkit-keyframes slideUpIn {
+	0% {-webkit-transform: translate3d(0,100%,0)}
+	100% {-webkit-transform: translate3d(0,0,0)}
+}
+
 
 aside{
     background: #393939;
@@ -841,6 +858,16 @@ header nav a:not(.button) > .icon {
 .icon.users:before {
     content: "\53";
 }
+@-webkit-keyframes spinner {
+	0% { -webkit-transform: rotate(0deg); }
+	50% { -webkit-transform: rotate(90deg); }
+    100% { -webkit-transform: rotate(180deg); }
+}
+.icon.spinner{
+    display: inline-block;
+    -webkit-animation: spinner .5s infinite linear;
+    animation: spinner .5s infinite linear;
+}
 .icon.spinner:before {
     content: "\54";
 }
@@ -1415,185 +1442,119 @@ ul.list {
 .list.inset .list-divider:last-child {
     border-radius: 0 0 6px 6px;
 }
-/* Modals
--------------------------------------------------- */
-.modal {
-  position: fixed; 
-  top: 0;
-  opacity: 0;
-  z-index: 11; 
-  width: 100%;
-  min-height: 100%;
-  overflow: hidden;
-  background-color: #fff;  
-  -webkit-transform: translate3d(0, 100%, 0);
-          transform: translate3d(0, 100%, 0);
-  -webkit-transition: -webkit-transform .25s ease-in-out, opacity 1ms .25s;
-          transition:         transform .25s ease-in-out, opacity 1ms .25s;
+#jingle_popup_mask{
+    display: none;
+    position: absolute;
+    z-index: 90;
+    left: 0;
+    right:0;
+    top:0;
+    bottom: 0;
+    background-color: #222;
+    opacity: 0;
+}
+#jingle_popup{
+    display: none;
+    position: absolute;
+    left: 0;
+    right:0;
+    background-color: #2C3E50;
+    color: #fff;
+    z-index: 98;
+    min-height: 50px;
+}
+#popup_btn_container{
+    text-align: center;
+}
+#popup_btn_container>*{
+    margin:5px;
+}
+#jingle_popup button{
+    width:80px;
+    padding: 5px;
+}
+#jingle_popup .title{
+    font-weight: 600;
+    padding: 10px;
+}
+#tag_close_popup{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    color: #BDC3C7;
+    padding: 5px 5px 10px 10px;
+}
+#jingle_toast_mask{
+    display: none;
+    position: absolute;
+    z-index: 91;
+    left: 0;
+    right:0;
+    top:0;
+    bottom: 0;
+    background-color: #222;
+    opacity: .5;
+}
+#jingle_toast{
+    display: none;
+    position: absolute;
+    z-index: 99;
+    color: #fff;
+}
+#jingle_toast.toast{
+    top: 70%;
+    font-size: 12px;
+    text-align: center;
+    width: 100%;;left: 0;
+}
+#jingle_toast.toast>a{
+    padding: 5px 10px;
+    background: #222;
+}
+#jingle_toast.success,#jingle_toast.error,#jingle_toast.info{
+    top:0;
+    left:0;
+    width:100%;
+    padding-left: 10px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 18px;
+}
+#jingle_toast.success{background-color: #27AE60;}
+#jingle_toast.error{background-color: #E74C3C;}
+#jingle_toast.info{background-color: #F1C40F;}
+
+#jingle_toast.loading{
+    top:50%;
+    left: 50%;
+    margin: -50px 0 0 -50px;
+    background-color: #1f1f1f;
+    opacity: .7;
+    text-align: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 5px;
+}
+#jingle_toast.loading i.icon{
+    font-size: 40px;
+    line-height: 75px;
+    margin:0;
+}
+#jingle_toast.loading p{
+    color: #BDC3C7;
 }
 
-/* Modal - When active
--------------------------------------------------- */
-.modal.active {
-  opacity: 1;
-  height: 100%;
-  -webkit-transition: -webkit-transform .25s ease-in-out;
-          transition:         transform .25 ease-in-out;
-  -webkit-transform: translate3d(0, 0, 0);
-          transform: translate3d(0, 0, 0);
+#jingle_toast i.icon{
+    margin-right: 10px;
 }
-/* Popovers (to be used with popovers.js)
--------------------------------------------------- */
-
-.popover {
-  position: fixed;
-  top: 55px;
-  left: 50%;
-  z-index: 20;
-  display: none;
-  width: 280px;
-  padding: 5px;
-  margin-left: -146px;
-  background-color: #555;
-  background-image: -webkit-linear-gradient(top, #555 5%, #555 6%, #111 30%);
-  background-image: linear-gradient(to bottom, #555 5%, #555 6%,#111 30%);
-  border: 1px solid #111;
-  border-radius: 6px;
-  opacity: 0;
-  box-shadow: inset 0 1px 1px -1px #fff, 0 3px 10px rgba(0, 0, 0, .3);
-  -webkit-transform: translate3d(0, -15px, 0);
-          transform: translate3d(0, -15px, 0);
-  -webkit-transition: -webkit-transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-                  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-}
-
-/* Caret on top of popover using CSS triangles (thanks to @chriscoyier for solution) */
-.popover:before,
-.popover:after {
-  position: absolute;
-  left: 50%;
-  width: 0;
-  height: 0;
-  content: '';
-}
-.popover:before {
-  top: -20px;
-  margin-left: -21px;
-  border-right: 21px solid transparent;
-  border-bottom: 21px solid #111;
-  border-left: 21px solid transparent;
-}
-.popover:after {
-  top: -19px;
-  margin-left: -20px;
-  border-right: 20px solid transparent;
-  border-bottom: 20px solid #555;
-  border-left: 20px solid transparent;
-}
-
-/* Wrapper for a title and buttons */
-.popover-header {
-  display: -webkit-box;
-  display: box;
-  height: 34px;
-  margin-bottom: 5px;
-}
-
-/* Centered title for popover */
-.popover-header .title {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  margin: 15px 0;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 12px;
-  color: #fff;
-  text-align: center;
-  text-shadow: 0 -1px rgba(0, 0, 0, .5);
-}
-
-/* Generic style for all buttons in .popover-header */
-.popover-header [class*="button"] {
-  z-index: 25;
-  font-size: 12px;
-  line-height: 22px;
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, .3);
-  background-color: #454545;
-  background-image: -webkit-linear-gradient(top, #454545 0, #353535 100%);
-  background-image: linear-gradient(to bottom, #454545 0, #353535 100%);
-  border: 1px solid #111;
-  -webkit-box-flex: 0;
-          box-flex: 0;
-}
-
-/* Hacky way to right align buttons outside of flex-box system
-   Note: is only absolutely positioned button, would be better if flex-box had an "align right" option */
-.popover-header .title + [class*="button"]:last-child,
-.popover-header .button + [class*="button"]:last-child,
-.popover-header [class*="button"].pull-right {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
-
-/* Active state for popover header buttons */
-.popover-header .button:active {
-  color: #fff;
-  background-color: #0876b1;
-}
-
-/* Popover animation
--------------------------------------------------- */
-
-.popover.visible {
-  opacity: 1;
-  -webkit-transform: translate3d(0, 0, 0);
-          transform: translate3d(0, 0, 0);
-}
-
-/* Backdrop (used as invisible touch escape)
--------------------------------------------------- */
-
-.backdrop {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 10;
-}
-
-/* Block level buttons in popovers
--------------------------------------------------- */
-
-/* Positioning and giving darker border to look sharp against dark popover */
-.popover .button-block {
-  margin-bottom: 5px;
-  border: 1px solid #111;
-}
-
-/* Remove extra margin on bottom of last button */
-.popover .button-block:last-child {
-  margin-bottom: 0;
-}
-
-/* Lists in popovers
--------------------------------------------------- */
-
-.popover .list {
-  width: auto;
-  max-height: 250px;
-  margin-right: 0;
-  margin-bottom: 0;
-  margin-left: 0;
-  overflow: auto;
-  background-color: #fff;
-  border: 1px solid #000;
-  border-radius: 3px;
-  -webkit-overflow-scrolling: touch;
+#tag_close_toast{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    color: #BDC3C7;
+    padding: 5px 5px 10px 10px;
 }
 /* Toggle styles (to be used with toggles.js)
 -------------------------------------------------- */

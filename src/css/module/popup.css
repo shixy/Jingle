@@ -1,0 +1,43 @@
+#jingle_popup_mask{
+    display: none;
+    position: absolute;
+    z-index: 90;
+    left: 0;
+    right:0;
+    top:0;
+    bottom: 0;
+    background-color: #222;
+    opacity: 0;
+}
+#jingle_popup{
+    display: none;
+    position: absolute;
+    left: 0;
+    right:0;
+    background-color: #2C3E50;
+    color: #fff;
+    z-index: 98;
+    min-height: 50px;
+}
+#popup_btn_container{
+    text-align: center;
+}
+#popup_btn_container>*{
+    margin:5px;
+}
+#jingle_popup button{
+    width:80px;
+    padding: 5px;
+}
+#jingle_popup .title{
+    font-weight: 600;
+    padding: 10px;
+}
+#tag_close_popup{
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    color: #BDC3C7;
+    padding: 5px 5px 10px 10px;
+}
