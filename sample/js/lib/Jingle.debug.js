@@ -14,9 +14,9 @@ var Jingle = J = {
     launch : function(opts){
         $.extend(this.settings,opts);
         this.Router.init('#login_section');
-        this.Markup.init();
+        this.Element.init();
         setTimeout(function(){ window.scrollTo(0, 1); }, 100);
-        $('#login_section').trigger('pageshow');
+        $('#section-container section.active').trigger('show');
     },
     anim : function(el,animName,duration,ease,callback){
         var d, e,c;
@@ -55,45 +55,35 @@ var Jingle = J = {
     popup : function(html,pos,closeable){
         this.Popup.show(html,pos,closeable);
     },
-    hidePopup : function(){
-        this.Popup.hide();
+    closePopup : function(){
+        this.Popup.close();
     }
 
 }
-Jingle.Constants = (function(J){
-    return {
-        Events : {
-            startEvent :J.hasTouch ? 'touchstart':'mousedown',
-            moveEvent :J.hasTouch ? 'touchmove':'mousemove',
-            endEvent :J.hasTouch ? 'touchend':'mouseup',
-            tap :J.hasTouch ? 'tap':'click'
-        }
-    }
-})(J)
-Jingle.Element = (function(J){
-    var SELECTOR = {
-        'nav' : '.bar-tab',
-        'SEGMENTED' : '.segmented-controller li'
-    }
-    var init = function(){
-    }
-    return {
-        init : init
-    }
-})(Jingle)
-Jingle.Markup = (function(){
-    var attr = {
-        icon : '<i class="icon {value}"></i>'
-    }
-    var init = function(selector){
+Jingle.Element = (function(){
+    var _init_icon = function(selector){
         var el = $(selector || 'body');
         if(el.length == 0)return;
-        for(var k in attr){
-            el.find('[data-'+k+']').each(function(i,children){
-                var value = $(children).data(k);
-                $(children).prepend(attr[k].replace('{value}',value));
+        el.find('[data-icon]').each(function(i){
+            var value = $(this).data('icon');
+            $(this).prepend('<i class="icon '+value+'"></i>');
+        })
+    }
+    var _init_scroll = function(selector){
+        var el = $(selector || 'body');
+        if(el.length == 0)return;
+        el.find('[data-scroll="true"]').each(function(i){
+            var _this = this;
+            $(this).wrapInner('<div></div>');
+            $(this).on('show',function(){
+                new iScroll(_this);
             })
-        }
+
+        })
+    }
+    var init = function(selector){
+        _init_icon(selector);
+        _init_scroll(selector);
     }
     return {
         init : init
@@ -233,7 +223,7 @@ Jingle.Router = (function(){
         add2History(hash);
         if($(hash).length === 0){
             J.Page.load(hash);
-            J.Markup.init(hash);
+            J.Element.init(hash);
         }
         _changePage(currentPage,hash);
     }
@@ -257,8 +247,8 @@ Jingle.Router = (function(){
         el.addClass('active').siblings('.active').removeClass('active');
         var activeArticle = article.addClass('active').siblings('.active').removeClass('active');
         J.anim(article,'scaleIn',300,function(){
-            article.trigger('load');
-            activeArticle.trigger('unload');
+            article.trigger('show');
+            activeArticle.trigger('hide');
         });
     }
 
@@ -364,8 +354,10 @@ Jingle.Transition = (function(J){
     var _finishTransition = function(current, target) {
         current.removeClass('activing active');
         target.removeClass('activing').addClass('active');
-        current.trigger('pagehide');
-        target.trigger('pageshow');
+        current.trigger('hide');
+        target.trigger('show');
+        current.find('article.active').trigger('hide');
+        target.find('article.active').trigger('show');
     }
 
     var run = function(current,target,isBack){
@@ -419,7 +411,7 @@ Jingle.Popup = (function(){
         var pos_type = $.type(pos);
         _mask.show();
         _popup.html(html).show();;
-        J.Markup.init(_popup);
+        J.Element.init(_popup);
         if(pos_type == 'object'){
             _popup.css(pos);
         }else if(pos_type == 'string'){
@@ -439,7 +431,7 @@ Jingle.Popup = (function(){
             transition = ANIM['default'];
         }
         J.anim(_popup,transition[0]);
-        _popup.trigger('show');
+        _popup.trigger('open');
         J.hasPopupOpen = true;
     }
     var hide = function(callback){
@@ -447,7 +439,7 @@ Jingle.Popup = (function(){
         J.anim(_popup,transition[1],function(){
             _popup.hide();
             J.hasPopupOpen = false;
-            _popup.trigger('hide');
+            _popup.trigger('close');
             callback.call();
         });
     }
@@ -476,7 +468,7 @@ Jingle.Popup = (function(){
 
     return {
         show : show,
-        hide : hide,
+        close : hide,
         alert : alert,
         confirm : confirm
     }

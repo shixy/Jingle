@@ -26,8 +26,10 @@ Jingle.Transition = (function(J){
     var _finishTransition = function(current, target) {
         current.removeClass('activing active');
         target.removeClass('activing').addClass('active');
-        current.trigger('pagehide');
-        target.trigger('pageshow');
+        current.trigger('hide');
+        target.trigger('show');
+        current.find('article.active').trigger('hide');
+        target.find('article.active').trigger('show');
     }
 
     var run = function(current,target,isBack){

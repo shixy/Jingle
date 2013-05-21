@@ -36,7 +36,7 @@ Jingle.Popup = (function(){
         var pos_type = $.type(pos);
         _mask.show();
         _popup.html(html).show();;
-        J.Markup.init(_popup);
+        J.Element.init(_popup);
         if(pos_type == 'object'){
             _popup.css(pos);
         }else if(pos_type == 'string'){
@@ -56,7 +56,7 @@ Jingle.Popup = (function(){
             transition = ANIM['default'];
         }
         J.anim(_popup,transition[0]);
-        _popup.trigger('show');
+        _popup.trigger('open');
         J.hasPopupOpen = true;
     }
     var hide = function(callback){
@@ -64,7 +64,7 @@ Jingle.Popup = (function(){
         J.anim(_popup,transition[1],function(){
             _popup.hide();
             J.hasPopupOpen = false;
-            _popup.trigger('hide');
+            _popup.trigger('close');
             callback.call();
         });
     }
@@ -93,7 +93,7 @@ Jingle.Popup = (function(){
 
     return {
         show : show,
-        hide : hide,
+        close : hide,
         alert : alert,
         confirm : confirm
     }

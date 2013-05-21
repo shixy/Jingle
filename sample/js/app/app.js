@@ -27,7 +27,7 @@ var App = (function(){
         _subscribeAsideEvents();
         $.each(pages,function(k,v){
             var sectionId = '#'+k+'_section';
-            $('body').delegate(sectionId,'pageshow',function(e){
+            $('body').delegate(sectionId,'show',function(e){
                 //只在页面第一次初始化的时候执行
                 if(!v.init_flag && v.hasOwnProperty('init')){
                     v.init.call(v);

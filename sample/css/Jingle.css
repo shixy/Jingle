@@ -1264,7 +1264,6 @@ aside{
     right:0;
     bottom: 0;
     background-color: #fff;
-    -webkit-overflow-scrolling: touch;
     z-index: 1;
 }
 
@@ -1275,9 +1274,7 @@ section{
     bottom: 0;
     left: 0;
     display: none;
-    overflow: hidden;
     background-color: #fff;
-    -webkit-overflow-scrolling: touch;
     z-index: 2
 }
 section.active{
@@ -1295,9 +1292,8 @@ article{
     width: 100%;
     visibility: hidden;
     display: none;
-    height: auto;
-    overflow-x: hidden;
-    overflow-y: scroll;
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
     z-index: 0;
     background-color: #fff;
 }

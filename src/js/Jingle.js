@@ -14,9 +14,10 @@ var Jingle = J = {
     launch : function(opts){
         $.extend(this.settings,opts);
         this.Router.init('#login_section');
-        this.Markup.init();
+        this.Element.init();
         setTimeout(function(){ window.scrollTo(0, 1); }, 100);
-        $('#login_section').trigger('pageshow');
+        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        $('#section-container section.active').trigger('show');
     },
     anim : function(el,animName,duration,ease,callback){
         var d, e,c;
@@ -55,8 +56,8 @@ var Jingle = J = {
     popup : function(html,pos,closeable){
         this.Popup.show(html,pos,closeable);
     },
-    hidePopup : function(){
-        this.Popup.hide();
+    closePopup : function(){
+        this.Popup.close();
     }
 
 }

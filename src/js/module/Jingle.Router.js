@@ -66,7 +66,7 @@ Jingle.Router = (function(){
         add2History(hash);
         if($(hash).length === 0){
             J.Page.load(hash);
-            J.Markup.init(hash);
+            J.Element.init(hash);
         }
         _changePage(currentPage,hash);
     }
@@ -90,8 +90,8 @@ Jingle.Router = (function(){
         el.addClass('active').siblings('.active').removeClass('active');
         var activeArticle = article.addClass('active').siblings('.active').removeClass('active');
         J.anim(article,'scaleIn',300,function(){
-            article.trigger('load');
-            activeArticle.trigger('unload');
+            article.trigger('show');
+            activeArticle.trigger('hide');
         });
     }
 

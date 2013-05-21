@@ -423,3 +423,11 @@ App.page('biz_sys',function(){
     return exports;
 });
 
+App.page('biz_vm_list',function(){
+    var exports = {};
+    exports.init = function(){
+       // document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+    }
+    return exports;
+})
+
