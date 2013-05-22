@@ -1,0 +1,34 @@
+<section id="toast_section" >
+    <header>
+        <nav class="left">
+            <a href="#" data-icon="previous" data-target="back">Back</a>
+        </nav>
+        <h1 class="title">Toast</h1>
+    </header>
+    <article class="active ">
+        <div class="demo-btn-group">
+            <a href="#" class="button block" id="btn_t_default">default</a>
+            <a href="#" class="button block nephritis" id="btn_t_success">success</a>
+            <a href="#" class="button block pomegranate" id="btn_t_error">error</a>
+            <a href="#" class="button block sun-flower" id="btn_t_info">info</a>
+            <a href="#" class="button block asbestos" id="btn_t_loading">loading</a>
+        </div>
+    </article>
+    <script type="text/javascript">
+        $('#btn_t_default').tap(function(){
+            J.showToast('这是默认的Toast,仿安卓');
+        })
+        $('#btn_t_success').tap(function(){
+            J.showToast('恭喜，success','success');
+        })
+        $('#btn_t_error').tap(function(){
+            J.showToast('抱歉，error','error');
+        })
+        $('#btn_t_info').tap(function(){
+            J.showToast('提示，info','info');
+        })
+        $('#btn_t_loading').tap(function(){
+            J.showMask();
+        })
+    </script>
+</section>

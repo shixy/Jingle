@@ -1,10 +1,14 @@
 Jingle.Popup = (function(){
     var POSITION = {
         'top':{
-            top:0
+            top:0,
+            left:0,
+            right:0
         },
         'top-second':{
-            top:'44px'
+            top:'44px',
+            left:0,
+            right:0
         },
         'center':{
             top:'30%',
@@ -13,10 +17,14 @@ Jingle.Popup = (function(){
             'border-radius' : '5px'
         },
         'bottom' : {
-            bottom:0
+            bottom:0,
+            left:0,
+            right:0
         },
         'bottom-second':{
-            bottom : '51px'
+            bottom : '51px',
+            left:0,
+            right:0
         }
     };
     var ANIM = {
@@ -35,8 +43,9 @@ Jingle.Popup = (function(){
     var show = function(html,pos,closeable){
         var pos_type = $.type(pos);
         _mask.show();
-        _popup.html(html).show();;
-        J.Element.init(_popup);
+        //rest position
+        _popup.attr('style','');
+
         if(pos_type == 'object'){
             _popup.css(pos);
         }else if(pos_type == 'string'){
@@ -48,6 +57,8 @@ Jingle.Popup = (function(){
         if(closeable){
             _popup.append('<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>');
         }
+        _popup.html(html).show();;
+        J.Element.init(_popup);
         if(pos.indexOf('top')>-1){
             transition = ANIM['top'];
         }else if(pos.indexOf('bottom')>-1){

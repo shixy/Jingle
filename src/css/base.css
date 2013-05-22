@@ -20,6 +20,7 @@ body {
     font-size: 13px;
     line-height: 1.3em;
     letter-spacing: -0.05em;
+    overflow: hidden;
 }
 html{
     -webkit-text-size-adjust: none;
@@ -60,6 +61,10 @@ th, td, caption {
     text-align: left
 }
 
+sub,sup{
+    font-size: 10px;
+}
+
 .fr{
     float:right;
 }
@@ -67,24 +72,24 @@ th, td, caption {
     float:left;
 }
 /******colors**********/
-.turquoise{background-color: #1ABC9C}
-.green-sea{background-color: #16A085}
-.emerland{background-color: #78ba00}
-.nephritis{background-color: #27AE60}
-.peter-river{background-color: #3498DB}
-.belize-hole{background-color: #2980B9}
-.amethyst{background-color: #9B59B6}
-.wisteria{background-color: #8E44AD}
-.wet-asphalt{background-color: #2C3E50}
-.midnight-blue{background-color: #2C3E50}
-.concrete{background-color: #95A5A6}
-.asbestos{background-color: #7F8C8D}
-.clouds{background-color: #ECF0F1 }
-.sliver{background-color:#BDC3C7 }
-.alizarin{background-color:#E74C3C }
-.pomegranate{background-color:#C0392B }
-.carrot{background-color:#E67E22 }
-.pumpkin{background-color:#D35400 }
-.sun-flower{background-color:#F1C40F }
-.orange{background-color:#F39C12 }
-.violet{background-color: #9f00a7}
+.turquoise{background-color: #1ABC9C !important;}
+.green-sea{background-color: #16A085 !important;}
+.emerland{background-color: #78ba00 !important;}
+.nephritis{background-color: #27AE60 !important;}
+.peter-river{background-color: #3498DB !important;}
+.belize-hole{background-color: #2980B9 !important;}
+.amethyst{background-color: #9B59B6 !important;}
+.wisteria{background-color: #8E44AD !important;}
+.wet-asphalt{background-color: #2C3E50 !important;}
+.midnight-blue{background-color: #2C3E50 !important;}
+.concrete{background-color: #95A5A6 !important;}
+.asbestos{background-color: #7F8C8D !important;}
+.clouds{background-color: #ECF0F1 !important;color:#666 !important}
+.sliver{background-color:#BDC3C7 !important;}
+.alizarin{background-color:#E74C3C !important;}
+.pomegranate{background-color:#C0392B !important;}
+.carrot{background-color:#E67E22 !important;}
+.pumpkin{background-color:#D35400 !important;}
+.sun-flower{background-color:#F1C40F !important;}
+.orange{background-color:#F39C12 !important;}
+.violet{background-color: #9f00a7 !important;}

@@ -1,0 +1,36 @@
+.indented > * {
+    margin: 5px 10px;
+}
+.demo-btn-group{
+    margin:10px;
+    text-align: center;
+}
+.demo-btn-group > *{
+    margin: 5px 0;
+}
+
+.icon-container{
+    width:100%;
+}
+.icon-container > *{
+    margin:10px;
+    padding-top: 50px;
+    float: left;
+    width: 7em;
+    height: 85px;
+    background-color: #eee;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    position: relative;
+}
+
+.icon-container .icon{
+    font-size: 2em;
+    width:100%;
+    text-align: center;
+    padding:5px;
+    position: absolute;
+    left: 0;
+    top:15px;
+}

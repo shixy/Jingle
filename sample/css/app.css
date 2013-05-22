@@ -185,27 +185,6 @@ sub,sup{
     border: 1px solid #c8c8c8;
 }
 
-.icon-container{
-    width:100%;
-}
-.icon-container > *{
-    margin:10px;
-    float: left;
-    width: 7em;
-    height: 85px;
-    background-color: #eee;
-    border-radius: 5px;
-    font-weight: bold;
-    text-align: center;
-}
-
-.icon-container .icon{
-    font-size: 2em;
-    width:100%;
-    text-align: center;
-    padding:5px;
-}
-
 #index_container{
     position: absolute;
     left: 0;

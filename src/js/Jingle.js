@@ -3,7 +3,7 @@ var Jingle = J = {
         transitionType : 'slide',
         transitionTime : 300,
         transitionTimingFunc : 'ease-in-out',
-        sectionPath : 'html/section/'
+        sectionPath : 'html/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
     hasTouch : 'ontouchstart' in window,
@@ -13,11 +13,9 @@ var Jingle = J = {
     hasPopupOpen : false,
     launch : function(opts){
         $.extend(this.settings,opts);
-        this.Router.init('#login_section');
+        this.Router.init();
         this.Element.init();
-        setTimeout(function(){ window.scrollTo(0, 1); }, 100);
         document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
-        $('#section-container section.active').trigger('show');
     },
     anim : function(el,animName,duration,ease,callback){
         var d, e,c;

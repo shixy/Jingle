@@ -1,0 +1,42 @@
+<section id="popup_section" >
+    <header>
+        <nav class="left">
+            <a href="#" data-icon="previous" data-target="back">Back</a>
+        </nav>
+        <h1 class="title">Popup</h1>
+    </header>
+    <article class="active ">
+        <div class="demo-btn-group">
+            <a href="#" class="button block" id="btn_alert">alert</a>
+            <a href="#" class="button block" id="btn_confirm">confirm</a>
+            <a href="#" class="button block" id="btn_p_default">default/center</a>
+            <a href="#" class="button block nephritis" id="btn_t_top">top</a>
+            <a href="#" class="button block pomegranate" id="btn_t_ts">top-second</a>
+            <a href="#" class="button block sun-flower" id="btn_t_bottom">bottom</a>
+            <a href="#" class="button block asbestos" id="btn_t_bs">botton-second</a>
+        </div>
+    </article>
+    <script type="text/javascript">
+        $('#btn_alert').tap(function(){
+            J.alert('这是一个Alert');
+        })
+        $('#btn_confirm').tap(function(){
+            J.confirm(' 这是一个Confirm！',function(){J.showToast('你选择了“确定”')},function(){J.showToast('你选择了“取消”')});
+        })
+        $('#btn_p_default').tap(function(){
+            J.popup('这是一个弹出框，内容请自行定义','center',true);
+        })
+        $('#btn_t_top').tap(function(){
+            J.popup('这是一个来自顶部的弹出框','top',false);
+        })
+        $('#btn_t_ts').tap(function(){
+            J.popup('这是一个在header之下的弹出框','top-second',false);
+        })
+        $('#btn_t_bottom').tap(function(){
+            J.popup('这是一个来自底部弹出框','bottom',false);
+        })
+        $('#btn_t_bs').tap(function(){
+            J.popup('这是一个在footer之上的弹出框','bottom-second',false);
+        })
+    </script>
+</section>

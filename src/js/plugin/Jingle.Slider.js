@@ -15,10 +15,11 @@
          * 初始化容器大小
          */
         var _init = function() {
+            wrapper.css('overflow','hidden');
             container = wrapper.children().first();
             slides = container.children();
             slideNum = slides.length;
-            slideWidth = container.offset().width;
+            slideWidth = wrapper.offset().width;
             container.css('width',slideNum * slideWidth);
 
             slides.css({

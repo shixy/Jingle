@@ -8,14 +8,15 @@ Jingle.Router = (function(){
     /**
      * 初始化events、state
      */
-    var init = function(initHash){
+    var init = function(){
         $(window).on('popstate', _popstateHandler);
         //取消所有锚点的tap click的默认事件，由框架来控制
         $(document).on('tap','a',function(e){e.preventDefault()});
         $(document).on('click','a',function(e){e.preventDefault()});
-
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
-        add2History(initHash);
+
+        var initSectionId = $('#section-container section.active').trigger('show').attr('id');
+        add2History('#'+initSectionId);
     }
 
     /**
