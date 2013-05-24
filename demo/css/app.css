@@ -2,7 +2,8 @@
     margin: 5px 10px;
 }
 .demo-btn-group{
-    margin:10px;
+    width: auto;
+    height: auto;
     text-align: center;
 }
 .demo-btn-group > *{

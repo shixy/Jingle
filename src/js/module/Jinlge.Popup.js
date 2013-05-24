@@ -76,7 +76,7 @@ Jingle.Popup = (function(){
             _popup.hide();
             J.hasPopupOpen = false;
             _popup.trigger('close');
-            callback.call();
+            if(callback)callback();
         });
     }
     var _subscribeEvents = function(){

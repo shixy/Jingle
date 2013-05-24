@@ -1,0 +1,27 @@
+[data-rangeinput] input[type="range"]{
+    width:80%;
+}
+input[type="range"] {
+    width: 100%;
+    height: 12px;
+    background: #1ABC9C;
+    -webkit-border-radius: 5px;
+    -webkit-appearance: none !important;
+    outline: none;
+    display: inline-block;
+}
+
+input[type="range"]::-webkit-slider-thumb{
+    width: 20px;
+    height: 20px;
+    background:#16A085;
+    -webkit-border-radius: 14px;
+    -webkit-appearance: none !important;
+}
+[data-rangeinput] input[type="text"]{
+    width: 15%;
+    padding: 5px;
+    margin:0 5px;
+    height: 25px;
+   display: inline-block;
+}

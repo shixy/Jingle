@@ -53,7 +53,7 @@ button.cancel,.button.cancel {
     background-color: #ee6557;
 }
 .button.block{
-    width:80%;
+    width:100%;
 }
 .button .icon, button .icon{
     float:left;

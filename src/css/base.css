@@ -71,6 +71,15 @@ sub,sup{
 .fl{
     float:left;
 }
+.clearfix:before,
+.clearfix:after {
+    content: "";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
 /******colors**********/
 .turquoise{background-color: #1ABC9C !important;}
 .green-sea{background-color: #16A085 !important;}

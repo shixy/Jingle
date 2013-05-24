@@ -60,30 +60,88 @@ var Jingle = J = {
 
 }
 Jingle.Element = (function(){
-    var _init_icon = function(selector){
-        var el = $(selector || 'body');
-        if(el.length == 0)return;
-        el.find('[data-icon]').each(function(i){
-            var value = $(this).data('icon');
-            $(this).prepend('<i class="icon '+value+'"></i>');
-        })
+    var SELECTOR  = {
+        'icon' : '[data-icon]',
+        'scroll' : 'article[data-scroll="true"]',
+        'toggle' : '.toggle',
+        'range' : '[data-rangeinput]',
+        'progress' : '[data-progress]'
     }
-    var _init_scroll = function(selector){
-        var el = $(selector || 'body');
-        if(el.length == 0)return;
-        el.find('[data-scroll="true"]').each(function(i){
-            var _this = this;
-            $(this).wrapInner('<div></div>');
-            $(this).on('show',function(){
-                new iScroll(_this);
-            })
 
+    var init = function(selector){
+        var el = $(selector || 'body');
+        if(el.length == 0)return;
+        $.map($(SELECTOR.icon,el),_init_icon);
+        $.map($(SELECTOR.scroll,el),_init_scroll);
+        $.map($(SELECTOR.toggle,el),_init_toggle);
+        $.map($(SELECTOR.range,el),_init_range);
+        $.map($(SELECTOR.progress,el),_init_progress);
+    }
+
+    var _init_icon = function(el){
+        $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
+    }
+    var _init_scroll = function(el){
+        $(el).wrapInner('<div></div>');
+        $(el).on('show',function(){
+            new iScroll(el);
         })
     }
-    var init = function(selector){
-        _init_icon(selector);
-        _init_scroll(selector);
+
+    var _init_toggle = function(el){
+        var $el = $(el);
+        var name = $el.attr('name');
+        //添加隐藏域，方便获取值
+        if(name){
+            $el.append('<input style="display: none;" name="'+name+'" value="'+$el.hasClass('active')+'"/>');
+        }
+        var $input = $el.find('input');
+        $el.tap(function(){
+            var value;
+            if($el.hasClass('active')){
+                $el.removeClass('active');
+                value = false;
+            }else{
+                $el.addClass('active');
+                value = true;
+            }
+            $input.val(value);
+            $el.trigger('toggle');
+        })
     }
+
+    var _init_range = function(el){
+        var $input;
+        var $el = $(el);
+        var $range = $('input[type="range"]',el);
+        var align = $el.data('rangeinput');
+        var input = $('<input type="text" name="test" value="'+$range.val()+'"/>');
+        if(align == 'left'){
+            $input = input.prependTo($el);
+        }else{
+            $input = input.appendTo($el);
+        }
+        var max = parseInt($range.attr('max'),10);
+        var min = parseInt($range.attr('min'),10);
+        $range.change(function(){
+            $input.val($range.val());
+        });
+        $input.on('input',function(){
+            var value = parseInt($input.val(),10);
+            value = value>max?max:(value<min?min:value);
+            $range.val(value);
+            $input.val(value);
+        })
+    }
+
+    var _init_progress = function(el){
+        var $el = $(el);
+        var progress = $el.data('progress');
+        var title = $el.data('title') || '';
+        var $bar = $('<div class="bar"></div>');
+        $bar.appendTo($el).width(progress).text(title+progress);
+    }
+
     return {
         init : init
     }
@@ -263,6 +321,176 @@ Jingle.Router = (function(){
     }
 
 })()
+/**
+ * 对zeptojs的ajax进行封装，实现离线访问
+ * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
+ */
+Jingle.Service = (function(){
+    var UNPOST_KEY = 'JINGLE_POST_DATA';
+
+    var ajax = function(options){
+        if(options.type == 'post'){
+            _doPost(options);
+        }else{
+            _doGet(options);
+        }
+    }
+
+    var _doPost = function(options){
+        if(J.offline){//离线模式，将数据存到本地，连线时进行提交
+            _setUnPostData(options.url,options.data);
+            options.success('数据已存至本地');
+        }else{//在线模式，直接提交
+            $.ajax(options);
+        }
+
+    }
+    var _doGet = function(options){
+        var key = options.url +JSON.stringify(options.data);
+        if(J.offline){//离线模式，直接从本地读取
+            var result = _getCache(key);
+            if(result){
+                options.success(result.data,result.createdTime);
+            }else{
+                options.success(result);
+            }
+
+        }else{//在线模式，将数据保存到本地
+            var callback = option.success;
+            option.success = function(result){
+                _saveData2local(key,result);
+                callback(result);
+            }
+            $.ajax(options);
+        }
+    }
+
+    /**
+     * 获取本地已缓存的数据
+     * @private
+     */
+    var _getCache = function(key){
+         return $.parse(localStorage.getItem(key));
+    }
+    /**
+     * 缓存数据到本地
+     * @private
+     */
+    var _saveData2local = function(key,result){
+        var data = {
+            data : result,
+            createdTime : new Date()
+        }
+        localStorage.setItem(key,JSON.stringify(data));
+    }
+
+    /**
+     * 将post的数据保存至本地
+     * @param url
+     * @param result
+     * @private
+     */
+    var _setUnPostData = function(url,result){
+        var data = getUnPostData();
+        if(!data)data = {};
+        data[url] = {
+            data : result,
+            createdTime : new Date()
+        }
+        localStorage.setItem(UNPOST_KEY,JSON.stringify(data));
+    }
+    /**
+     *  获取尚未同步的post数据
+     * @param url  没有就返回所有未同步的数据
+     */
+    var getUnPostData = function(url){
+        var data = $.parse(localStorage.getItem(UNPOST_KEY));
+        if(url){
+            return data[url];
+        }else{
+            return data;
+        }
+    }
+    /**
+     * 移除未同步的数据
+     * @param url 没有就移除所有未同步的数据
+     */
+    var removeUnPostData = function(url){
+        if(url){
+            var data = getUnPostData();
+            delete data[url];
+            localStorage.setItem(UNPOST_KEY,JSON.stringify(data));
+        }else{
+            localStorage.removeItem(UNPOST_KEY);
+        }
+    }
+
+    /**
+     * 同步本地缓存的post数据
+     * @param url
+     */
+    var syncPostData = function(url,success,error){
+        var unPostData = getUnPostData(url).data;
+        $.ajax({
+            url : url,
+            data : unPostData,
+            type : 'post',
+            success : function(){
+                success(url);
+            },
+            error : function(){
+                error(url);
+            }
+        })
+    }
+    /**
+     * 同步所有的数据
+     * @param callback
+     */
+    var syncAllPostData = function(success,error){
+        var unPostData = getUnPostData();
+        for(var url in unPostData){
+            syncPostData(url,success,error);
+        }
+    }
+
+    //copy from zepto
+    function parseArguments(url, data, success, dataType) {
+        var hasData = !$.isFunction(data)
+        return {
+            url:      url,
+            data:     hasData  ? data : undefined,
+            success:  !hasData ? data : $.isFunction(success) ? success : undefined,
+            dataType: hasData  ? dataType || success : success
+        }
+    }
+
+    var get = function(url, data, success, dataType){
+        return ajax(parseArguments.apply(null, arguments))
+    }
+
+    var post = function(url, data, success, dataType){
+        var options = parseArguments.apply(null, arguments)
+        options.type = 'POST'
+        return ajax(options)
+    }
+
+    var getJSON = function(url, data, success){
+        var options = parseArguments.apply(null, arguments)
+        options.dataType = 'json'
+        return ajax(options)
+    }
+    return {
+        ajax : ajax,
+        get : get,
+        post : post,
+        getJSON : getJSON,
+        getUnPostData : getUnPostData,
+        removeUnPostData : removeUnPostData,
+        syncPostData : syncPostData,
+        syncAllPostData : syncAllPostData
+    }
+})();
 Jingle.Toast = (function(){
     var TEMPLATE = {
         toast : '<a href="#">{value}</a>',
@@ -451,7 +679,7 @@ Jingle.Popup = (function(){
             _popup.hide();
             J.hasPopupOpen = false;
             _popup.trigger('close');
-            callback.call();
+            if(callback)callback();
         });
     }
     var _subscribeEvents = function(){
