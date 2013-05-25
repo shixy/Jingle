@@ -1,0 +1,31 @@
+<section id="slider_section" >
+    <header>
+        <nav class="left">
+            <a href="#" data-icon="previous" data-target="back">Back</a>
+        </nav>
+        <h1 class="title">slider</h1>
+        <nav class="right">
+            <a href="#" class="button" data-icon="previous" id="slider_prev"></a>
+            <a href="#" class="button" data-icon="next" id="slider_next"></a>
+        </nav>
+    </header>
+    <article class="active">
+        <div id="slider_test">
+            <div>
+                <div style="text-align: center"><img src="http://lorempixel.com/320/480/?1"></div>
+                <div style="text-align: center"><img src="http://lorempixel.com/320/480/?2"></div>
+                <div style="text-align: center"><img src="http://lorempixel.com/320/480/?3"></div>
+                <div style="text-align: center"><img src="http://lorempixel.com/320/480/?4"></div>
+                <div style="text-align: center"><img src="http://lorempixel.com/320/480/?5"></div>
+            </div>
+        </div>
+    </article>
+    <script type="text/javascript">
+        var slider;
+        $('#slider_section article').on('show',function(){
+            slider = new J.Slider('#slider_test');
+        });
+        $('#slider_prev').tap(function(){slider.prev()});
+        $('#slider_next').tap(function(){slider.next()});
+    </script>
+</section>
