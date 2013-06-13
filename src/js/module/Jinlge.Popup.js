@@ -40,32 +40,33 @@ Jingle.Popup = (function(){
         _popup = $('#jingle_popup');
         _subscribeEvents();
     }
-    var show = function(html,pos,closeable){
+    var show = function(html,pos,closeable,arrow_direction){
         var pos_type = $.type(pos);
         _mask.show();
-        //rest position
-        _popup.attr('style','');
-
+        //rest position and class
+        _popup.attr({'style':'','class':''});
         if(pos_type == 'object'){
             _popup.css(pos);
+            transition = ANIM['default'];
         }else if(pos_type == 'string'){
             _popup.css(POSITION[pos])
+            var trans_key = pos.indexOf('top')>-1?'top':(pos.indexOf('bottom')>-1?'bottom':'default');
+            transition = ANIM[trans_key];
         }else{
             console.error('错误的参数！');
             return;
+        }
+        if(arrow_direction){
+            _popup.addClass('arrow '+arrow_direction);
+            if(arrow_direction=='top'||arrow_direction=='bottom'){
+                transition = ANIM[arrow_direction];
+            }
         }
         if(closeable){
             _popup.append('<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>');
         }
         _popup.html(html).show();;
         J.Element.init(_popup);
-        if(pos.indexOf('top')>-1){
-            transition = ANIM['top'];
-        }else if(pos.indexOf('bottom')>-1){
-            transition = ANIM['bottom'];
-        }else{
-            transition = ANIM['default'];
-        }
         J.anim(_popup,transition[0]);
         _popup.trigger('open');
         J.hasPopupOpen = true;
@@ -102,10 +103,15 @@ Jingle.Popup = (function(){
         });
     }
 
+    var popover = function(html,pos,arrow_direction){
+        show(html,pos,false,arrow_direction)
+    }
+
     return {
         show : show,
         close : hide,
         alert : alert,
-        confirm : confirm
+        confirm : confirm,
+        popover : popover
     }
 })();

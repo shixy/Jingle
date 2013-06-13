@@ -56,6 +56,9 @@ var Jingle = J = {
     },
     closePopup : function(){
         this.Popup.close();
+    },
+    popover : function(html,pos,arrow_direction){
+        this.Popup.popover(html,pos,arrow_direction);
     }
 
 }

@@ -40,6 +40,7 @@ var App = (function(){
             });
         });
         Jingle.launch();
+        AHelper.registerTemplateHelper();
     };
     exports.cacheUserInfo = function(userInfo){
         userCache['UID'] = userInfo.cloudUserInfo.id;

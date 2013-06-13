@@ -1,44 +1,16 @@
 var AHelper = {
-    Constants : {
-        HOST_STATUS : {
-            'RUNNING':{text:'运行中',className:'accept'},
-            'SHUTDOWN':{text : '关机',className:'cancel'},
-            'UNKNOWN':{text : '未知',className:'secondary'}
-        },
-        VM_STATUS : {
-            'RUNNING':{text:'运行中',className:'accept'},
-            'HALTED':{text:'关机',className:'cancel'},
-            'PAUSED':{text:'暂停',className:'secondary'},
-            'SUSPENDED':{text:'挂起',className:'secondary'},
-            'UNKNOWN':{text:'未知',className:'cancel'}
-        }
-    },
-    calcPercent : function(v1,v2){
-        if(v1 == 0 || v2 == 0)
-            return 0;
-        return parseInt((v1/v2)*100);
-    },
-    getProgressColor : function (v1,v2){
-        var v = v2?this.calcPercent(v1,v2):v1;
-        return v<=33?'green':(v<=66?'blue':'orange');
-    },
-    getMB : function(v){
-        return parseInt(v/(1024*1024));
-    },
     getGB : function(v){
-        return parseInt(v/(1024*1024*1024));
+        return parseInt(v/1024);
     },
-    getAutoSize : function(v){
-        var g = parseInt(v/(1024*1024*1024));
+    getAutoUnit : function(v){
+        var g = parseInt(v/1024);
         if(g<1){
-            return parseInt(v/(1024*1024))+'MB';
+            return v+'<sub>MB</sub>';
+        }else if(g>1024){
+            return v/(1024*1024)+'<sub>TB</sub>';
         }else{
-            return g+'GB';
+            return g + '<sub>GB</sub>';
         }
-    },
-    getLineColor : function(i){
-        //可添加多种
-        return ['#0d8ecf','#ef7707','#CC0033','#00ced1','#bdb76b','#cd5c5c','#4682b4'][i];
     },
     formatDate : function(date,format){
         var o =
@@ -69,27 +41,10 @@ var AHelper = {
         var hms = dateStr.substring(11,19);
         return year + ' '+ hms;
     },
-    isEmptyObjet : function(obj){
-        for(var i in obj){
-            return false;
-        }
-        return true;
+    registerTemplateHelper : function(){
+        template.helper('$getGB',this.getGB);
+        template.helper('$getAutoUnit',this.getAutoUnit);
     },
-    markupProgress : function(v1,v2){
-        var per = (v1 == 0 || v2 == 0)?0:parseInt((v1/v2)*100);
-        var color = per<=33?'green':(per<=66?'blue':'orange')
-        return '<div class="progress-bar '+ color +'"><span style="width:'+per+'%">'+per+'%</span></div>'
-    },
-//    registerTemplateHelper : function(){
-//        template.helper('$getMB',this.getMB);
-//        template.helper('$getGB',this.getGB);
-//        template.helper('$getAutoSize',this.getAutoSize);
-//        template.helper('$jsonDateFormart',this.jsonDateFormart);
-//        template.helper('$Contants',this.Constants);
-//        template.helper('$markupProgress',this.markupProgress);
-//        template.helper('$isEmptyObject',this.isEmptyObjet);
-//
-//    },
     getArticleOffset : function(){
       if(!App.articleOffset){
           var screenOffset = $('#section-container').offset();

@@ -17,20 +17,28 @@ App.page('login',function(){
         if(username == '' || pwd == ''){
             alert('请填写完整的信息！');
         }else{
-            var auth = {username : username ,password : pwd};
-            window.localStorage.setItem('auth',JSON.stringify(auth));
-            //TODO  login rest api
-            J.Router.turnTo('#index_section');
+            RsAPI.auth.login(username,pwd,function(data){
+                if(data.error){
+                    J.showToast(data.error,'error');
+                }else{
+                    localStorage.setItem('userInfo',data.userInfo);
+                    J.Router.turnTo('#index_section');
+                }
+            })
+
         }
         return false;
     }
     var _autoLogin = function(){
-        var auth = localStorage.getItem('auth');
-        if(auth){
-            auth = JSON.parse(auth);
-            $('#username').val(auth.username);
-            $('#password').val(auth.password);
-            _login();
+        var sessionId = localStorage.getItem('sessionId');
+        if(sessionId){
+            RsAPI.auth.reLogin(function(data){
+                if(data.error){
+                    J.showToast(data.error,'error');
+                }else{
+                    J.Router.turnTo('#index_section');
+                }
+            })
         }
     }
     return exports;
@@ -61,6 +69,7 @@ App.page('setting',function(){
 
 App.page('index',function(){
     var exports = {};
+    var serverType;
     var data_health = [70,60,20,40];
     exports.init = function(){
         _subscribeEvents();
@@ -114,8 +123,8 @@ App.page('index',function(){
             },4000);
         });
 
-        $('#testToast').tap(function(){
-            J.confirm('恭喜，已经成功执行！',function(){J.alert('确定')},function(){J.alert('取消')});
+        $('#index_title').tap(function(){
+            J.popover('<ul class="list"><li class="nav">全局概览</li><li class="nav">PC机</li><li class="nav">小型机</li></ul>',{top:'44px',left:'20%',right:'20%'},'top');
         });
     }
     /**
@@ -123,10 +132,17 @@ App.page('index',function(){
      * @private
      */
     var _renderIndex = function(){
-        //render boxlist
-        //todo 获取总数据，以下为模拟数据
-        //render 业务系统
-        //todo 获取业务系统数据列表
+        RsAPI.res.summary(serverType,function(data){
+			var $box = $('#index_article .box .text');
+            $box.eq(0).text(data.bizCount);
+            $box.eq(1).text(data.vmCount);
+            $box.eq(2).text(data.totalCpuCount);
+            $box.eq(3).html(AHelper.getAutoUnit(data.totalMemory));
+            $box.eq(4).html(AHelper.getAutoUnit(data.totalLocalStorage));
+
+            var listHtml = template('bizInfoTmpl',data.list);
+            $('#bizSysContainer').html(listHtml);
+        })
         _renderHealth();
 
     }

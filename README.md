@@ -1,4 +1,4 @@
-# a html5 mobile framewok
+#这是一个简单的Html5 WebApp开发框架(基于webkit，所有目前只支持ios，android)
 
 ## Getting Started
 

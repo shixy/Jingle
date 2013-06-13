@@ -102,3 +102,18 @@ sub,sup{
 .sun-flower{background-color:#F1C40F !important;}
 .orange{background-color:#F39C12 !important;}
 .violet{background-color: #9f00a7 !important;}
+/********** tip arrow*****************/
+.tip-arrow-down:after{
+    content: "▼";
+    position: relative;
+    top: -5px;
+    left: 1px;
+    font-size: 11px;
+}
+.tip-arrow-up:after{
+    content: "▲";
+    position: relative;
+    top: -5px;
+    left: 1px;
+    font-size: 11px;
+}

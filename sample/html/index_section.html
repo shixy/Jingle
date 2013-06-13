@@ -3,39 +3,38 @@
         <nav class="left">
             <a data-target="menu" data-icon="menu" href="#"></a>
         </nav>
-        <h1 class="title">全局概览</h1>
+        <h1 class="title"><a href="#" id="index_title" class="tip-arrow-down">全局概览</a></h1>
         <nav class="right">
             <a href="#" class="button" data-icon="question" id="testToast"></a>
         </nav>
     </header>
-    <article class="active indented" id="index_article">
+    <article class="active indented" id="index_article" >
         <ul class="box">
             <li class="belize-hole active">
                 <p class="title">业务系统</p>
-                <p class="text">8</p>
+                <p class="text">0</p>
             </li>
             <li class="peter-river">
                 <p class="title">虚拟机</p>
-                <p class="text">20</p>
-
+                <p class="text">0</p>
             </li>
             <li class="orange">
                 <p class="title">CPU</p>
-                <p class="text">40</p>
+                <p class="text">0</p>
 
             </li>
             <li class="green-sea">
                 <p class="title">内存</p>
-                <p class="text">1000</p>
+                <p class="text">0</p>
 
             </li>
             <li class="asbestos">
                 <p class="title">存储</p>
-                <p class="text">1000</p>
+                <p class="text">0</p>
 
             </li>
         </ul>
-        <div id="index_container">
+        <div id="index_container" >
            <ul class="group_list active" id="bizSysContainer">
                 <li  class="arrow">
                     <div class="title">
@@ -95,4 +94,21 @@
             <div id="sr_usage_canvas" ></div>
         </div>
     </article>
+    <script type="text/tmpl" id="bizInfoTmpl">
+        {each $data}
+        <li class="arrow">
+            <div class="title">{$value.businessSystem.name}
+                <div class="progress"></div>
+                <div class="health-tip">健康值<span>100</span></div>
+            </div>
+            <div class="content">
+                <a href="#"><abbr>CPU</abbr><span>{$value.totalCpuCoreCount}</span></a>
+                <a href="#"><abbr>内存</abbr><span>{$getAutoUnit $value.totalMemory}</span> </a>
+                <a href="#"><abbr>存储</abbr><span>{$getAutoUnit $value.totalLocalStorage}</span></a>
+                <a href="#"><abbr>虚拟机</abbr><span>{$value.vmCount}</span></a>
+            </div>
+        </li>
+        {/each}
+
+    </script>
 </section>

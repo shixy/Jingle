@@ -33,8 +33,8 @@ Jingle.Service = (function(){
             }
 
         }else{//在线模式，将数据保存到本地
-            var callback = option.success;
-            option.success = function(result){
+            var callback = options.success;
+            options.success = function(result){
                 _saveData2local(key,result);
                 callback(result);
             }

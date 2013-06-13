@@ -3,13 +3,24 @@
         var gestureStarted = false,
             index = 0,
             speed = 300,
-            wrapper = $(selector),
+            wrapper,
             dots,
             container,
             slides,
             slideNum,
             slideWidth,
-            deltaX;
+            deltaX,
+            afterSilde,beforeSlide;
+
+        if($.isPlainObject(selector)){
+            wrapper = $(selector.selector);
+            noDots = selector.noDots;
+            beforeSilde = selector.onBeforeSlide;
+            afterSilde = selector.onAfterSlide;
+        }else{
+            wrapper = $(selector);
+        }
+
 
         /**
          * 初始化容器大小
@@ -65,6 +76,7 @@
             },duration)
             index = i;
             if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
+            if(afterSilde)afterSilde(index);
         };
 
         /**
@@ -103,8 +115,9 @@
             }
             if (!isScrolling) {
                 event.preventDefault();
-                var factor = ((!index && deltaX > 0 || index == slideNum - 1 && deltaX < 0) ?(Math.abs(deltaX)/slideWidth + 1):1);
-                deltaX = deltaX / factor;
+                //判定是否达到了边界即第一个右滑、最后一个左滑
+                var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
+                if(isPastBounds)return;
                 var pos = (deltaX - index * slideWidth);
                 container[0].style.webkitTransform = 'translateX('+pos+'px)';
                 event.stopPropagation();
@@ -115,9 +128,10 @@
             //判定是否跳转到下一个卡片
             //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3
             var isValidSlide = Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20 || Math.abs(deltaX) > slideWidth/3;
-            //判定是否达到了边界即第一个右滑、最后一个左滑
+                //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
             if (!isScrolling) {
+                if(beforeSlide)beforeSlide(index);
                 _slide( index + ( isValidSlide && !isPastBounds ? (deltaX < 0 ? 1 : -1) : 0 ), speed );
             }
             gestureStarted = false;

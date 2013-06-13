@@ -3,6 +3,8 @@
 }
 sub,sup{
     font-size: 10px;
+    position: relative;
+    top: -5px;
 }
 .box{
     display: -webkit-box;
@@ -11,7 +13,7 @@ sub,sup{
 .box li{
     list-style: none;
     border-radius: 3px;
-    padding: 11px 3px;
+    padding: 8px 3px;
     -webkit-box-flex:1;
     margin-right: 5px;
     text-align: center;
@@ -42,7 +44,7 @@ sub,sup{
 .box li .title{
     color: #fbf4ff;
     font-size: 12px;
-    padding-bottom: 3px;
+    padding-bottom: 6px;
 }
 .box li .text{
     color: #fff;

@@ -56,6 +56,9 @@ var Jingle = J = {
     },
     closePopup : function(){
         this.Popup.close();
+    },
+    popover : function(html,pos,arrow_direction){
+        this.Popup.popover(html,pos,arrow_direction);
     }
 
 }
@@ -356,8 +359,8 @@ Jingle.Service = (function(){
             }
 
         }else{//在线模式，将数据保存到本地
-            var callback = option.success;
-            option.success = function(result){
+            var callback = options.success;
+            options.success = function(result){
                 _saveData2local(key,result);
                 callback(result);
             }
@@ -643,32 +646,33 @@ Jingle.Popup = (function(){
         _popup = $('#jingle_popup');
         _subscribeEvents();
     }
-    var show = function(html,pos,closeable){
+    var show = function(html,pos,closeable,arrow_direction){
         var pos_type = $.type(pos);
         _mask.show();
-        //rest position
-        _popup.attr('style','');
-
+        //rest position and class
+        _popup.attr({'style':'','class':''});
         if(pos_type == 'object'){
             _popup.css(pos);
+            transition = ANIM['default'];
         }else if(pos_type == 'string'){
             _popup.css(POSITION[pos])
+            var trans_key = pos.indexOf('top')>-1?'top':(pos.indexOf('bottom')>-1?'bottom':'default');
+            transition = ANIM[trans_key];
         }else{
             console.error('错误的参数！');
             return;
+        }
+        if(arrow_direction){
+            _popup.addClass('arrow '+arrow_direction);
+            if(arrow_direction=='top'||arrow_direction=='bottom'){
+                transition = ANIM[arrow_direction];
+            }
         }
         if(closeable){
             _popup.append('<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>');
         }
         _popup.html(html).show();;
         J.Element.init(_popup);
-        if(pos.indexOf('top')>-1){
-            transition = ANIM['top'];
-        }else if(pos.indexOf('bottom')>-1){
-            transition = ANIM['bottom'];
-        }else{
-            transition = ANIM['default'];
-        }
         J.anim(_popup,transition[0]);
         _popup.trigger('open');
         J.hasPopupOpen = true;
@@ -705,11 +709,16 @@ Jingle.Popup = (function(){
         });
     }
 
+    var popover = function(html,pos,arrow_direction){
+        show(html,pos,false,arrow_direction)
+    }
+
     return {
         show : show,
         close : hide,
         alert : alert,
-        confirm : confirm
+        confirm : confirm,
+        popover : popover
     }
 })();
 Jingle.Menu = (function(J){
@@ -747,13 +756,24 @@ Jingle.Menu = (function(J){
         var gestureStarted = false,
             index = 0,
             speed = 300,
-            wrapper = $(selector),
+            wrapper,
             dots,
             container,
             slides,
             slideNum,
             slideWidth,
-            deltaX;
+            deltaX,
+            afterSilde,beforeSlide;
+
+        if($.isPlainObject(selector)){
+            wrapper = $(selector.selector);
+            noDots = selector.noDots;
+            beforeSilde = selector.onBeforeSlide;
+            afterSilde = selector.onAfterSlide;
+        }else{
+            wrapper = $(selector);
+        }
+
 
         /**
          * 初始化容器大小
@@ -809,6 +829,7 @@ Jingle.Menu = (function(J){
             },duration)
             index = i;
             if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
+            if(afterSilde)afterSilde(index);
         };
 
         /**
@@ -847,8 +868,9 @@ Jingle.Menu = (function(J){
             }
             if (!isScrolling) {
                 event.preventDefault();
-                var factor = ((!index && deltaX > 0 || index == slideNum - 1 && deltaX < 0) ?(Math.abs(deltaX)/slideWidth + 1):1);
-                deltaX = deltaX / factor;
+                //判定是否达到了边界即第一个右滑、最后一个左滑
+                var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
+                if(isPastBounds)return;
                 var pos = (deltaX - index * slideWidth);
                 container[0].style.webkitTransform = 'translateX('+pos+'px)';
                 event.stopPropagation();
@@ -859,9 +881,10 @@ Jingle.Menu = (function(J){
             //判定是否跳转到下一个卡片
             //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3
             var isValidSlide = Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20 || Math.abs(deltaX) > slideWidth/3;
-            //判定是否达到了边界即第一个右滑、最后一个左滑
+                //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
             if (!isScrolling) {
+                if(beforeSlide)beforeSlide(index);
                 _slide( index + ( isValidSlide && !isPastBounds ? (deltaX < 0 ? 1 : -1) : 0 ), speed );
             }
             gestureStarted = false;

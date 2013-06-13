@@ -102,6 +102,21 @@ sub,sup{
 .sun-flower{background-color:#F1C40F !important;}
 .orange{background-color:#F39C12 !important;}
 .violet{background-color: #9f00a7 !important;}
+/********** tip arrow*****************/
+.tip-arrow-down:after{
+    content: "▼";
+    position: relative;
+    top: -5px;
+    left: 1px;
+    font-size: 11px;
+}
+.tip-arrow-up:after{
+    content: "▲";
+    position: relative;
+    top: -5px;
+    left: 1px;
+    font-size: 11px;
+}
 @-webkit-keyframes slideLeftIn {
 	0% { -webkit-transform: translate3d(100%,0,0)}
 	100% { -webkit-transform: translate3d(0,0,0)}
@@ -1328,7 +1343,6 @@ header ~ article{
 /* Lists
 -------------------------------------------------- */
 ul.list {
-    margin-bottom: 10px;
     list-style: none;
     background-color: #fff;
 }
@@ -1449,6 +1463,43 @@ ul.list {
     color: #fff;
     z-index: 98;
     min-height: 50px;
+    padding: 6px;
+}
+#jingle_popup.arrow{
+    border-radius: 5px;
+}
+#jingle_popup.arrow:after{
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-width: 10px;
+}
+#jingle_popup.arrow.top:after{
+     bottom: 100%;
+     left: 50%;
+     margin-left: -10px;
+     border-bottom-color: #222;
+ }
+#jingle_popup.arrow.right:after{
+    left: 100%;
+    top: 50%;
+    margin-top: -10px;
+    border-left-color: #222;
+}
+#jingle_popup.arrow.bottom:after{
+    top: 100%;
+    left: 50%;
+    margin-left: -10px;
+    border-top-color: #222;
+}
+#jingle_popup.arrow.left:after{
+    top: 50%;
+    right: 100%;
+    margin-top: -10px;
+    border-right-color: #222;
 }
 #popup_btn_container{
     text-align: center;
@@ -1471,6 +1522,12 @@ ul.list {
     font-size: 12px;
     color: #BDC3C7;
     padding: 5px 5px 10px 10px;
+}
+#jingle_popup .nav{
+    color: #000;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
 }
 [data-progress]{
     background: #e8edf2;
