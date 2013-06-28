@@ -14,6 +14,7 @@
             <a href="#" class="button block pomegranate" id="btn_t_ts">top-second</a>
             <a href="#" class="button block sun-flower" id="btn_t_bottom">bottom</a>
             <a href="#" class="button block asbestos" id="btn_t_bs">botton-second</a>
+            <a href="#" class="button block asbestos" id="btn_popover">popover</a>
         </div>
     </article>
     <script type="text/javascript">
@@ -37,6 +38,9 @@
         })
         $('#btn_t_bs').tap(function(){
             J.popup('这是一个在footer之上的弹出框','bottom-second',false);
+        })
+        $('#btn_popover').tap(function(){
+            J.Popup.popover('<ul class="list"><li>Hello</li><li>Hello2</li></ul>',{top:'50px',left:'10%',right:'10%'},'top');
         })
     </script>
 </section>

@@ -2,7 +2,7 @@ var Jingle = J = {
     settings : {
         transitionType : 'slide',
         transitionTime : 300,
-        transitionTimingFunc : 'ease-in-out',
+        transitionTimingFunc : 'linear',
         sectionPath : 'html/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
@@ -11,6 +11,7 @@ var Jingle = J = {
     launchCompleted : false,
     isMenuOpen : false,
     hasPopupOpen : false,
+    isWebApp : location.protocol == 'http:',
     launch : function(opts){
         $.extend(this.settings,opts);
         this.Router.init();
@@ -56,13 +57,16 @@ var Jingle = J = {
     },
     closePopup : function(){
         this.Popup.close();
+    },
+    popover : function(html,pos,arrow_direction){
+        this.Popup.popover(html,pos,arrow_direction);
     }
 
 }
 Jingle.Element = (function(){
     var SELECTOR  = {
         'icon' : '[data-icon]',
-        'scroll' : 'article[data-scroll="true"]',
+        'scroll' : '[data-scroll="true"]',
         'toggle' : '.toggle',
         'range' : '[data-rangeinput]',
         'progress' : '[data-progress]'
@@ -82,10 +86,7 @@ Jingle.Element = (function(){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
     var _init_scroll = function(el){
-        $(el).wrapInner('<div></div>');
-        $(el).on('show',function(){
-            new iScroll(el);
-        })
+        J.Scroll.init(el);
     }
 
     var _init_toggle = function(el){
@@ -136,10 +137,14 @@ Jingle.Element = (function(){
 
     var _init_progress = function(el){
         var $el = $(el);
-        var progress = $el.data('progress');
+        var progress = parseFloat($el.data('progress'));
         var title = $el.data('title') || '';
         var $bar = $('<div class="bar"></div>');
+        progress = progress+'%';
         $bar.appendTo($el).width(progress).text(title+progress);
+        if(progress == '100%'){
+            $bar.css('border-radius','10px');
+        }
     }
 
     return {
@@ -229,7 +234,7 @@ Jingle.Router = (function(){
         $(document).on('click','a',function(e){e.preventDefault()});
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
 
-        var initSectionId = $('#section-container section.active').trigger('show').attr('id');
+        var initSectionId = $('#section-container section.active').trigger('in').attr('id');
         add2History('#'+initSectionId);
     }
 
@@ -307,6 +312,7 @@ Jingle.Router = (function(){
         J.anim(article,'scaleIn',300,function(){
             article.trigger('show');
             activeArticle.trigger('hide');
+
         });
     }
 
@@ -321,6 +327,27 @@ Jingle.Router = (function(){
     }
 
 })()
+Jingle.Scroll = (function(){
+
+    function init(selector){
+        var el = $(selector);
+        el.css({overflow:'auto'});
+        var scrollStartPos=0;
+        el.on('touchstart',function(e){
+            scrollStartPos=this.scrollTop+event.touches[0].pageY;
+            e.preventDefault();
+        })
+        el.on('touchmove',function(e){
+            this.scrollTop=scrollStartPos-event.touches[0].pageY;
+            e.preventDefault();
+        })
+
+    }
+
+    return {
+        init : init
+    }
+})();
 /**
  * 对zeptojs的ajax进行封装，实现离线访问
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
@@ -356,8 +383,8 @@ Jingle.Service = (function(){
             }
 
         }else{//在线模式，将数据保存到本地
-            var callback = option.success;
-            option.success = function(result){
+            var callback = options.success;
+            options.success = function(result){
                 _saveData2local(key,result);
                 callback(result);
             }
@@ -370,7 +397,7 @@ Jingle.Service = (function(){
      * @private
      */
     var _getCache = function(key){
-         return $.parse(localStorage.getItem(key));
+         return JSON.parse(localStorage.getItem(key));
     }
     /**
      * 缓存数据到本地
@@ -404,7 +431,7 @@ Jingle.Service = (function(){
      * @param url  没有就返回所有未同步的数据
      */
     var getUnPostData = function(url){
-        var data = $.parse(localStorage.getItem(UNPOST_KEY));
+        var data = JSON.parse(localStorage.getItem(UNPOST_KEY));
         if(url){
             return data[url];
         }else{
@@ -556,6 +583,8 @@ Jingle.Toast = (function(){
 })();
 Jingle.Transition = (function(J){
 
+    var isBack = false;
+
     var TRANSITION = {
         //[back,in]
         slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],
@@ -582,13 +611,14 @@ Jingle.Transition = (function(J){
     var _finishTransition = function(current, target) {
         current.removeClass('activing active');
         target.removeClass('activing').addClass('active');
-        current.trigger('hide');
-        target.trigger('show');
+        current.trigger('out',[isBack]);
+        target.trigger('in',[isBack]);
         current.find('article.active').trigger('hide');
         target.find('article.active').trigger('show');
     }
 
-    var run = function(current,target,isBack){
+    var run = function(current,target,back){
+        isBack = back;
         current = $(current);
         target = $(target);
         var type = isBack?current.attr('data-transition'):target.attr('data-transition');
@@ -614,7 +644,7 @@ Jingle.Popup = (function(){
             right:0
         },
         'center':{
-            top:'30%',
+            top:'50%',
             left:'10%',
             right:'10%',
             'border-radius' : '5px'
@@ -643,32 +673,33 @@ Jingle.Popup = (function(){
         _popup = $('#jingle_popup');
         _subscribeEvents();
     }
-    var show = function(html,pos,closeable){
+    var show = function(html,pos,closeable,arrow_direction){
         var pos_type = $.type(pos);
         _mask.show();
-        //rest position
-        _popup.attr('style','');
-
+        //rest position and class
+        _popup.attr({'style':'','class':''});
         if(pos_type == 'object'){
             _popup.css(pos);
+            transition = ANIM['default'];
         }else if(pos_type == 'string'){
             _popup.css(POSITION[pos])
+            var trans_key = pos.indexOf('top')>-1?'top':(pos.indexOf('bottom')>-1?'bottom':'default');
+            transition = ANIM[trans_key];
         }else{
             console.error('错误的参数！');
             return;
+        }
+        if(arrow_direction){
+            _popup.addClass('arrow '+arrow_direction);
+            if(arrow_direction=='top'||arrow_direction=='bottom'){
+                transition = ANIM[arrow_direction];
+            }
         }
         if(closeable){
             _popup.append('<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>');
         }
         _popup.html(html).show();;
         J.Element.init(_popup);
-        if(pos.indexOf('top')>-1){
-            transition = ANIM['top'];
-        }else if(pos.indexOf('bottom')>-1){
-            transition = ANIM['bottom'];
-        }else{
-            transition = ANIM['default'];
-        }
         J.anim(_popup,transition[0]);
         _popup.trigger('open');
         J.hasPopupOpen = true;
@@ -705,12 +736,17 @@ Jingle.Popup = (function(){
         });
     }
 
-    return {
-        show : show,
-        close : hide,
-        alert : alert,
-        confirm : confirm
+    var popover = function(html,pos,arrow_direction){
+        show(html,pos,false,arrow_direction)
     }
+
+    return {
+    show : show,
+    close : hide,
+    alert : alert,
+    confirm : confirm,
+    popover : popover
+}
 })();
 Jingle.Menu = (function(J){
     var SELECTOR = {
@@ -747,13 +783,25 @@ Jingle.Menu = (function(J){
         var gestureStarted = false,
             index = 0,
             speed = 300,
-            wrapper = $(selector),
+            wrapper,
             dots,
             container,
             slides,
             slideNum,
             slideWidth,
             deltaX;
+        var afterSlide = function(){};
+        var beforeSlide = function(){return true};
+
+        if($.isPlainObject(selector)){
+            wrapper = $(selector.selector);
+            noDots = selector.noDots;
+            beforeSlide = selector.onBeforeSlide || beforeSlide;
+            afterSlide = selector.onAfterSlide || afterSlide;
+        }else{
+            wrapper = $(selector);
+        }
+
 
         /**
          * 初始化容器大小
@@ -768,8 +816,7 @@ Jingle.Menu = (function(J){
 
             slides.css({
                     'width':slideWidth,
-                    'display':'table-cell',
-                    'verticalAlign' : 'top'
+                    'float':'left'
             })
             if(!noDots)_initDots();
             _slide(0, 0);
@@ -809,6 +856,7 @@ Jingle.Menu = (function(J){
             },duration)
             index = i;
             if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
+            afterSlide(index);
         };
 
         /**
@@ -834,7 +882,7 @@ Jingle.Menu = (function(J){
             container[0].style.webkitTransitionDuration = 0;
             gestureStarted = true;
             //阻止事件冒泡
-            event.stopPropagation();
+            //event.stopPropagation();
         };
 
         var _touchMove = function(event) {
@@ -847,11 +895,12 @@ Jingle.Menu = (function(J){
             }
             if (!isScrolling) {
                 event.preventDefault();
-                var factor = ((!index && deltaX > 0 || index == slideNum - 1 && deltaX < 0) ?(Math.abs(deltaX)/slideWidth + 1):1);
-                deltaX = deltaX / factor;
+                //判定是否达到了边界即第一个右滑、最后一个左滑
+                var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
+                if(isPastBounds)return;
                 var pos = (deltaX - index * slideWidth);
                 container[0].style.webkitTransform = 'translateX('+pos+'px)';
-                event.stopPropagation();
+                //event.stopPropagation();
             }
         };
 
@@ -859,13 +908,17 @@ Jingle.Menu = (function(J){
             //判定是否跳转到下一个卡片
             //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3
             var isValidSlide = Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20 || Math.abs(deltaX) > slideWidth/3;
-            //判定是否达到了边界即第一个右滑、最后一个左滑
+                //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
             if (!isScrolling) {
-                _slide( index + ( isValidSlide && !isPastBounds ? (deltaX < 0 ? 1 : -1) : 0 ), speed );
+                if(beforeSlide(index,deltaX)){
+                    _slide( index + ( isValidSlide && !isPastBounds ? (deltaX < 0 ? 1 : -1) : 0 ), speed );
+                }else{
+                    _slide(index);
+                }
             }
             gestureStarted = false;
-            e.stopPropagation();
+            //e.stopPropagation();
         };
 
 

@@ -23,7 +23,16 @@
     <script type="text/javascript">
         var slider;
         $('#slider_section article').on('show',function(){
-            slider = new J.Slider('#slider_test');
+            slider = new J.Slider({
+                selector : '#slider_test',
+                noDots : false,
+                onBeforeSlide : function(){
+
+                },
+                onAfterSlide : function(i){
+                    //alert(i);
+                }
+            });
         });
         $('#slider_prev').tap(function(){slider.prev()});
         $('#slider_next').tap(function(){slider.next()});
