@@ -2,7 +2,7 @@ var Jingle = J = {
     settings : {
         transitionType : 'slide',
         transitionTime : 300,
-        transitionTimingFunc : 'ease-in-out',
+        transitionTimingFunc : 'linear',
         sectionPath : 'html/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
@@ -11,6 +11,7 @@ var Jingle = J = {
     launchCompleted : false,
     isMenuOpen : false,
     hasPopupOpen : false,
+    isWebApp : location.protocol == 'http:',
     launch : function(opts){
         $.extend(this.settings,opts);
         this.Router.init();
@@ -65,7 +66,7 @@ var Jingle = J = {
 Jingle.Element = (function(){
     var SELECTOR  = {
         'icon' : '[data-icon]',
-        'scroll' : 'article[data-scroll="true"]',
+        'scroll' : '[data-scroll="true"]',
         'toggle' : '.toggle',
         'range' : '[data-rangeinput]',
         'progress' : '[data-progress]'
@@ -85,10 +86,7 @@ Jingle.Element = (function(){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
     var _init_scroll = function(el){
-        $(el).wrapInner('<div></div>');
-        $(el).on('show',function(){
-            new iScroll(el);
-        })
+        J.Scroll.init(el);
     }
 
     var _init_toggle = function(el){
@@ -139,10 +137,14 @@ Jingle.Element = (function(){
 
     var _init_progress = function(el){
         var $el = $(el);
-        var progress = $el.data('progress');
+        var progress = parseFloat($el.data('progress'));
         var title = $el.data('title') || '';
         var $bar = $('<div class="bar"></div>');
+        progress = progress+'%';
         $bar.appendTo($el).width(progress).text(title+progress);
+        if(progress == '100%'){
+            $bar.css('border-radius','10px');
+        }
     }
 
     return {
@@ -232,7 +234,7 @@ Jingle.Router = (function(){
         $(document).on('click','a',function(e){e.preventDefault()});
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
 
-        var initSectionId = $('#section-container section.active').trigger('show').attr('id');
+        var initSectionId = $('#section-container section.active').trigger('in').attr('id');
         add2History('#'+initSectionId);
     }
 
@@ -310,6 +312,7 @@ Jingle.Router = (function(){
         J.anim(article,'scaleIn',300,function(){
             article.trigger('show');
             activeArticle.trigger('hide');
+
         });
     }
 
@@ -324,6 +327,27 @@ Jingle.Router = (function(){
     }
 
 })()
+Jingle.Scroll = (function(){
+
+    function init(selector){
+        var el = $(selector);
+        el.css({overflow:'auto'});
+        var scrollStartPos=0;
+        el.on('touchstart',function(e){
+            scrollStartPos=this.scrollTop+event.touches[0].pageY;
+            e.preventDefault();
+        })
+        el.on('touchmove',function(e){
+            this.scrollTop=scrollStartPos-event.touches[0].pageY;
+            e.preventDefault();
+        })
+
+    }
+
+    return {
+        init : init
+    }
+})();
 /**
  * 对zeptojs的ajax进行封装，实现离线访问
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
@@ -373,7 +397,7 @@ Jingle.Service = (function(){
      * @private
      */
     var _getCache = function(key){
-         return $.parse(localStorage.getItem(key));
+         return JSON.parse(localStorage.getItem(key));
     }
     /**
      * 缓存数据到本地
@@ -407,7 +431,7 @@ Jingle.Service = (function(){
      * @param url  没有就返回所有未同步的数据
      */
     var getUnPostData = function(url){
-        var data = $.parse(localStorage.getItem(UNPOST_KEY));
+        var data = JSON.parse(localStorage.getItem(UNPOST_KEY));
         if(url){
             return data[url];
         }else{
@@ -559,6 +583,8 @@ Jingle.Toast = (function(){
 })();
 Jingle.Transition = (function(J){
 
+    var isBack = false;
+
     var TRANSITION = {
         //[back,in]
         slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],
@@ -585,13 +611,14 @@ Jingle.Transition = (function(J){
     var _finishTransition = function(current, target) {
         current.removeClass('activing active');
         target.removeClass('activing').addClass('active');
-        current.trigger('hide');
-        target.trigger('show');
+        current.trigger('out',[isBack]);
+        target.trigger('in',[isBack]);
         current.find('article.active').trigger('hide');
         target.find('article.active').trigger('show');
     }
 
-    var run = function(current,target,isBack){
+    var run = function(current,target,back){
+        isBack = back;
         current = $(current);
         target = $(target);
         var type = isBack?current.attr('data-transition'):target.attr('data-transition');
@@ -617,7 +644,7 @@ Jingle.Popup = (function(){
             right:0
         },
         'center':{
-            top:'30%',
+            top:'50%',
             left:'10%',
             right:'10%',
             'border-radius' : '5px'
@@ -714,12 +741,12 @@ Jingle.Popup = (function(){
     }
 
     return {
-        show : show,
-        close : hide,
-        alert : alert,
-        confirm : confirm,
-        popover : popover
-    }
+    show : show,
+    close : hide,
+    alert : alert,
+    confirm : confirm,
+    popover : popover
+}
 })();
 Jingle.Menu = (function(J){
     var SELECTOR = {
@@ -762,14 +789,15 @@ Jingle.Menu = (function(J){
             slides,
             slideNum,
             slideWidth,
-            deltaX,
-            afterSilde,beforeSlide;
+            deltaX;
+        var afterSlide = function(){};
+        var beforeSlide = function(){return true};
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);
             noDots = selector.noDots;
-            beforeSilde = selector.onBeforeSlide;
-            afterSilde = selector.onAfterSlide;
+            beforeSlide = selector.onBeforeSlide || beforeSlide;
+            afterSlide = selector.onAfterSlide || afterSlide;
         }else{
             wrapper = $(selector);
         }
@@ -788,8 +816,7 @@ Jingle.Menu = (function(J){
 
             slides.css({
                     'width':slideWidth,
-                    'display':'table-cell',
-                    'verticalAlign' : 'top'
+                    'float':'left'
             })
             if(!noDots)_initDots();
             _slide(0, 0);
@@ -829,7 +856,7 @@ Jingle.Menu = (function(J){
             },duration)
             index = i;
             if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
-            if(afterSilde)afterSilde(index);
+            afterSlide(index);
         };
 
         /**
@@ -855,7 +882,7 @@ Jingle.Menu = (function(J){
             container[0].style.webkitTransitionDuration = 0;
             gestureStarted = true;
             //阻止事件冒泡
-            event.stopPropagation();
+            //event.stopPropagation();
         };
 
         var _touchMove = function(event) {
@@ -873,7 +900,7 @@ Jingle.Menu = (function(J){
                 if(isPastBounds)return;
                 var pos = (deltaX - index * slideWidth);
                 container[0].style.webkitTransform = 'translateX('+pos+'px)';
-                event.stopPropagation();
+                //event.stopPropagation();
             }
         };
 
@@ -884,11 +911,14 @@ Jingle.Menu = (function(J){
                 //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
             if (!isScrolling) {
-                if(beforeSlide)beforeSlide(index);
-                _slide( index + ( isValidSlide && !isPastBounds ? (deltaX < 0 ? 1 : -1) : 0 ), speed );
+                if(beforeSlide(index,deltaX)){
+                    _slide( index + ( isValidSlide && !isPastBounds ? (deltaX < 0 ? 1 : -1) : 0 ), speed );
+                }else{
+                    _slide(index);
+                }
             }
             gestureStarted = false;
-            e.stopPropagation();
+            //e.stopPropagation();
         };
 
 

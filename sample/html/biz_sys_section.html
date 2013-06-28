@@ -3,57 +3,54 @@
         <nav class="left">
             <a href="#" data-icon="undo" data-target="back">返回</a>
         </nav>
-        <h1 class="title"> 业务系统</h1>
+        <h1 class="title">业务系统</h1>
     </header>
 
-    <article class="indented active scroll" id="biz_sys_article">
-        <div style="border-bottom: 2px silver solid;height: 25px;margin-top: 15px;">
-            <strong style="font-size: 30px;font-weight: bold;color: #78ba00;float: left;">OA</strong>
-            <p style="font-size: 11px;color: #808080;margin: 5px 0 0 10px;float:left;">对OA的一些简单描述</p>
-        </div>
-        <div class="vm-grid emerland" style="background-color: #78ba00">
+    <article class="indented active scroll" id="biz_sys_article" style="display: -webkit-box;-webkit-box-orient:vertical;">
+        <div class="vm-grid emerland" id="biz_health_block" style="background-color: #78ba00;-webkit-box-flex:1;">
             <div class="title">健康度<div class="icon contrast"></div></div>
             <div class="content">
-                20
+                <span id="txt_biz_health">100</span>
                 <span style="font-size: 12px;font-weight: 600;color: #fff;">建议增加虚拟机</span>
             </div>
+            <div class="icon arrow-up-right"></div>
         </div>
-        <div class="grid-container">
+        <div class="grid-container" style="-webkit-box-flex:1;">
             <div class="vm-grid pumpkin" id="biz_alarm_block">
                 <div class="title">告警<div class="icon info"></div></div>
-                <div class="content">5</div>
+                <div class="content" id="txt_biz_alarm">0</div>
                 <div class="icon arrow-up-right"></div>
             </div>
             <div class="vm-grid violet">
                 <div class="title">服务器<div class="icon cabinet"></div></div>
-                <div class="content">10</div>
+                <div class="content" id="txt_biz_host">0</div>
                 <div class="icon arrow-up-right"></div>
             </div>
         </div>
-        <div class="grid-container">
-            <div class="vm-grid peter-river" id="biz_vm_block">
+        <div class="grid-container" style="-webkit-box-flex:1;">
+            <div class="vm-grid peter-river" id="biz_vm_block" data-article="biz_vm_list_article">
                 <div class="title">虚拟机<div class="icon stack"></div></div>
-                <div class="content">20</div>
+                <div class="content" id="txt_biz_vm">0</div>
                 <div class="icon arrow-up-right"></div>
             </div>
-            <div class="vm-grid orange" id="biz_cpu_block">
+            <div class="vm-grid orange" id="biz_cpu_block" data-article="biz_vm_cpu_top10_article">
                 <div class="title">CPU<div class="icon meter"></div></div>
-                <div class="content">20</div>
+                <div class="content" id="txt_biz_cpu">0</div>
                 <div class="icon arrow-up-right"></div>
                 <div class="icon-tip">Top10</div>
             </div>
 
         </div>
-        <div class="grid-container">
-            <div class="vm-grid green-sea" id="biz_mm_block">
+        <div class="grid-container" style="-webkit-box-flex:1;">
+            <div class="vm-grid green-sea" id="biz_mm_block" data-article="biz_vm_memory_top10_article">
                 <div class="title">内存<div class="icon road"></div></div>
-                <div class="content" >20<sub>GB</sub></div>
+                <div class="content"><span id="txt_biz_memroy">0</span><sub>GB</sub></div>
                 <div class="icon arrow-up-right"></div>
                 <div class="icon-tip">Top10</div>
             </div>
             <div class="vm-grid asbestos">
                 <div class="title">存储<div class="icon database"></div></div>
-                <div class="content">20<sub>TB</sub></div>
+                <div class="content"><span id="txt_biz_sr">0</span><sub>TB</sub></div>
             </div>
         </div>
     </article>

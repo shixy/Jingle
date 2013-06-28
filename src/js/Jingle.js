@@ -2,7 +2,7 @@ var Jingle = J = {
     settings : {
         transitionType : 'slide',
         transitionTime : 300,
-        transitionTimingFunc : 'ease-in-out',
+        transitionTimingFunc : 'linear',
         sectionPath : 'html/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
@@ -11,6 +11,7 @@ var Jingle = J = {
     launchCompleted : false,
     isMenuOpen : false,
     hasPopupOpen : false,
+    isWebApp : location.protocol == 'http:',
     launch : function(opts){
         $.extend(this.settings,opts);
         this.Router.init();

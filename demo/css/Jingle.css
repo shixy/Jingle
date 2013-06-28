@@ -282,7 +282,7 @@ button.cancel,.button.cancel {
     line-height: 30px;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
     color: #fff;
-    background-color: #1ABC9C;
+    background-color: #3498DB;
     border-radius: 3px;
     -webkit-box-flex: 1;
     box-flex: 1;
@@ -312,7 +312,7 @@ button.cancel,.button.cancel {
 }
 
 .control-group li.active {
-    background-color: #16a085;
+    background-color: #2980B9;
 }
 .control-group .icon{
     font-size: 20px;
@@ -570,6 +570,13 @@ select {
   margin-bottom: 0;
   border-bottom: 0;
 }
+.label{
+    background-color: #E67E22;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin: 0 5px;
+}
 header {
     top: 0;
     display: -webkit-box;
@@ -652,6 +659,14 @@ header nav a:not(.button):active {
 header nav a:not(.button) > .icon {
     font-size: 1.5em;
     float:left;
+}
+
+header .control-group{
+    margin: 0 auto;
+    width:120px;
+    height: 30px;
+    margin-top: 8px;
+    border: 1px solid #0e5895;
 }
 
 .header-secondary{
@@ -1298,8 +1313,7 @@ article{
     width: 100%;
     visibility: hidden;
     display: none;
-    overflow:auto;
-    -webkit-overflow-scrolling: touch;
+    overflow:hidden;
     z-index: 0;
     background-color: #fff;
 }
@@ -1312,7 +1326,7 @@ header,footer,.header-secondary{
     position: absolute;
     left: 0;
     width: 100%;
-    z-index: 1
+    z-index: 10
 }
 header{
     top:0;
@@ -1349,7 +1363,7 @@ ul.list {
 
 .list li {
     position: relative;
-    padding: 10px 20px 10px 10px;;
+    padding: 15px 20px 15px 10px;;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
 .list li.selected:active{
@@ -1365,7 +1379,7 @@ ul.list {
     position: relative;
     display: block;
     padding: inherit;
-    margin:-10px -20px -10px -10px;;
+    margin:-15px -20px -15px -10px;;
     color: inherit;
 }
 .list li strong{
@@ -1374,6 +1388,7 @@ ul.list {
 }
 .list li p{
     font-size: 0.9em;
+    padding-top: 10px;
 }
 .list li > .icon{
     position: absolute;
@@ -1385,7 +1400,7 @@ ul.list {
 }
 .list li .tag{
     position: absolute;
-    top:5px;
+    top:10px;
     right: 10px;
     padding: 1px 5px;
     border-radius: 3px;
@@ -1529,22 +1544,29 @@ ul.list {
     font-weight: 600;
     font-size: 14px;
 }
+#jingle_popup .nav.active,#jingle_popup .nav:active{
+    background-color: #3498DB;
+    color: #fff;
+}
 [data-progress]{
-    background: #e8edf2;
-    border-radius: 32px;
+    background: #4c4d4c;
+    border-radius: 10px;
     height: 20px;
     line-height: 20px;
-    overflow: hidden;
+    color: #000;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    text-align: center;
+    font-size: 12px;
 }
 [data-progress] .bar{
     float: left;
     width:0;
-    background: #1abc9c;
+    background: #3498DB;
     height: 100%;
-    font-size: 12px;
-    color: #ffffff;
-    text-align: center;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    color: #fff;
+    white-space: nowrap;
+    border-radius: 10px 0 0 10px;
+
 }
 [data-rangeinput] input[type="range"]{
     width:80%;

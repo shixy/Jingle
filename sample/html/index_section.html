@@ -5,11 +5,11 @@
         </nav>
         <h1 class="title"><a href="#" id="index_title" class="tip-arrow-down">全局概览</a></h1>
         <nav class="right">
-            <a href="#" class="button" data-icon="question" id="testToast"></a>
+            <a href="#" class="button" id="btn_approval">我的审批</a>
         </nav>
     </header>
-    <article class="active indented" id="index_article" >
-        <ul class="box">
+    <article class="active indented" id="index_article">
+    <ul class="box">
             <li class="belize-hole active">
                 <p class="title">业务系统</p>
                 <p class="text">0</p>
@@ -35,80 +35,33 @@
             </li>
         </ul>
         <div id="index_container" >
-           <ul class="group_list active" id="bizSysContainer">
-                <li  class="arrow">
-                    <div class="title">
-                        OA
-                        <div class="progress"></div>
-                        <div class="health-tip">健康值<span>100</span></div>
-                    </div>
-                    <div class="content">
-                        <a href="#"><abbr>CPU</abbr><span>20</span></a>
-                        <a href="#"><abbr>内存</abbr><span>160<sub>GB</sub></span> </a>
-                        <a href="#"><abbr>存储</abbr><span>20<sub>TB</sub></span></a>
-                        <a href="#"><abbr>虚拟机</abbr><span>30</span></a>
-                    </div>
-                </li>
-                <li data-count="6" class="arrow">
-                    <div class="title">订单
-                        <div class="progress"></div>
-                        <div class="health-tip">健康值<span>100</span></div>
-                    </div>
-                    <div class="content">
-                        <a href="#"><abbr>CPU</abbr><span>20</span></a>
-                        <a href="#"><abbr>内存</abbr><span>160<sub>GB</sub></span> </a>
-                        <a href="#"><abbr>存储</abbr><span>20<sub>TB</sub></span></a>
-                        <a href="#"><abbr>虚拟机</abbr><span>30</span></a>
-                    </div>
-                </li>
-                <li data-count="18" class="arrow">
-                    <div class="title">营销
-                        <div class="progress"></div>
-                        <div class="health-tip">健康值<span>100</span></div>
-                    </div>
-                    <div class="content">
-                        <a href="#"><abbr>CPU</abbr><span>20</span></a>
-                        <a href="#"><abbr>内存</abbr><span>160<sub>GB</sub></span> </a>
-                        <a href="#"><abbr>存储</abbr><span>20<sub>TB</sub></span></a>
-                        <a href="#"><abbr>虚拟机</abbr><span>30</span></a>
-                    </div>
-                </li>
-                <li data-count="9" class="arrow">
-                    <div class="title">协同
-                        <div class="progress"></div>
-                        <div class="health-tip">健康值<span>100</span></div>
-                    </div>
-                    <div class="content">
-                        <a href="#"><abbr>CPU</abbr><span>20</span></a>
-                        <a href="#"><abbr>内存</abbr><span>160<sub>GB</sub></span> </a>
-                        <a href="#"><abbr>存储</abbr><span>20<sub>TB</sub></span></a>
-                        <a href="#"><abbr>虚拟机</abbr><span>30</span></a>
-                    </div>
-                </li>
-
-            </ul>
-            <div id="vm_num_canvas" >
+            <div>
+                <div id="bizSysContainer" class="active"  data-scroll="true" style="position:relative;">
+                </div>
+                <div id="vm_num_canvas" >
+                </div>
+                <div id="cpu_usage_canvas" ></div>
+                <div id="mm_usage_canvas" ></div>
+                <div id="sr_usage_canvas" ></div>
             </div>
-            <div id="cpu_usage_canvas" ></div>
-            <div id="mm_usage_canvas" ></div>
-            <div id="sr_usage_canvas" ></div>
         </div>
     </article>
     <script type="text/tmpl" id="bizInfoTmpl">
+        <ul class="group_list">
         {each $data}
         <li class="arrow">
             <div class="title">{$value.businessSystem.name}
                 <div class="progress"></div>
                 <div class="health-tip">健康值<span>100</span></div>
             </div>
-            <div class="content">
+            <div class="content" data-id="{$value.businessSystem.id}">
+                <a href="#"><abbr>虚拟机</abbr><span>{$value.vmCount}</span></a>
                 <a href="#"><abbr>CPU</abbr><span>{$value.totalCpuCoreCount}</span></a>
                 <a href="#"><abbr>内存</abbr><span>{$getAutoUnit $value.totalMemory}</span> </a>
                 <a href="#"><abbr>存储</abbr><span>{$getAutoUnit $value.totalLocalStorage}</span></a>
-                <a href="#"><abbr>虚拟机</abbr><span>{$value.vmCount}</span></a>
             </div>
         </li>
         {/each}
-
+        </ul>
     </script>
 </section>

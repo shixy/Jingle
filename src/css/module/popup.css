@@ -84,3 +84,7 @@
     font-weight: 600;
     font-size: 14px;
 }
+#jingle_popup .nav.active,#jingle_popup .nav:active{
+    background-color: #3498DB;
+    color: #fff;
+}

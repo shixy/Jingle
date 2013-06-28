@@ -82,6 +82,14 @@ header nav a:not(.button) > .icon {
     float:left;
 }
 
+header .control-group{
+    margin: 0 auto;
+    width:120px;
+    height: 30px;
+    margin-top: 8px;
+    border: 1px solid #0e5895;
+}
+
 .header-secondary{
     background-color: #222;
     color: #fff;

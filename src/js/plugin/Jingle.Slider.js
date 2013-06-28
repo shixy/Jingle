@@ -9,14 +9,15 @@
             slides,
             slideNum,
             slideWidth,
-            deltaX,
-            afterSilde,beforeSlide;
+            deltaX;
+        var afterSlide = function(){};
+        var beforeSlide = function(){return true};
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);
             noDots = selector.noDots;
-            beforeSilde = selector.onBeforeSlide;
-            afterSilde = selector.onAfterSlide;
+            beforeSlide = selector.onBeforeSlide || beforeSlide;
+            afterSlide = selector.onAfterSlide || afterSlide;
         }else{
             wrapper = $(selector);
         }
@@ -35,8 +36,7 @@
 
             slides.css({
                     'width':slideWidth,
-                    'display':'table-cell',
-                    'verticalAlign' : 'top'
+                    'float':'left'
             })
             if(!noDots)_initDots();
             _slide(0, 0);
@@ -76,7 +76,7 @@
             },duration)
             index = i;
             if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
-            if(afterSilde)afterSilde(index);
+            afterSlide(index);
         };
 
         /**
@@ -102,7 +102,7 @@
             container[0].style.webkitTransitionDuration = 0;
             gestureStarted = true;
             //阻止事件冒泡
-            event.stopPropagation();
+            //event.stopPropagation();
         };
 
         var _touchMove = function(event) {
@@ -120,7 +120,7 @@
                 if(isPastBounds)return;
                 var pos = (deltaX - index * slideWidth);
                 container[0].style.webkitTransform = 'translateX('+pos+'px)';
-                event.stopPropagation();
+                //event.stopPropagation();
             }
         };
 
@@ -131,11 +131,14 @@
                 //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
             if (!isScrolling) {
-                if(beforeSlide)beforeSlide(index);
-                _slide( index + ( isValidSlide && !isPastBounds ? (deltaX < 0 ? 1 : -1) : 0 ), speed );
+                if(beforeSlide(index,deltaX)){
+                    _slide( index + ( isValidSlide && !isPastBounds ? (deltaX < 0 ? 1 : -1) : 0 ), speed );
+                }else{
+                    _slide(index);
+                }
             }
             gestureStarted = false;
-            e.stopPropagation();
+            //e.stopPropagation();
         };
 
 

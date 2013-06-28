@@ -1,7 +1,7 @@
 Jingle.Element = (function(){
     var SELECTOR  = {
         'icon' : '[data-icon]',
-        'scroll' : 'article[data-scroll="true"]',
+        'scroll' : '[data-scroll="true"]',
         'toggle' : '.toggle',
         'range' : '[data-rangeinput]',
         'progress' : '[data-progress]'
@@ -21,10 +21,7 @@ Jingle.Element = (function(){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
     var _init_scroll = function(el){
-        $(el).wrapInner('<div></div>');
-        $(el).on('show',function(){
-            new iScroll(el);
-        })
+        J.Scroll.init(el);
     }
 
     var _init_toggle = function(el){
@@ -75,10 +72,14 @@ Jingle.Element = (function(){
 
     var _init_progress = function(el){
         var $el = $(el);
-        var progress = $el.data('progress');
+        var progress = parseFloat($el.data('progress'));
         var title = $el.data('title') || '';
         var $bar = $('<div class="bar"></div>');
+        progress = progress+'%';
         $bar.appendTo($el).width(progress).text(title+progress);
+        if(progress == '100%'){
+            $bar.css('border-radius','10px');
+        }
     }
 
     return {

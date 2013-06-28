@@ -1,5 +1,7 @@
 Jingle.Transition = (function(J){
 
+    var isBack = false;
+
     var TRANSITION = {
         //[back,in]
         slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],
@@ -26,13 +28,14 @@ Jingle.Transition = (function(J){
     var _finishTransition = function(current, target) {
         current.removeClass('activing active');
         target.removeClass('activing').addClass('active');
-        current.trigger('hide');
-        target.trigger('show');
+        current.trigger('out',[isBack]);
+        target.trigger('in',[isBack]);
         current.find('article.active').trigger('hide');
         target.find('article.active').trigger('show');
     }
 
-    var run = function(current,target,isBack){
+    var run = function(current,target,back){
+        isBack = back;
         current = $(current);
         target = $(target);
         var type = isBack?current.attr('data-transition'):target.attr('data-transition');

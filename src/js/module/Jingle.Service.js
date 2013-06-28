@@ -47,7 +47,7 @@ Jingle.Service = (function(){
      * @private
      */
     var _getCache = function(key){
-         return $.parse(localStorage.getItem(key));
+         return JSON.parse(localStorage.getItem(key));
     }
     /**
      * 缓存数据到本地
@@ -81,7 +81,7 @@ Jingle.Service = (function(){
      * @param url  没有就返回所有未同步的数据
      */
     var getUnPostData = function(url){
-        var data = $.parse(localStorage.getItem(UNPOST_KEY));
+        var data = JSON.parse(localStorage.getItem(UNPOST_KEY));
         if(url){
             return data[url];
         }else{

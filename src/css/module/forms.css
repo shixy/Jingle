@@ -120,3 +120,10 @@ select {
   margin-bottom: 0;
   border-bottom: 0;
 }
+.label{
+    background-color: #E67E22;
+    color: #fff;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin: 0 5px;
+}

@@ -11,7 +11,7 @@ Jingle.Popup = (function(){
             right:0
         },
         'center':{
-            top:'30%',
+            top:'50%',
             left:'10%',
             right:'10%',
             'border-radius' : '5px'
@@ -108,10 +108,10 @@ Jingle.Popup = (function(){
     }
 
     return {
-        show : show,
-        close : hide,
-        alert : alert,
-        confirm : confirm,
-        popover : popover
-    }
+    show : show,
+    close : hide,
+    alert : alert,
+    confirm : confirm,
+    popover : popover
+}
 })();

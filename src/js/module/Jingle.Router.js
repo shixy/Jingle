@@ -15,7 +15,7 @@ Jingle.Router = (function(){
         $(document).on('click','a',function(e){e.preventDefault()});
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
 
-        var initSectionId = $('#section-container section.active').trigger('show').attr('id');
+        var initSectionId = $('#section-container section.active').trigger('in').attr('id');
         add2History('#'+initSectionId);
     }
 
@@ -93,6 +93,7 @@ Jingle.Router = (function(){
         J.anim(article,'scaleIn',300,function(){
             article.trigger('show');
             activeArticle.trigger('hide');
+
         });
     }
 

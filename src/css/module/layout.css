@@ -59,8 +59,7 @@ article{
     width: 100%;
     visibility: hidden;
     display: none;
-    overflow:auto;
-    -webkit-overflow-scrolling: touch;
+    overflow:hidden;
     z-index: 0;
     background-color: #fff;
 }
@@ -73,7 +72,7 @@ header,footer,.header-secondary{
     position: absolute;
     left: 0;
     width: 100%;
-    z-index: 1
+    z-index: 10
 }
 header{
     top:0;

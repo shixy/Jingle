@@ -17,10 +17,13 @@
         <ul class="center menu">
             <li><a href="#index_section" data-icon="next" data-target="section">全局概览</a></li>
             <li><a href="#res_period_section" data-icon="next" data-target="section">资源使用对比</a></li>
-            <li><a href="#alarm_section" data-icon="next" data-target="section">告警分布</a></li>
-            <li><a href="#res_allocate_section" data-icon="next" data-target="section">资源分配趋势</a></li>
+            <li><a href="#" data-icon="next" data-target="section">我的审批(未完成)</a></li>
+            <li><a href="#" data-icon="next" data-target="section">虚拟机查询(未完成)</a></li>
+            <li><a href="#" data-icon="next" data-target="section">资源分配趋势(未完成)</a></li>
+            <li><a href="#" data-icon="next" data-target="section">DSR(未完成)</a></li>
+            <li><a href="#" data-icon="next" data-target="section">用户列表(未完成)</a></li>
             <li class="anchor">设置</li>
-            <li><a href="#" data-icon="switch" id="btn_change_user">退出账号</a></li>
+            <li><a href="#" data-icon="switch" id="btn_change_user">切换账号</a></li>
             <li><a href="#" data-icon="exit" id="btn_exit_app">退出程序</a></li>
         </ul>
     </aside>
@@ -37,13 +40,13 @@
         </section>
     </div>
     <!-- lib -->
+    <script type="text/javascript" src="js/lib/cordova-2.4.0.js"></script>
     <script type="text/javascript" src="js/lib/zepto.js"></script>
     <script type="text/javascript" src="js/lib/touch.js"></script>
-    <script type="text/javascript" src="js/lib/ichart.1.1.js"></script>
+    <script type="text/javascript" src="js/lib/ichart.min.js"></script>
     <!--<script type="text/javascript" src="js/lib/jq.desktopBrowsers.js"></script>-->
-    <script type="text/javascript" src="js/lib/iscroll.js"></script>
     <script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
-    <script type="text/javascript" src="js/lib/template.js"></script>
+    <script type="text/javascript" src="js/lib/template.min.js"></script>
     <script type="text/javascript" src="js/lib/template-syntax.js"></script>
     <!--- app --->
     <script type="text/javascript" src="js/app/app.js"></script>
@@ -56,9 +59,6 @@
             script.src="js/lib/jq.desktopBrowsers.js";
             var tag=$("head").append(script);
         }
-    $(function () {
-        App.run();
-    })
 </script>
 </body>
 </html>

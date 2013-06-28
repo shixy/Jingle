@@ -41,9 +41,19 @@ var AHelper = {
         var hms = dateStr.substring(11,19);
         return year + ' '+ hms;
     },
+    getVMStatusClass : function(status){
+        if(status == 'RUNNING' || status == 'ONLINE'){
+            return 'green-sea';
+        }else if(status == 'DOWN'|| status == 'ERROR' || status == 'OFFLINE' ){
+            return 'pomegranate';
+        }else{
+            return 'orange';
+        }
+    },
     registerTemplateHelper : function(){
         template.helper('$getGB',this.getGB);
         template.helper('$getAutoUnit',this.getAutoUnit);
+        template.helper('$getVMStatusClass',this.getVMStatusClass);
     },
     getArticleOffset : function(){
       if(!App.articleOffset){
@@ -112,6 +122,8 @@ var AHelper = {
     //环形图默认配置
     getDountCfg : function(data,renderId,centerText){
         var offset = AHelper.getArticleOffset();
+        var rows = 2;
+        if(data.length>6)rows = 3;
         return {
             data : data,
             render : renderId,
@@ -121,6 +133,7 @@ var AHelper = {
             showpercent:true,
             donutwidth:0.5,
             turn_off_touchmove:true,
+            //offsety : 20,
             sub_option : {
                 mini_label_threshold_angle : 30,//迷你label的阀值,单位:角度
                 mini_label:{//迷你label配置项
@@ -152,7 +165,7 @@ var AHelper = {
                 sign_size:20,//小图标大小
                 line_height:28,//设置行高
                 sign_space:10,//小图标与文本间距
-                row:2,//设置在一行上显示，与column配合使用
+                row:rows,//设置在一行上显示，与column配合使用
                 column : 'max',
                 border:false,
                 valign : 'top',

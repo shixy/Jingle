@@ -5,15 +5,16 @@
  * Time: 上午9:42
  */
 ;(function(){
-    var _baseUrl = "http://localhost:8088";
+    var _baseUrl = "http://172.20.1.33:8088";
     var appKey = '000001',version='1.0';
-    var sessionId = localStorage.getItem('sessionId');
+    var sessionId;
 
     //判断当前是手机端(phonegap)还是浏览器端，手机端通过phonegap的白名单进行跨域，浏览器端采用nodejs进行跨域转发
     if(location.protocol == 'http:'){
         _baseUrl = "/proxy?url="+_baseUrl+'?1=1';
     }
     function _ajax(type,method,param,callback,noCache){
+        if(!sessionId)sessionId = localStorage.getItem('sessionId');
         param.appKey = appKey;
         param.v = version;
         param.sessionId = sessionId;
@@ -55,7 +56,7 @@
                     userName : username,
                     password : pwd
                 };
-                if(App.offline){
+                if(J.offline){
                     var sessionId = window.localStorage.getItem('sessionId');
                     if(!sessionId){
                         J.showToast('对不起，您是第一次访问本系统，无法使用离线功能','error');
@@ -67,8 +68,7 @@
                 }else{
                     _get('auth.login',param,function(data){
                         if(!data.error){
-                            sessionId = data.sessionId;
-                            localStorage.setItem('sessionId',sessionId);
+                            localStorage.setItem('sessionId',data.sessionId);
                         }
                         callback(data);
                     },true);
@@ -78,7 +78,12 @@
                 _get('auth.logout',{},callback,true);
             },
             reLogin:function(callback){
-                _get('auth.reLogin',{},callback,true);
+                if(J.offline){
+                    callback({});
+                }else{
+                    _get('auth.reLogin',{},callback,true);
+                }
+
             }
         },
         res : {
@@ -86,15 +91,41 @@
                 var param = serverType?{serverType:serverType}:{};
                 _get('res.summary',param,callback);
             },
-            getBizInfo:function(bizKey,callback){
-                var param = bizKey?{bizKey:bizKey}:{};
-                _get('res.getBizInfo',param,callback);
+            getHealth : function(callback){
+                _get('res.getHealth',{},callback);
             },
-            getBizVMs:function(bizId,callback){
-                var param = {bizId:bizId};
-                _get('res.getBizVMs',param,callback);
+            getBizResUsage : function(date,serverType,callback){
+                serverType = serverType || 'pc_server';
+                _get('res.getBizResUsage',{date:date,serverType:serverType},callback);
             }
-
+        },
+        biz : {
+            getInfo : function(bizId,callback){
+                _get('biz.getInfo',{bizId:bizId},callback);
+            },
+            getAlarms : function(bizId,callback){
+                _get('biz.getAlarms',{bizId:bizId},callback);
+            },
+            getVms : function(bizId,callback){
+                _get('biz.getVms',{bizId:bizId},callback);
+            },
+            getVmCpuTop10 : function(bizId,period,serverType,callback){
+                _get('biz.getVmCpuTop10',{bizId:bizId,period:period,serverType:serverType},callback);
+            },
+            getVmMemoryTop10 : function(bizId,period,serverType,callback){
+                _get('biz.getVmMemoryTop10',{bizId:bizId,period:period,serverType:serverType},callback);
+            },
+            getAvailability : function(bizId,serverType,callback){
+                _get('biz.getAvailability',{bizId:bizId,serverType:serverType},callback);
+            }
+        },
+        vm : {
+            get : function(vmId,callback){
+                _get('vm.getInfo',{vmId:vmId},callback);
+            },
+            query : function(queryObject,callback){
+                _get('vm.query',queryObject,callback);
+            }
         }
     }
 

@@ -18,6 +18,7 @@ sub,sup{
     margin-right: 5px;
     text-align: center;
     position: relative;
+    height: 60px;
 }
 .box li:after{
     top: 100%;
@@ -133,7 +134,7 @@ sub,sup{
 
 .vm-grid {
     border-radius: 5px;
-    height: 100px;
+    min-height: 100px;
     display: -webkit-box;
     color: #fff;
     position: relative;
@@ -187,22 +188,3 @@ sub,sup{
     border: 1px solid #c8c8c8;
 }
 
-#index_container{
-    position: absolute;
-    left: 0;
-    top: 80px;
-    bottom: 0;
-    right: 0;
-}
-#index_container > *{
-    position: absolute;
-    top:0;bottom: 0;left: 0;right: 0;
-    z-index : 1;
-    overflow: hidden;
-}
-#index_container > .hiding{
-    z-index: 2;
-}
-#index_container > .active{
-    z-index : 3;
-}

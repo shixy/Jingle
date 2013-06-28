@@ -5,19 +5,20 @@ function onDeviceReady(){
     document.addEventListener("backbutton", function (e) {
         if(J.isMenuOpen){
             J.Menu.hide();
-        }else{//TODO 处理popup事件
+        }else if(J.hasPopupOpen){
+            J.closePopup();
+        }else{
             var sectionId = $('section.active').attr('id');
             if(sectionId == 'login_section' || sectionId == 'index_section'){
-                if(confirm('是否退出程序？')){
+                J.confirm('是否退出程序？',function(){
                     navigator.app.exitApp();
-                }else{
-                    return;
-                }
+                });
             }else{
                 J.Router.back();
             }
         }
     }, false);
+    App.run();
 }
 var App = (function(){
     var exports ={};
@@ -27,7 +28,8 @@ var App = (function(){
         _subscribeAsideEvents();
         $.each(pages,function(k,v){
             var sectionId = '#'+k+'_section';
-            $('body').delegate(sectionId,'show',function(e){
+            $('body').delegate(sectionId,'in',function(e,isBack){
+                if(isBack)return;
                 //只在页面第一次初始化的时候执行
                 if(!v.init_flag && v.hasOwnProperty('init')){
                     v.init.call(v);
@@ -43,32 +45,6 @@ var App = (function(){
         AHelper.registerTemplateHelper();
     };
     exports.cacheUserInfo = function(userInfo){
-        userCache['UID'] = userInfo.cloudUserInfo.id;
-        userCache['UNAME'] = userInfo.cloudUserInfo.name;
-        userCache['UTYPE'] = userInfo.cloudUserInfo.type;
-        if(userInfo.cloudUserInfo.datacenter){
-            userCache['DCID'] = userInfo.cloudUserInfo.datacenter.id;
-        }
-    };
-    exports.getUId = function(){
-        return userCache['UID'];
-    };
-    exports.getUName = function(){
-        return userCache['UNAME'];
-    };
-    exports.getUType = function(){
-        return userCache['UTYPE'];
-    };
-    exports.getDcId = function(){
-        return userCache['DCID'];
-    };
-    var _initArguments = function(){
-        if(!localStorage.getItem("network-2g")){
-            localStorage.setItem('network-2g',1);
-            localStorage.setItem('auto-login',0);
-            localStorage.setItem('auto-update',1);
-            localStorage.setItem('auto-save',0);
-        };
     };
     exports.page = function(id,factory){
         return ((id && factory)?_addPage:_getPage).call(this,id,factory);
@@ -81,6 +57,7 @@ var App = (function(){
     }
 
     exports.checkNetwork = function(){
+        if(!navigator.connection)return true;
         var networkState = navigator.connection.type;
         if(networkState == Connection.CELL_2G){
             var network2g = localStorage.getItem("network-2g");
@@ -91,7 +68,7 @@ var App = (function(){
             }
         }else if(networkState == Connection.NONE){
             if(confirm('当前没有网络连接,是否使用离线方式访问？')){
-                App.offline = true;
+                J.offline = true;
                 $('#btn_offline').val(1);
                 return true;
             }
@@ -111,4 +88,10 @@ var App = (function(){
         });
     }
     return exports;
-}())
+}());
+if(J.isWebApp){
+    $(function () {
+        App.run();
+    })
+}
+

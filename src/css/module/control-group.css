@@ -8,7 +8,7 @@
     line-height: 30px;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
     color: #fff;
-    background-color: #1ABC9C;
+    background-color: #3498DB;
     border-radius: 3px;
     -webkit-box-flex: 1;
     box-flex: 1;
@@ -38,7 +38,7 @@
 }
 
 .control-group li.active {
-    background-color: #16a085;
+    background-color: #2980B9;
 }
 .control-group .icon{
     font-size: 20px;

@@ -7,7 +7,7 @@ ul.list {
 
 .list li {
     position: relative;
-    padding: 10px 20px 10px 10px;;
+    padding: 15px 20px 15px 10px;;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
 .list li.selected:active{
@@ -23,7 +23,7 @@ ul.list {
     position: relative;
     display: block;
     padding: inherit;
-    margin:-10px -20px -10px -10px;;
+    margin:-15px -20px -15px -10px;;
     color: inherit;
 }
 .list li strong{
@@ -32,6 +32,7 @@ ul.list {
 }
 .list li p{
     font-size: 0.9em;
+    padding-top: 10px;
 }
 .list li > .icon{
     position: absolute;
@@ -43,7 +44,7 @@ ul.list {
 }
 .list li .tag{
     position: absolute;
-    top:5px;
+    top:10px;
     right: 10px;
     padding: 1px 5px;
     border-radius: 3px;
