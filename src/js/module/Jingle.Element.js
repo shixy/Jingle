@@ -4,7 +4,8 @@ Jingle.Element = (function(){
         'scroll' : '[data-scroll="true"]',
         'toggle' : '.toggle',
         'range' : '[data-rangeinput]',
-        'progress' : '[data-progress]'
+        'progress' : '[data-progress]',
+        'count' : '[data-count]'
     }
 
     var init = function(selector){
@@ -15,6 +16,7 @@ Jingle.Element = (function(){
         $.map($(SELECTOR.toggle,el),_init_toggle);
         $.map($(SELECTOR.range,el),_init_range);
         $.map($(SELECTOR.progress,el),_init_progress);
+        $.map($(SELECTOR.count,el),_init_count);
     }
 
     var _init_icon = function(el){
@@ -80,6 +82,17 @@ Jingle.Element = (function(){
         if(progress == '100%'){
             $bar.css('border-radius','10px');
         }
+    }
+    var _init_count = function(el){
+        var $el = $(el);
+        var count = parseInt($el.data('count'));
+        var orient = $el.data('orient');
+        if(count>0){
+            var className = (orient == 'left')?'left':'';
+            var markup = '<span class="count '+className+'">'+count+'</span>'
+            $el.append(markup);
+        }
+
     }
 
     return {

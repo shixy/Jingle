@@ -1,13 +1,13 @@
 var AHelper = {
     getGB : function(v){
-        return parseInt(v/1024);
+        return Math.round(v/1024);
     },
     getAutoUnit : function(v){
         var g = parseInt(v/1024);
         if(g<1){
             return v+'<sub>MB</sub>';
         }else if(g>1024){
-            return v/(1024*1024)+'<sub>TB</sub>';
+            return Math.round(v/(1024*1024))+'<sub>TB</sub>';
         }else{
             return g + '<sub>GB</sub>';
         }

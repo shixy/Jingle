@@ -5,7 +5,7 @@
         </nav>
         <h1 class="title"><a href="#" id="index_title" class="tip-arrow-down">全局概览</a></h1>
         <nav class="right">
-            <a href="#" class="button" id="btn_approval">我的审批</a>
+            <a href="#vm_apply_list_section" data-target="section" data-count="4" class="button" id="btn_approval">我的审批</a>
         </nav>
     </header>
     <article class="active indented" id="index_article">
@@ -49,7 +49,7 @@
     <script type="text/tmpl" id="bizInfoTmpl">
         <ul class="group_list">
         {each $data}
-        <li class="arrow">
+        <li data-icon="next">
             <div class="title">{$value.businessSystem.name}
                 <div class="progress"></div>
                 <div class="health-tip">健康值<span>100</span></div>

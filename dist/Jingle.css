@@ -64,7 +64,9 @@ th, td, caption {
 sub,sup{
     font-size: 10px;
 }
-
+.bold{
+    font-weight: 600;
+}
 .fr{
     float:right;
 }
@@ -277,7 +279,7 @@ button.cancel,.button.cancel {
     display: box;
     overflow: hidden;
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 600;
     list-style: none;
     line-height: 30px;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
@@ -292,6 +294,7 @@ button.cancel,.button.cancel {
     overflow: hidden;
     text-align: center;
     white-space: nowrap;
+    font-weight: 600;
     border-left: 1px solid rgba(0, 0, 0, .2);
     box-shadow: inset 1px 0 rgba(255, 255, 255, .25);
     -webkit-box-flex: 1;
@@ -303,6 +306,7 @@ button.cancel,.button.cancel {
     padding: 8px 16px;
     overflow: hidden;
     line-height: 15px;
+    font-weight: 600;
     text-overflow: ellipsis;
 }
 
@@ -318,50 +322,22 @@ button.cancel,.button.cancel {
     font-size: 20px;
 }
 
-/* General count styles
--------------------------------------------------- */
-
 .count{
-  display: inline-block;
-  padding: 4px 9px;
-  font-size: 12px;
-  font-weight: bold;
-  line-height: 13px;
-  color: #fff;
-  background-color: rgba(0, 0, 0, .3);
-  border-radius: 100px;
+    position:absolute;
+    background-color: #E74C3C;
+    border-radius: 30px;
+    color: #fff;
+    line-height: 18px;
+    padding: 0 5px;
+    font-size: 12px;
+    font-weight: 500;
+    min-width: 8px;
+    text-align: center;
+    right: 7px;
+    top:0;
 }
-
-/* Count modifiers
--------------------------------------------------- */
-
-/* Overriding styles for counts with modifiers  */
-.count.main,
-.count.positive,
-.count.negative {
-  color: #fff;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, .3);
-}
-
-/* Main count  */
-.count.main {
-  background-color: #1eafe7;
-  background-image: -webkit-linear-gradient(top, #1eafe7 0, #1a97c8 100%);
-  background-image: linear-gradient(to bottom, #1eafe7 0, #1a97c8 100%);
-}
-
-/* Positive count  */
-.count.positive {
-  background-color: #34ba15;
-  background-image: -webkit-linear-gradient(top, #34ba15 0, #2da012 100%);
-  background-image: linear-gradient(to bottom, #34ba15 0, #2da012 100%);
-}
-
-/* Negative count  */
-.count.negative {
-  background-color: #e71e1e;
-  background-image: -webkit-linear-gradient(top, #e71e1e 0,#c71a1a 100%);
-  background-image: linear-gradient(to bottom, #e71e1e 0, #c71a1a 100%);
+.count.left{
+    left:7px;
 }
 .dots{
     width:100%;height: 20px;position:absolute;left: 0;bottom: 50px;z-index: 999;
@@ -576,6 +552,32 @@ select {
     padding: 2px 5px;
     border-radius: 3px;
     margin: 0 5px;
+}
+.grid{
+    display: -webkit-box;
+    display: box;
+}
+.grid.vertical{
+    -webkit-box-orient:vertical;
+    box-orient:vertical;
+}
+.grid-label{
+    -webkit-box-flex:0;
+    box-flex:0;
+    width: 100px;
+    font-weight: 600;
+}
+.one-part{
+    -webkit-box-flex:1;
+    box-flex:1
+}
+.two-part{
+    -webkit-box-flex:1;
+    box-flex:1
+}
+.three-part{
+    -webkit-box-flex:1;
+    box-flex:1
 }
 header {
     top: 0;
@@ -1383,10 +1385,12 @@ ul.list {
     color: inherit;
 }
 .list li strong{
+    color: #333;
     font-weight: 600;
     font-size: 1.2em;
 }
 .list li p{
+    color:#7a7a7a;
     font-size: 0.9em;
     padding-top: 10px;
 }

@@ -154,9 +154,6 @@ App.page('index',function(){
             }
             J.closePopup();
         });
-        $('#btn_approval').on('tap',function(){
-            J.alert('功能开发中..');
-        })
     }
     /**
      * render 全局概览信息
@@ -607,6 +604,65 @@ App.page('biz_health_list',function(){
             $('#biz_health_list_article ul.list').html(template('biz_health_liut_tmpl',data));
             J.Element.init($('#biz_health_list_article ul.list'));
             J.hideMask();
+        })
+    }
+    return exports;
+});
+App.page('vm_apply_list',function(){
+    var exports = {};
+    var pageNo = 0 ;
+    exports.init = function(){
+        $('#vm_apply_list_section header .control-group li').on('tap',function(){
+            var $this = $(this);
+            if($this.hasClass('active'))return;
+            $this.addClass('active').siblings().removeClass('active');
+            var type = $(this).data('type');
+            if(type == 'underway'){
+                $('#underway_apply_list_article').addClass('active');
+                $('#finished_apply_list_article').removeClass('active');
+                _renderUnderwayList();
+            }else{
+                $('#underway_apply_list_article').removeClass('active');
+                $('#finished_apply_list_article').addClass('active');
+                pageNo = 0 ;
+                _renderFinishedList();
+            }
+        });
+        $('#vm_apply_list_section article').on('tap',' ul.list li',function(){
+            var applicationId = $(this).data('id');
+            App.page('vm_apply').setData({id:applicationId});
+            J.Router.turnTo('#vm_apply_section');
+        })
+    }
+    exports.load = function(){
+        _renderUnderwayList();
+    }
+    var _renderUnderwayList = function(){
+        RsAPI.vmApply.getUnderwayList(function(data){
+            var $container = $('#underway_apply_list_article ul.list');
+            $container.html(template('underway_list_tmpl',data));
+            J.Element.init($container);
+        });
+    }
+    var _renderFinishedList = function(){
+        RsAPI.vmApply.getFinishedList(pageNo, function(data){
+            var $container = $('#finished_apply_list_article ul.list');
+            $container.html(template('finished_list_tmpl',data));
+            J.Element.init($container);
+        });
+    }
+    return exports;
+})
+App.page('vm_apply',function(){
+    var exports = {};
+    var data;
+    exports.setData = function(d){data = d; }
+    exports.init = function(){
+        new J.Slider('#vmConfigList');
+    }
+    exports.load = function(){
+        RsAPI.vmApply.getApply(data.id,function(result){
+            //TODO render
         })
     }
     return exports;

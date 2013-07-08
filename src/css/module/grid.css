@@ -1,0 +1,26 @@
+.grid{
+    display: -webkit-box;
+    display: box;
+}
+.grid.vertical{
+    -webkit-box-orient:vertical;
+    box-orient:vertical;
+}
+.grid-label{
+    -webkit-box-flex:0;
+    box-flex:0;
+    width: 100px;
+    font-weight: 600;
+}
+.one-part{
+    -webkit-box-flex:1;
+    box-flex:1
+}
+.two-part{
+    -webkit-box-flex:1;
+    box-flex:1
+}
+.three-part{
+    -webkit-box-flex:1;
+    box-flex:1
+}

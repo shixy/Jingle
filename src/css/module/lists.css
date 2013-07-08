@@ -27,10 +27,12 @@ ul.list {
     color: inherit;
 }
 .list li strong{
+    color: #333;
     font-weight: 600;
     font-size: 1.2em;
 }
 .list li p{
+    color:#7a7a7a;
     font-size: 0.9em;
     padding-top: 10px;
 }

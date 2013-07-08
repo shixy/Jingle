@@ -64,7 +64,9 @@ th, td, caption {
 sub,sup{
     font-size: 10px;
 }
-
+.bold{
+    font-weight: 600;
+}
 .fr{
     float:right;
 }

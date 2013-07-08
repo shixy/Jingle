@@ -1,0 +1,120 @@
+<section id="vm_apply_list_section">
+    <header>
+        <nav class="left">
+            <a href="#" data-target="back" data-icon="undo">返回</a>
+        </nav>
+        <ul class="control-group">
+            <li class="active" data-type="underway">
+                进行中
+            </li>
+            <li data-type="finished">
+               已完成
+            </li>
+        </ul>
+    </header>
+    <article class="active" data-scroll="true" id="underway_apply_list_article">
+        <ul class="list">
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p><span data-icon="user">张三</span> <span style="margin-left: 50px;" data-icon="alarm">2013-06-07 12:22:22</span></p>
+            </li>
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p><span data-icon="user">张三</span> <span style="margin-left: 50px;" data-icon="alarm">2013-06-07 12:22:22</span></p>
+            </li>
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p><span data-icon="user">张三</span> <span style="margin-left: 50px;" data-icon="alarm">2013-06-07 12:22:22</span></p>
+            </li>
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p><span data-icon="user">张三</span> <span style="margin-left: 50px;" data-icon="alarm">2013-06-07 12:22:22</span></p>
+            </li>
+        </ul>
+    </article>
+
+    <article  data-scroll="true" id="finished_apply_list_article">
+        <ul class="list">
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p>
+                    <span data-icon="user">张三</span>
+                    <span data-icon="alarm" style="margin-left: 10px;">2013-06-07 12:22:22</span>
+                </p>
+                <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
+            </li>
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p>
+                    <span data-icon="user">张三</span>
+                    <span data-icon="alarm" style="margin-left: 10px;">2013-06-07 12:22:22</span>
+                </p>
+                <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
+            </li>
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p>
+                    <span data-icon="user">张三</span>
+                    <span data-icon="alarm" style="margin-left: 10px;">2013-06-07 12:22:22</span>
+                </p>
+                <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
+            </li>
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p>
+                    <span data-icon="user">张三</span>
+                    <span data-icon="alarm" style="margin-left: 10px;">2013-06-07 12:22:22</span>
+                </p>
+                <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
+            </li>
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p>
+                    <span data-icon="user">张三</span>
+                    <span data-icon="alarm" style="margin-left: 10px;">2013-06-07 12:22:22</span>
+                </p>
+                <p><span data-icon="checkmark" style="color:#27AE60">2013-06-07 12:22:22</span></p>
+            </li>
+            <li class="selected" data-icon="next" data-id="11">
+                <div class="tag">已提交</div>
+                <strong>申请虚拟机(A10101020102)</strong>
+                <p>
+                    <span data-icon="user">张三</span>
+                    <span data-icon="alarm" style="margin-left: 10px;">2013-06-07 12:22:22</span>
+                </p>
+                <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
+            </li>
+        </ul>
+    </article>
+</section>
+<script type="text/html" id="underway_list_tmpl">
+    {each $data}
+    <li class="selected" data-icon="next" data-id="{$value.id}">
+        <div class="tag">{$value.status.label}</div>
+        <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
+        <p><span data-icon="user">{$value.userName}</span> <span style="margin-left: 50px;" data-icon="alarm">{$value.submitTime}</span></p>
+    </li>
+    {/each}
+</script>
+<script type="text/html" id="finished_list_tmpl">
+    {each $data}
+    <li class="selected" data-icon="next">
+        <div class="tag">{$value.status.label}</div>
+        <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
+        <p>
+            <span data-icon="user">{$value.userName}</span>
+            <span data-icon="alarm" style="margin-left: 10px;">{$value.submitTime}</span>
+        </p>
+        <p><span data-icon="checkmark" style="color: #27AE60">{$value.approvalTime}</span></p>
+    </li>
+    {/each}
+</script>
