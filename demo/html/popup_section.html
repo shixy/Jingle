@@ -19,13 +19,13 @@
     </article>
     <script type="text/javascript">
         $('#btn_alert').tap(function(){
-            J.alert('这是一个Alert');
+            J.alert('提示','这是一个Alert');
         })
         $('#btn_confirm').tap(function(){
-            J.confirm(' 这是一个Confirm！',function(){J.showToast('你选择了“确定”')},function(){J.showToast('你选择了“取消”')});
+            J.confirm('提示','这是一个Confirm！',function(){J.showToast('你选择了“确定”')},function(){J.showToast('你选择了“取消”')});
         })
         $('#btn_p_default').tap(function(){
-            J.popup('这是一个弹出框，内容请自行定义','center',true);
+            J.popup('提示','这是一个弹出框，内容请自行定义','center',true);
         })
         $('#btn_t_top').tap(function(){
             J.popup('这是一个来自顶部的弹出框','top',false);
