@@ -47,4 +47,4 @@ Jingle.Transition = (function(J){
         run : run
     }
 
-})(Jingle)
+})(Jingle);

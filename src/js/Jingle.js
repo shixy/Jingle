@@ -16,7 +16,11 @@ var Jingle = J = {
         $.extend(this.settings,opts);
         this.Router.init();
         this.Element.init();
-        document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+        $('body').delegate('article','show',function(){
+            if($(this).data('scroll')){
+                J.Scroll(this.id);
+            }
+        });
     },
     anim : function(el,animName,duration,ease,callback){
         var d, e,c;
@@ -46,11 +50,12 @@ var Jingle = J = {
     hideToast : function(){
         this.Toast.hide();
     },
-    alert : function(title){
-        this.Popup.alert(title);
+    alert : function(title,content){
+        this.Popup.alert(title,content);
+
     },
-    confirm : function(title,okCall,cancelCall){
-        this.Popup.confirm(title,okCall,cancelCall);
+    confirm : function(title,content,okCall,cancelCall){
+        this.Popup.confirm(title,content,okCall,cancelCall);
     },
     popup : function(html,pos,closeable){
         this.Popup.show(html,pos,closeable);
@@ -60,6 +65,8 @@ var Jingle = J = {
     },
     popover : function(html,pos,arrow_direction){
         this.Popup.popover(html,pos,arrow_direction);
+    },
+    tmpl : function(containerSelector,templateId,data){
+        this.Template.render(containerSelector,templateId,data);
     }
-
-}
+};

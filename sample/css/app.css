@@ -2,7 +2,7 @@
     margin: 5px 10px;
 }
 sub,sup{
-    font-size: 10px;
+    font-size: 0.5em;
     position: relative;
     top: -5px;
 }
@@ -18,7 +18,7 @@ sub,sup{
     margin-right: 5px;
     text-align: center;
     position: relative;
-    height: 60px;
+    height: 70px;
 }
 .box li:after{
     top: 100%;
@@ -44,12 +44,12 @@ sub,sup{
 }
 .box li .title{
     color: #fbf4ff;
-    font-size: 12px;
+    font-size: 1em;
     padding-bottom: 6px;
 }
 .box li .text{
     color: #fff;
-    font-size: 24px;
+    font-size: 1.5em;
     font-weight: 600;
 }
 .group_list{
@@ -58,13 +58,14 @@ sub,sup{
 }
 
 .group_list .title{
-    font-size: 20px;font-weight: 600;height:60px;line-height: 60px;float: left;width:70px;
+    font-size: 1.2em;font-weight: 600;height:60px;line-height: 60px;float: left;width:70px;
     text-align: center;
     color: #000;
     text-shadow: 2px 2px 0 #E4F1FF;
     border-right: 1px solid #eee;
     background-color: #fff;
     position: absolute;
+    overflow: hidden;
 }
 .group_list .title .progress{
     position: absolute;
@@ -80,19 +81,20 @@ sub,sup{
     position: absolute;
     left: 0;top:0;bottom: 0;width: 100%;
     z-index: 3;background: #27AE60;color: #fff;
-    font-size: 10px;line-height: 30px;text-shadow: none;
+    font-size: 0.9em;line-height: 30px;text-shadow: none;
     display: none;
 }
 .health-tip span{
     display: block;
-    font-size: 20px;font-weight: 600;
+    font-size: 1.5em;font-weight: 600;
 }
  section .group_list li{
-    border-radius: 5px 5px 0 0;background-color: #2980B9;
-    border: solid 1px #C8C8C8;
-    border-top: none;
+     border: solid 1px #C8C8C8;
+     border-top: none;
+     border-radius: 5px 5px 0 0;background-color: #2980B9;
     margin-bottom: 10px;
-     padding-top: 5px;
+    padding: 5px 0 0 0;
+    position: relative;
 }
 .group_list .content{
     margin-left: 70px;height: 60px;
@@ -105,12 +107,12 @@ sub,sup{
 }
 .group_list a abbr{
     color: #2C3E50;
-    font-size: 12px;
+    font-size: 1em;
 
 }
 .group_list a span{
-    font-size: 1.5em;font-weight: bold;color: #E67E22;padding:0 4px 0 8px;
-    margin-left: 10px;
+    font-size: 1.3em;font-weight: bold;color: #E67E22;padding:0 4px;
+    margin-left: 6px;
 }
 
 
@@ -142,21 +144,20 @@ sub,sup{
 .vm-grid .title{
     margin: 10px 0;
     text-align: center;
-    width: 50px;
-    font-size: 14px;
-    height: 30px;line-height: 30px;
+    width: 70px;
+    font-size: 1em;
     -webkit-box-flex : 0;
 }
 .vm-grid .content{
     -webkit-box-flex : 1;
-    font-size: 40px;
+    font-size: 2.5em;
     height: 100px;line-height: 100px;
     font-weight: 600;
     padding-left: 10px;
     min-width: 110px;
 }
 .vm-grid > .icon{
-    font-size: 16px;
+    font-size: 1.2em;
     color: #fff;
     position: absolute;
     right: 5px;top:5px;
@@ -170,9 +171,12 @@ sub,sup{
     padding: 1px 3px;
 }
 .vm-grid .title>.icon{
-   display: block;
-    font-size: 40px;
+    display: block;
+    font-size: 2.5em;
     margin: 10px 0 0 5px;
+    position: absolute;
+    bottom: 10px;
+    left:10px;
 }
 .grid-container{
    display: -webkit-box;
@@ -187,4 +191,3 @@ sub,sup{
 .border{
     border: 1px solid #c8c8c8;
 }
-

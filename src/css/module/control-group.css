@@ -2,14 +2,15 @@
     display: -webkit-box;
     display: box;
     overflow: hidden;
-    font-size: 12px;
+    font-size: 1em;
     font-weight: 600;
     list-style: none;
     line-height: 30px;
     text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
     color: #fff;
     background-color: #3498DB;
-    border-radius: 3px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
     -webkit-box-flex: 1;
     box-flex: 1;
 }
@@ -43,5 +44,5 @@
     background-color: #2980B9;
 }
 .control-group .icon{
-    font-size: 20px;
+    font-size: 1.2em;
 }

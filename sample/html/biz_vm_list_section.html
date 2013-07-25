@@ -19,28 +19,32 @@
         </ul>
     </article>
     <article data-scroll="true" id="biz_vm_cpu_top10_article">
-        <ul class="control-group" style="margin:10px;">
-            <li class="active" data-period="ONE_HOUR">一小时</li>
-            <li data-period="ONE_DAY">一天</li>
-            <li data-period="THREE_DAY">三天</li>
-            <li data-period="ONE_WEEK">一周</li>
-        </ul>
-        <ul class="list inset">
-        </ul>
+        <div>
+            <ul class="control-group" style="margin:10px;">
+                <li class="active" data-period="ONE_HOUR">一小时</li>
+                <li data-period="ONE_DAY">一天</li>
+                <li data-period="THREE_DAY">三天</li>
+                <li data-period="ONE_WEEK">一周</li>
+            </ul>
+            <ul class="list inset">
+            </ul>
+        </div>
     </article>
     <article data-scroll="true" id="biz_vm_memory_top10_article">
-        <ul class="control-group" style="margin:10px;">
-            <li class="active" data-period="ONE_HOUR">一小时</li>
-            <li data-period="ONE_DAY">一天</li>
-            <li data-period="THREE_DAY">三天</li>
-            <li data-period="ONE_WEEK">一周</li>
-        </ul>
-        <ul class="list inset">
-        </ul>
+        <div>
+            <ul class="control-group" style="margin:10px;">
+                <li class="active" data-period="ONE_HOUR">一小时</li>
+                <li data-period="ONE_DAY">一天</li>
+                <li data-period="THREE_DAY">三天</li>
+                <li data-period="ONE_WEEK">一周</li>
+            </ul>
+            <ul class="list inset">
+            </ul>
+        </div>
     </article>
     <script type="text/tmpl" id="biz_vm_list_tmpl">
         {each $data}
-        <li data-icon="next" class="selected" data-vmid="{$value.vmId}">
+        <li data-icon="next"  data-vmid="{$value.vmId}">
             <div class="tag {$getVMStatusClass $value.status.name}">
                 {$value.status.label}
             </div>
@@ -54,7 +58,7 @@
     </script>
     <script type="text/tmpl" id="biz_vm_cpu_top10_list_tmpl">
         {each $data}
-        <li data-icon="next"  class="selected" data-vmid="{$value.targetId}" style="display:-webkit-box;">
+        <li data-icon="next"   data-vmid="{$value.targetId}" style="display:-webkit-box;">
             <div style="-webkit-box-flex:1;"><strong>{$value.name}</strong></div>
             <div style="width:60px;">{$value.remark}</div>
             <div style="width:100px;"><span style="font-size:9px;">CPU使用率:</span><span class="label">{$value.cpuRate}%</span></div>
@@ -63,7 +67,7 @@
     </script>
     <script type="text/tmpl" id="biz_vm_mm_top10_list_tmpl">
         {each $data}
-        <li data-icon="next"  class="selected" data-vmid="{$value.targetId}" style="display:-webkit-box;">
+        <li data-icon="next"   data-vmid="{$value.targetId}" style="display:-webkit-box;">
             <div style="-webkit-box-flex:1;"><strong>{$value.name}</strong></div>
             <div style="width:100px;"><span style="font-size:9px;">内存使用率:</span><span class="label">{$value.memoryRate}%</span></div>
         </li>

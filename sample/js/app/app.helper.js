@@ -50,10 +50,25 @@ var AHelper = {
             return 'orange';
         }
     },
+    getFontSize : function(text){
+        var len = text.length;
+        if(len <= 3){
+            return '1em';
+        }else if(len == 4){
+            return '0.9em';
+        }else if(len<7){
+            return '0.7em';
+        }else{
+            return '0.5em';
+        }
+
+
+    },
     registerTemplateHelper : function(){
         template.helper('$getGB',this.getGB);
         template.helper('$getAutoUnit',this.getAutoUnit);
         template.helper('$getVMStatusClass',this.getVMStatusClass);
+        template.helper('$getFontSize',this.getFontSize);
     },
     getArticleOffset : function(){
       if(!App.articleOffset){

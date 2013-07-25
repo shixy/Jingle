@@ -45,7 +45,7 @@ input[type="color"],
 /* Fully round search input */
 input[type=search] {
   height: 34px;
-  font-size: 14px;
+  font-size: 1em;
   border-radius: 30px;
 }
 
@@ -57,7 +57,7 @@ textarea {
 /* Style select button to look like part of the Ratchet's style */
 select {
   height: auto;
-  font-size: 14px;
+  font-size: 1em;
   background-color: #f8f8f8;
   background-image: -webkit-linear-gradient(top, #f8f8f8 0%, #d4d4d4 100%);
   background-image: linear-gradient(to bottom, #f8f8f8 0%, #d4d4d4 100%);

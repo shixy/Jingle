@@ -38,106 +38,21 @@
                 <strong>EXS-2</strong>
                 <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
             </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
-            <li class="selected">
-                <div class="tag ">2013-04-03 16:51</div>
-                <strong>EXS-2</strong>
-                <p>磁盘可用空间的opm_lab_ds_11为4.97GB，阈值是5 GB</p>
-            </li>
         </ul>
     </article>
+    <script type="text/html" id="alarm_list_tmpl">
+        {each $data}
+        <li class="selected">
+            <div class="tag">
+                {$value.status.label}
+            </div>
+            <strong>{$value.title}</strong>
+            <p>{$value.summary}</p>
+            <p>
+                <span class="label">{$value.triggerTime}</span>
+                <span class="label peter-river">{$value.system.label}</span>
+            </p>
+        </li>
+        {/each}
+    </script>
 </section>

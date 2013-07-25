@@ -1,0 +1,32 @@
+header{
+    background-color: #006953;
+    -webkit-box-shadow: none;
+    box-shadow:none;
+}
+header .button,
+header button {
+    background-color: #1ABC9C;
+}
+header .button:active,
+header button:active {
+    background-color: #16A085;
+}
+header nav a:not(.button) {
+    color: #fff;
+    -webkit-text-shadow: 0 1px 0 #16A085;
+    text-shadow: 0 1px 0 #16A085;
+}
+header nav a:not(.button):active {
+    color: #2C3E50;
+}
+
+footer .active .icon{
+    color: #1ABC9C;
+}
+
+.control-group{
+    background-color: #1ABC9C;
+}
+.control-group li.active {
+    background-color: #16A085;
+}

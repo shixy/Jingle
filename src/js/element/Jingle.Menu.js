@@ -27,4 +27,4 @@ Jingle.Menu = (function(J){
         show : showMenu,
         hide : hideMenu
     }
-})(Jingle)
+})(Jingle);

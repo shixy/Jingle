@@ -34,7 +34,7 @@ ul.list {
 .list li p{
     color:#7a7a7a;
     font-size: 0.9em;
-    padding-top: 10px;
+    padding-top: 5px;
 }
 .list li > .icon{
     position: absolute;
@@ -52,7 +52,7 @@ ul.list {
     border-radius: 3px;
     background-color: #3498DB;
     color: #fff;
-    font-size: 10px;
+    font-size: 0.8em;
 }
 .icon ~ .tag{
     right: 30px !important;
@@ -83,7 +83,7 @@ ul.list {
     top: -1px;
     padding-top: 6px;
     padding-bottom: 6px;
-    font-size: 12px;
+    font-size: 0.9em;
     font-weight: bold;
     line-height: 18px;
     text-shadow: 0 1px 0 rgba(255, 255, 255, .5);

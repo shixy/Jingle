@@ -7,6 +7,7 @@
 App.page('login',function(){
     var exports = {};
     exports.init = function(){
+        _initUserName();
         $('#login_form').submit(_login);
         if(!J.isWebApp){
             var networkState = navigator.connection.type;
@@ -23,19 +24,26 @@ App.page('login',function(){
         var username = $('#username').val();
         var pwd = $('#password').val();
         if(username == '' || pwd == ''){
-            alert('请填写完整的信息！');
+            J.alert('提示','请填写完整的信息！');
         }else{
             RsAPI.auth.login(username,pwd,function(data){
                 if(data.error){
                     J.showToast(data.error,'error');
                 }else{
-                    localStorage.setItem('userInfo',data.userInfo);
+                    localStorage.setItem('userInfo',JSON.stringify(data.userInfo));
                     J.Router.turnTo('#index_section');
                 }
             })
 
         }
         return false;
+    }
+    var _initUserName = function(){
+        var userInfo = localStorage.getItem('userInfo');
+        if(userInfo){
+            userInfo = JSON.parse(userInfo);
+            $('#username').val(userInfo.name);
+        }
     }
     var _autoLogin = function(){
         var sessionId = localStorage.getItem('sessionId');
@@ -79,10 +87,21 @@ App.page('index',function(){
     var exports = {};
     var serverType;
     exports.init = function(){
-        var h = AHelper.getArticleOffset().height - 80;
+        var h = AHelper.getArticleOffset().height - 90;
         $('#bizSysContainer').height(h);
         _subscribeEvents();
         _render();
+    }
+
+    exports.show = function(){
+        RsAPI.vmApply.getUnderwayCount(function(count){
+            var $count = $('#btn_approval .count');
+            if(count>0){
+                $count.text(count).show();
+            }else{
+                $count.hide();
+            }
+        });
     }
     var _subscribeEvents = function(){
         var $box = $('#index_section .box li');
@@ -160,6 +179,7 @@ App.page('index',function(){
      * @private
      */
     var _render = function(){
+        J.Template.loading('#bizSysContainer ul.group_list');
         RsAPI.res.summary(serverType,function(data){
 			var $box = $('#index_article .box .text');
             $box.eq(0).text(data.bizCount);
@@ -170,8 +190,8 @@ App.page('index',function(){
             if(data.list.length === 0){
                 $('#index_container').children().children().html('未获取到相关数据！');
             }else{
-                var listHtml = template('bizInfoTmpl',data.list);
-                $('#bizSysContainer').html(listHtml);
+                J.tmpl('#bizSysContainer ul.group_list','bizInfoTmpl',data.list);
+                J.Scroll('bizSysContainer');
                 _renderUsageChart(data);
                 _renderHealth();
             }
@@ -188,7 +208,7 @@ App.page('index',function(){
     }
     var _renderUsageChart = function(data){
         var cpudata = [],mmdata = [],srdata =[], vmdata = [];
-        var colors = ['#4572a7','#aa4643','#89a54e','#80699b','#80699b','#80699b','#80699b','#80699b','#80699b','#80699b','#80699b','#80699b'];
+        var colors = ['#2980B9','#F39C12','#16A085','#7F8C8D','#aa4643','#3498DB','#9B59B6','#95A5A6','#F39C12','#C0392B'];
         $.each(data.list,function(i,item){
             vmdata.push({name:item.businessSystem.name,color:colors[i],value:item.vmCount});
             cpudata.push({name:item.businessSystem.name,color:colors[i],value:item.totalCpuCoreCount});
@@ -203,165 +223,6 @@ App.page('index',function(){
     var _renderPieChart = function(data,id,text){
         var chartCfg = AHelper.getDountCfg(data,id,text);
         new iChart.Donut2D(chartCfg).draw();
-    }
-    return exports;
-});
-App.page('alarm',function(){
-   var exports = {};
-    exports.init = function(){
-        _subscribeEvents();
-        $('#alarm_article').trigger('load');
-    }
-    var _subscribeEvents = function(){
-        var carousel = new J.Slider('#alarm_article');
-        var carouselTrend = new J.Slider('#alarm_trend_article');
-        $('#alarm_article').on('load',function(){
-            _renderChart();
-            carousel.refresh();
-        });
-        $('#alarm_trend_article').on('load',function(){
-            _renderTrendChart();
-            carouselTrend.refresh();
-        });
-    }
-    var _renderChart = function(){
-        var businessData = [
-            {name : 'OA',value : 30,color:'#4572a7'},
-            {name : '订单',value : 20,color:'#aa4643'},
-            {name : '营销',value : 60,color:'#89a54e'},
-            {name : '协同',value : 40,color:'#80699b'}
-        ];
-        var resData = [
-            {name : 'ACP',value : 30,color:'#4572a7'},
-            {name : '网络',value : 8,color:'#aa4643'},
-            {name : '存储',value : 15,color:'#89a54e'},
-            {name : 'PowerVM',value : 30,color:'#80699b'},
-            {name : 'VMware',value : 30,color:'#3d96ae'}
-        ];
-        var businessChartCfg = AHelper.getPieCfg(businessData,'busiSysAlarmChart',true);
-        businessChartCfg.listeners = {
-            'bound':function(){
-                J.Router.turnTo('#alarm_list_section');
-            }
-        };
-        businessChartCfg.sub_option.listeners = {
-            parseText:function(d, t){
-                return d.get('value');
-            }
-        };
-        businessChartCfg.height -= 51;
-        new iChart.Pie2D(businessChartCfg).draw();
-
-        var resChartCfg = AHelper.getPieCfg(resData,'resAlarmChart',true);
-        resChartCfg.listeners = {
-            'bound':function(){
-                J.Slider.turnTo('#alarm_list_section');
-            }
-        };
-        resChartCfg.sub_option.listeners = {
-            parseText:function(d, t){
-                return d.get('value');
-            }
-        };
-        resChartCfg.height -= 51;
-        new iChart.Pie2D(resChartCfg).draw();
-    }
-    var _renderTrendChart = function(){
-        var pv=[],ip=[],t;
-        for(var i=0;i<61;i++){
-            t = Math.floor(Math.random()*(30+((i%12)*5)))+10;
-            pv.push(t);
-            t = Math.floor(t*0.5);
-            t = t-Math.floor((Math.random()*t)/2);
-            ip.push(t);
-        }
-
-        var data = [
-            {
-                name : 'OA',
-                value:pv,
-                color:'#0d8ecf',
-                line_width:2
-            },
-            {
-                name : '协同',
-                value:ip,
-                color:'#ef7707',
-                line_width:2
-            }
-        ];
-        var data2 = [{
-                name : 'ACP',
-                value:pv,
-                color:'#0d8ecf',
-                line_width:2
-            },{
-                name : 'PowerVM',
-                value:ip,
-                color:'#ef7707',
-                line_width:2
-            }];
-
-        var labels = ["2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06"];
-        var config = AHelper.getLineCfg(data,'busiSysTrendChart',labels);
-        config.height -= 51;
-        config.title='业务维度';
-        new iChart.LineBasic2D(config).draw();
-        var config = AHelper.getLineCfg(data2,'resTrendChart',labels);
-        config.height -= 51;
-        config.title = '环境维度';
-        new iChart.LineBasic2D(config).draw();
-    }
-    return exports;
-});
-
-App.page('res_allocate',function(){
-    var exports = {};
-    exports.init = function(){
-        _renderChart();
-        _subscribeEvents();
-    }
-    var _subscribeEvents = function(){
-       new J.Slider('#res_allocate_article');
-    }
-    var _renderChart = function(){
-        var pv=[],ip=[],t;
-        for(var i=0;i<61;i++){
-            t = Math.floor(Math.random()*(30+((i%12)*5)))+10;
-            pv.push(t);
-            t = Math.floor(t*0.5);
-            t = t-Math.floor((Math.random()*t)/2);
-            ip.push(t);
-        }
-
-        var data = [
-            {
-                name : 'OA',
-                value:pv,
-                color:'#0d8ecf',
-                line_width:2
-            },
-            {
-                name : '协同',
-                value:ip,
-                color:'#ef7707',
-                line_width:2
-            }
-        ];
-
-        var labels = ["2012-08-01","2012-08-02","2012-08-03","2012-08-04","2012-08-05","2012-08-06"];
-        var config = AHelper.getLineCfg(data,'cpu_allocate_chart',labels);
-        config.title = 'CPU';
-        config.height -=30;
-        new iChart.LineBasic2D(config).draw();
-        var config = AHelper.getLineCfg(data,'mm_allocate_chart',labels);
-        config.title = '内存';
-        config.height -=30;
-        new iChart.LineBasic2D(config).draw();
-        var config = AHelper.getLineCfg(data,'sr_allocate_chart',labels);
-        config.title = '存储';
-        config.height -=30;
-        new iChart.LineBasic2D(config).draw();
     }
     return exports;
 });
@@ -467,20 +328,37 @@ App.page('biz_sys',function(){
             J.Router.turnTo('#biz_health_list_section');
         })
         $('#biz_alarm_block').on('tap',function(){
-            J.Router.turnTo('#alarm_list_section');
+            if($(this).data('loaded')){
+                J.Router.turnTo('#alarm_list_section');
+            }else{
+                J.showToast('数据采集中，请稍候...');
+            }
+
         });
     }
     var _render = function(){
+        J.showMask();
         RsAPI.biz.getInfo(data.bizId,function(d){
             $('#biz_sys_section header .title').text(d.name);
             $('#txt_biz_health').text(d.health);
-            $('#txt_biz_alarm').text(d.alarmNum);
             $('#txt_biz_host').text(0);
             $('#txt_biz_vm').text(d.vmCount);
             $('#txt_biz_cpu').text(d.cpuCount);
             $('#txt_biz_memroy').text(d.memoryCapacity);
             $('#txt_biz_sr').text(d.memoryCapacity);
-        })
+            J.hideMask();
+        });
+        $('#txt_biz_alarm').html('<div class="icon spinner" style="font-size: 0.5em"></div>');
+        $('#biz_alarm_block').data('loaded',false);
+        RsAPI.biz.getAlarms(data.bizId,function(d){
+            var num = d.length;
+            $('#txt_biz_alarm').html(num);
+            $('#biz_alarm_block').data('loaded',true);
+            App.page('alarm_list').setData({
+                bizId : data.bizId,
+                alarms : d
+            });
+        });
     }
     return exports;
 });
@@ -557,10 +435,30 @@ App.page('biz_vm_list',function(){
 
     }
     var _renderList = function(articleId,tmplId,data){
-        var el =  $('#'+articleId+' ul.list');
-        el.html(template(tmplId,data));
-        J.Element.init(el);
+        J.tmpl('#'+articleId+' ul.list',tmplId,data);
+        J.Scroll(articleId);
         J.hideMask();
+    }
+    return exports;
+})
+
+App.page('alarm_list',function(){
+    var exports = {};
+    var data;
+    exports.setData = function(d){data = d; }
+    exports.init = function(){
+
+    }
+    exports.load = function(){
+        if(data.alarms){
+            J.tmpl('#alarm_list_article ul.list','alarm_list_tmpl',data.alarms);
+        }else{
+            J.showMask();
+            RsAPI.biz.getAlarms(data.bizId,function(result){
+                J.tmpl('#alarm_list_article ul.list','alarm_list_tmpl',result);
+                J.hideMask();
+            })
+        }
     }
     return exports;
 })
@@ -572,13 +470,21 @@ App.page('vm',function(){
     exports.setData = function(d){data = d; }
     exports.init = function(){
         $('#vm_section .control-group li').on('tap',function(){
-            J.alert('功能开发中...');
+            var actionStr = {'start':'启动','restart':'重启','stop':'停止'}
+            var action = $(this).data('action');
+            J.showMask('正在'+actionStr[action]);
+            RsAPI.vm[action].call(this,data.vmId,function(){
+                J.showToast('虚拟机已经'+actionStr[action]);
+                exports.load();
+            })
         })
     }
     exports.load = function(){
         var vmId = data.vmId;
+        J.showMask();
         RsAPI.vm.get(vmId,function(data){
-            $('#vm_article').html(template('vm_detail_tmpl',data));
+            J.tmpl('#vm_article','vm_detail_tmpl',data);
+            J.hideMask();
         })
     }
     return exports;
@@ -601,8 +507,7 @@ App.page('biz_health_list',function(){
         var bizId = data.bizId;
         J.showMask();
         RsAPI.biz.getAvailability(bizId,serverType,function(data){
-            $('#biz_health_list_article ul.list').html(template('biz_health_liut_tmpl',data));
-            J.Element.init($('#biz_health_list_article ul.list'));
+            J.tmpl('#biz_health_list_article ul.list','biz_health_liut_tmpl',data);
             J.hideMask();
         })
     }
@@ -638,17 +543,17 @@ App.page('vm_apply_list',function(){
         _renderUnderwayList();
     }
     var _renderUnderwayList = function(){
+        J.showMask();
         RsAPI.vmApply.getUnderwayList(function(data){
-            var $container = $('#underway_apply_list_article ul.list');
-            $container.html(template('underway_list_tmpl',data));
-            J.Element.init($container);
+            J.tmpl('#underway_apply_list_article ul.list','underway_list_tmpl',data);
+            J.hideMask();
         });
     }
     var _renderFinishedList = function(){
+        J.showMask();
         RsAPI.vmApply.getFinishedList(pageNo, function(data){
-            var $container = $('#finished_apply_list_article ul.list');
-            $container.html(template('finished_list_tmpl',data));
-            J.Element.init($container);
+            J.tmpl('#finished_apply_list_article ul.list','finished_list_tmpl',data);
+            J.hideMask();
         });
     }
     return exports;
@@ -658,11 +563,115 @@ App.page('vm_apply',function(){
     var data;
     exports.setData = function(d){data = d; }
     exports.init = function(){
-        new J.Slider('#vmConfigList');
+        $('#btn_process_agree').on('tap',function(){
+            var param = {
+                applicationId : data.id,
+                approvalOpinion : $('#approvalOpinion').val(),
+                items : _getFinalParam()
+            };
+            RsAPI.vmApply.agree(param,function(){
+                J.showToast('审批通过','success');
+                exports.load();
+            });
+        });
+        $('#btn_process_refuse').on('tap',function(){
+            var param = {
+                applicationId : data.id,
+                approvalOpinion : $('#approvalOpinion').val()
+            };
+            RsAPI.vmApply.refuse(param,function(){
+                J.showToast('申请已退回','success');
+                exports.load();
+            });
+        });
+        $('#btn_process_confirm').on('tap',function(){
+            var param = {
+                applicationId : data.id,
+                items : _getRevertInfos()
+            };
+            RsAPI.vmApply.confirm(param,function(){
+                J.showToast('确认成功','success');
+                exports.load();
+            });
+        });
+        $('#btn_process_save').on('tap',function(){
+            var param = {
+                applicationId : data.id,
+                items : _getRevertInfos()
+            };
+            RsAPI.vmApply.saveRevert(param,function(){
+                J.showToast('保存成功','success');
+                exports.load();
+            });
+        });
     }
     exports.load = function(){
+        var $footer = $('#vm_apply_section footer').addClass('hide');
+        var $approve_btn_container = $('#approve_btn_container');
+        var $created_btn_container = $('#created_btn_container');
         RsAPI.vmApply.getApply(data.id,function(result){
-            //TODO render
+            var status = result.status.name;
+            if(status == 'WAIT_APPROVAL'){
+                $approve_btn_container.css('display','-webkit-box');
+                $created_btn_container.css('display','none');
+                $footer.removeClass('hide');
+            }
+            if(status == 'APPROVED'){
+                $approve_btn_container.css('display','none');
+                $created_btn_container.css('display','-webkit-box');
+                $footer.removeClass('hide');
+            }
+            J.tmpl('#vm_apply_article>div','vm_apply_article_tmpl',result);
+            new J.Slider('#vmConfigList',true);
+        })
+    }
+
+    var _getFinalParam = function(){
+        var items  = [];
+        $('#vmConfigList  ul').each(function(i,ul){
+            var id = $(ul).data('id');
+            var finalCpuCount = $(ul).find('input[name="finalCpuCount"]').val();
+            var finalMemory = $(ul).find('input[name="finalMemory"]').val();
+            var finalStorage = $(ul).find('input[name="finalStorage"]').val();
+            items.push({id: id,finalCpuCount:finalCpuCount,finalMemory:finalMemory,finalStorage:finalStorage})
+        });
+        return items;
+    }
+
+    var _getRevertInfos = function(){
+        var items = [];
+        $('#vmConfigList  ul').each(function(i,ul){
+            var itemId = $(ul).data('id');
+            var item = {
+                id : itemId,
+                revertInfos : []
+            }
+            $('li[data-type="revertInfo"]',ul).each(function(i,revert){
+                var revertId = $(revert).data('id');
+                var vmName = $('input[name="vmName"]',revert).val();
+                var ip = $('input[name="ip"]',revert).val();
+                item.revertInfos.push({id:revertId,vmName:vmName,ip:ip});
+            })
+            items.push(item);
+        });
+        return items;
+    }
+    return exports;
+})
+
+App.page('user',function(){
+    var exports = {};
+    exports.init = function(){
+        _subscribeEvents();
+        _render();
+    }
+    var _subscribeEvents = function(){
+
+    }
+    var _render = function(){
+        RsAPI.user.findAll(function(data){
+            J.tmpl('#user_article ul.list','user_tmpl',data);
+            J.Scroll('user_article');
         })
     }
     return exports;

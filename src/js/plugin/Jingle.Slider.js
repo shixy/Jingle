@@ -86,8 +86,6 @@
             container.on('touchstart',_touchStart,false);
             container.on('touchmove',_touchMove,false);
             container.on('touchend',_touchEnd,false);
-            //屏幕旋转时重新计算大小
-            $(window).on('resize',_init);
         };
 
         var  _touchStart = function(event) {
@@ -101,8 +99,6 @@
             deltaX = 0;
             container[0].style.webkitTransitionDuration = 0;
             gestureStarted = true;
-            //阻止事件冒泡
-            //event.stopPropagation();
         };
 
         var _touchMove = function(event) {
@@ -120,7 +116,6 @@
                 if(isPastBounds)return;
                 var pos = (deltaX - index * slideWidth);
                 container[0].style.webkitTransform = 'translateX('+pos+'px)';
-                //event.stopPropagation();
             }
         };
 
@@ -138,7 +133,6 @@
                 }
             }
             gestureStarted = false;
-            //e.stopPropagation();
         };
 
 
@@ -164,4 +158,4 @@
         };
     }
     J.Slider = slider;
-}())
+}());

@@ -9,46 +9,54 @@
         <h1 class="title">虚拟机申请</h1>
     </header>
     <footer>
-        <div style="-webkit-box-flex:1;padding-top: 5px;padding-left: 2px;">
-            <input type="text" placeholder="请填写审批意见">
+        <div id="approve_btn_container" style="display:-webkit-box;-webkit-box-flex:1;">
+            <div style="-webkit-box-flex:1;padding-top: 5px;padding-left: 2px;">
+                <input type="text" id="approvalOpinion" placeholder="请填写审批意见">
+            </div>
+            <div style="-webkit-box-flex:0;width:140px;text-align: center;padding-top: 5px;">
+                <button class="button emerland" style="display: inline-block;"  id="btn_process_agree">通过</button>
+                <button class="button alizarin" style="display: inline-block;" id="btn_process_refuse">拒绝</button>
+            </div>
         </div>
-        <div style="-webkit-box-flex:0;width:140px;text-align: center;padding-top: 5px;">
-            <button class="button" style="display: inline-block;">通过</button>
-            <button class="button" style="display: inline-block;">拒绝</button></div>
+        <div id="created_btn_container" style="display:-webkit-box;-webkit-box-flex:1;display: none;">
+            <button class="button" data-icon="signup" id="btn_process_confirm" style="display: block;-webkit-box-flex:1;width:100%;margin:8px 10px;">确认</button>
+            <button class="button" data-icon="checkmark" id="btn_process_save" style="display: block;-webkit-box-flex:1;width:100%;margin:8px 10px;">保存</button>
+        </div>
     </footer>
-    <article class="active" id="vm_article" data-scroll="true">
-        <div style="position: relative;padding:15px 10px;margin:0;background-color:#2C3E50;color: #fff; ">
-            <div class="vm-tag">已提交</div>
-            <a href="#" style="position:absolute;right: 20px;bottom: 30px;font-size: 30px;" data-icon="phone"></a>
-            <div class="grid" style="padding: 5px;">
-                <div class="grid-label">编号：</div>
-                <div class="one-part" style="color: #E67E22">A1010101010</div>
+    <article class="active" id="vm_apply_article" data-scroll="true">
+        <div>
+            <div style="position: relative;padding:15px 10px;margin:0;background-color:#2C3E50;color: #fff; ">
+                <div class="vm-tag">已提交</div>
+                <a href="#" style="position:absolute;right: 20px;bottom: 30px;font-size: 30px;" data-icon="phone"></a>
+                <div class="grid" style="padding: 5px;">
+                    <div class="grid-label">编号：</div>
+                    <div class="one-part" style="color: #E67E22">A1010101010</div>
+                </div>
+                <div class="grid" style="padding: 5px;">
+                    <div class="grid-label">申请人：</div>
+                    <div class="one-part">张三</div>
+                </div>
+                <div class="grid" style="padding: 5px;">
+                    <div class="grid-label">部门：</div>
+                    <div class="one-part">研究院</div>
+                </div>
+                <div class="grid" style="padding: 5px;">
+                    <div class="grid-label">申请时间：</div>
+                    <div class="one-part">2013-07-03 12:11</div>
+                </div>
             </div>
-            <div class="grid" style="padding: 5px;">
-                <div class="grid-label">申请人：</div>
-                <div class="one-part">张三</div>
-            </div>
-            <div class="grid" style="padding: 5px;">
-                <div class="grid-label">部门：</div>
-                <div class="one-part">研究院</div>
-            </div>
-            <div class="grid" style="padding: 5px;">
-                <div class="grid-label">申请时间：</div>
-                <div class="one-part">2013-07-03 12:11</div>
-            </div>
-        </div>
-        <ul class="list">
-            <li class="divider">
-                详细申请信息
-            </li>
-        </ul>
-        <div id="vmConfigList">
+            <ul class="list">
+                <li class="divider">
+                    详细申请信息
+                </li>
+            </ul>
+            <div id="vmConfigList">
             <div>
                 <div style="padding: 10px 0;">
                     <ul class="list inset">
                         <li class="grid">
                             <div class="grid-label">申请理由：</div>
-                            <div class="one-part">嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚嘚啵嘚</div>
+                            <div class="one-part"></div>
                         </li>
                         <li class="grid">
                             <div class="grid-label">平台：</div>
@@ -83,8 +91,6 @@
                                 <input type="text" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
                             </div>
                         </li>
-                    </ul>
-                    <ul class="list inset" >
                         <li class="divider">已创建的虚拟机(2)</li>
                         <li class="grid">
                             <div class="grid-label">虚拟机1</div>
@@ -98,6 +104,119 @@
                 </div>
             </div>
         </div>
-
+        </div>
     </article>
 </section>
+<script type="text/html" id="vm_apply_article_tmpl">
+    <div style="position: relative;padding:15px 10px;margin:0;background-color:#2C3E50;color: #fff; ">
+        <div class="vm-tag">{status.label}</div>
+        <a href="#" style="position:absolute;right: 20px;bottom: 30px;font-size: 30px;" data-icon="phone"></a>
+        <div class="grid" style="padding: 5px;">
+            <div class="grid-label">编号：</div>
+            <div class="one-part" style="color: #E67E22">{applicationNo}</div>
+        </div>
+        <div class="grid" style="padding: 5px;">
+            <div class="grid-label">申请人：</div>
+            <div class="one-part">{userName}</div>
+        </div>
+        <div class="grid" style="padding: 5px;">
+            <div class="grid-label">部门：</div>
+            <div class="one-part">{groupName}</div>
+        </div>
+        <div class="grid" style="padding: 5px;">
+            <div class="grid-label">申请时间：</div>
+            <div class="one-part">{submitTime}</div>
+        </div>
+    </div>
+    <ul class="list">
+        <li class="divider">
+            详细申请信息
+        </li>
+    </ul>
+    <div id="vmConfigList">
+        <div>
+            {each appItems}
+            <div style="padding: 10px 0;">
+                <ul class="list inset" data-id="{$value.id}">
+                   {if status.name == 'APPROVED'}
+                    <li class="divider">已创建的虚拟机</li>
+                    {each $value.vmRevertInfos}
+                    <li class="grid" data-type="revertInfo" data-id="{$value.id}" style="padding:10px;">
+                        <div class="grid-label one-part" style="padding:0 10px;">
+                            <input type="text" name="vmName" value="{$value.vmName}" placeholder="虚拟机名称" style="margin:5px 0 0 0"/>
+                        </div>
+                        <div class="one-part" style="padding:0 10px;">
+                            <input type="text" name="ip" value="{$value.ip}" placeholder="IP" style="margin:5px 0 0 0"/>
+                        </div>
+                    </li>
+                    {/each}
+                    {/if}
+                    {if status.name == 'CREATED'}
+                    <li class="divider">已创建的虚拟机</li>
+                    {each $value.vmRevertInfos}
+                    <li class="grid">
+                        <div class="grid-label one-part">{$value.vmName}</div>
+                        <div class="one-part">{$value.ip} </div>
+                    </li>
+                    {/each}
+                    {/if}
+                    <li class="divider">申请明细</li>
+                    <li class="grid">
+                        <div class="grid-label">申请理由：</div>
+                        <div class="one-part">{$value.introduction}</div>
+                    </li>
+                    <li class="grid">
+                        <div class="grid-label">平台：</div>
+                        <div class="one-part">{$value.vmType}</div>
+                    </li>
+                    <li class="grid">
+                        <div class="grid-label">虚拟机数：</div>
+                        <div class="one-part">{$value.vmCount}</div>
+                    </li>
+                    <li class="grid">
+                        <div class="grid-label">操作系统：</div>
+                        <div class="one-part">{$value.os}</div>
+                    </li>
+                    <li class="grid">
+                        <div class="grid-label" style="line-height: 30px;">CPU：</div>
+                        <div class="one-part" style="line-height: 30px;">{$value.cpuCount}个</div>
+                        <div style="width:100px;line-height:30px;">
+                            {if status.name == 'WAIT_APPROVAL'}
+                            <input type="text" data-id="{$value.id}" name="finalCpuCount" value="{$value.finalCpuCount}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">个
+                            {/if}
+                            {if status.name == 'APPROVED'|| status.name == 'CREATED'}
+                            {$value.finalCpuCount}个(最终值)
+                            {/if}
+                        </div>
+                    </li>
+                    <li class="grid">
+                        <div class="grid-label" style="line-height: 30px;">内存：</div>
+                        <div class="one-part" style="line-height: 30px;">{$value.memory}GB</div>
+                        <div style="width:100px;line-height:30px;">
+                            {if status.name == 'WAIT_APPROVAL'}
+                            <input type="text" data-id="{$value.id}" name="finalMemory" value="{$value.finalMemory}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
+                            {/if}
+                            {if status.name == 'APPROVED'|| status.name == 'CREATED'}
+                            {$value.finalMemory}GB(最终值)
+                            {/if}
+                        </div>
+                    </li>
+                    <li class="grid">
+                        <div class="grid-label" style="line-height: 30px;">存储：</div>
+                        <div class="one-part" style="line-height: 30px;">{$value.storage}GB</div>
+                        <div style="width:100px;line-height:30px;">
+                            {if status.name == 'WAIT_APPROVAL'}
+                            <input type="text" data-id="{$value.id}" name="finalStorage" value="{$value.finalStorage}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
+                            {/if}
+                            {if status.name == 'APPROVED'|| status.name == 'CREATED'}
+                            {$value.finalStorage}GB(最终值)
+                            {/if}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            {/each}
+        </div>
+    </div>
+</script>
+

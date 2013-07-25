@@ -5,40 +5,57 @@
  * Time: 上午9:42
  */
 ;(function(){
-    var api = "http://172.20.1.33:6888/ws";
-    var appKey = '000001';
+//    var api = "http://172.20.1.195:6888/ws";
+    var api = "http://localhost:6888/ws";
+    var appKey = '751507d364d69b40';
     var sessionId;
 
     function _ajax(type,url,param,callback,noCache){
         if(!sessionId)sessionId = localStorage.getItem('sessionId');
-        param.appKey = appKey;
-        param.sessionId = sessionId;
-
+        var scretParam = {
+            appKey : appKey,
+            sessionId : sessionId
+        }
         var requestUrl;
         //判断当前是手机端(phonegap)还是浏览器端，手机端通过phonegap的白名单进行跨域，浏览器端采用nodejs进行跨域转发
         if(location.protocol == 'http:'){
-            requestUrl = '/proxy?url='+api+url+'?'+ $.param(param);
-            param = {};
+            if(type == 'get'){
+                $.extend(param,scretParam)
+                requestUrl = '/proxy?url='+api+url+'?'+ $.param(param);
+                param = {};
+            }else{
+                requestUrl = '/proxy?url='+api+url+'?'+ $.param(scretParam);
+            }
         }else{
-            requestUrl = api+url;
+            if(type == 'get'){
+                $.extend(param,scretParam);
+                requestUrl = api+url;
+            }else{
+                requestUrl = api+url+'?'+ $.param(scretParam);
+            }
         }
-
         var options = {
             url : requestUrl,
             type : type,
             data : param,
-            success : function(data){
+            success : callback,
+            error : function(xhr){
+                var data = JSON.parse(xhr.responseText);
                 if(data.code && data.message){
-                    J.showToast(data.solution,'error');
+                    J.showToast(data.message,'error');
                 }else{
-                    callback(data);
+                    J.showToast('连接服务器失败！','error');
                 }
-            },
-            error : function(){
-                J.showToast('连接服务器失败！','error');
+
             },
             dataType : 'json'
         }
+
+        if(type == 'post'){
+            options.data = JSON.stringify(param);
+            options.contentType ='application/json';
+        }
+
         if(noCache){
             $.ajax(options);
         }else{
@@ -129,9 +146,21 @@
             },
             query : function(queryObject,callback){
                 _get('/vm/query',queryObject,callback);
+            },
+            start : function(vmId,callback){
+                _get('/vm/start',{vmId:vmId},callback);
+            },
+            restart : function(vmId,callback){
+                _get('/vm/restart',{vmId:vmId},callback);
+            },
+            stop : function(vmId,callback){
+                _get('/vm/stop',{vmId:vmId},callback);
             }
         },
         vmApply : {
+            getUnderwayCount : function(callback){
+                _get('/apply/admin/underway/count',{},callback);
+            },
             getUnderwayList : function(callback){
                 _get('/apply/admin/underway',{},callback);
             },
@@ -140,8 +169,30 @@
             },
             getApply : function(applicationId,callback){
                 _get('/apply/info',{applicationId:applicationId},callback);
+            },
+            agree : function(param,callback){
+              _post('/apply/agree',param,callback);
+            },
+            refuse : function(param,callback){
+              _post('/apply/refuse',param,callback);
+            },
+            confirm : function(param,callback){
+              _post('/apply/confirm',param,callback);
+            },
+            saveRevert : function(param,callback){
+              _post('/apply/saveRevert',param,callback);
             }
-
+        },
+        user : {
+            findAll : function(callback){
+               _get('/user/findAll',{},callback);
+            },
+            findByName : function(username,callback){
+                _get('/user/findByName',{username:username},callback)
+            },
+            resetPassword : function(username,password,callback){
+                _post('/user/resetPassword',{username:username,password:password},callback);
+            }
         }
     }
     })();

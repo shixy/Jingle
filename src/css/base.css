@@ -15,10 +15,12 @@ body {
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     background-color: #222;
-    font-family: STHeiti,"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-weight: 400;
-    font-size: 13px;
-    line-height: 1.3em;
+    /*font-family: STHeiti,"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
+    /*font-weight: 400;*/
+    /*font-size: 16px;*/
+    /*line-height: 1.3em;*/
+    font: 16px/1.25 "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: bold;
     letter-spacing: -0.05em;
     overflow: hidden;
 }
@@ -108,14 +110,12 @@ sub,sup{
 .tip-arrow-down:after{
     content: "▼";
     position: relative;
-    top: -5px;
     left: 1px;
-    font-size: 11px;
+    font-size: 0.9em
 }
 .tip-arrow-up:after{
     content: "▲";
     position: relative;
-    top: -5px;
     left: 1px;
-    font-size: 11px;
+    font-size: 0.9em;
 }

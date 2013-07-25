@@ -29,9 +29,9 @@ Jingle.Toast = (function(){
                 _toast.hide();
             });
         }
-
     }
     var show = function(type,text,closeCallback){
+        _mask.hide();
         if(timer) clearTimeout(timer);
         toast_type = type;
         _toast.attr('class',type).html(TEMPLATE[type].replace('{value}',text)).show();
@@ -45,7 +45,6 @@ Jingle.Toast = (function(){
             J.anim(_toast,'slideDownIn');
             timer = setTimeout(hide,3000);
         }
-
     }
     var _subscribeCloseTag = function(){
         _toast.on('tap','#tag_close_toast',function(){

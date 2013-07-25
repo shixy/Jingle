@@ -1,3 +1,4 @@
+var UPDATE_APP_PATH = 'http://172.20.1.200:2000/download/version.js';
 document.addEventListener('deviceready', onDeviceReady, false);
 function onDeviceReady(){
     navigator.splashscreen.hide();
@@ -10,7 +11,7 @@ function onDeviceReady(){
         }else{
             var sectionId = $('section.active').attr('id');
             if(sectionId == 'login_section' || sectionId == 'index_section'){
-                J.confirm('是否退出程序？',function(){
+                J.confirm('提示','是否退出程序？',function(){
                     navigator.app.exitApp();
                 });
             }else{
@@ -19,6 +20,7 @@ function onDeviceReady(){
         }
     }, false);
     App.run();
+    window.plugins.updateApp.checkAndUpdate(UPDATE_APP_PATH);
 }
 var App = (function(){
     var exports ={};
@@ -29,14 +31,18 @@ var App = (function(){
         $.each(pages,function(k,v){
             var sectionId = '#'+k+'_section';
             $('body').delegate(sectionId,'in',function(e,isBack){
-                if(isBack)return;
                 //只在页面第一次初始化的时候执行
                 if(!v.init_flag && v.hasOwnProperty('init')){
                     v.init.call(v);
                     v.init_flag = true;
                 }
                 //页面每次显示的时候都会执行
-                if(v.hasOwnProperty('load')){
+                if(v.hasOwnProperty('show')){
+                    v.show.call(v);
+                }
+
+                //页面加载的时候都会执行
+                if(!isBack && v.hasOwnProperty('load')){
                     v.load.call(v);
                 }
             });

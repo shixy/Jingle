@@ -107,4 +107,4 @@ Jingle.Router = (function(){
         back : back
     }
 
-})()
+})();

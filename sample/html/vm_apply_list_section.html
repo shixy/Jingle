@@ -15,32 +15,32 @@
     <article class="active" data-scroll="true" id="underway_apply_list_article">
         <ul class="list">
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p><span data-icon="user">张三</span> <span style="margin-left: 50px;" data-icon="alarm">2013-06-07 12:22:22</span></p>
             </li>
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p><span data-icon="user">张三</span> <span style="margin-left: 50px;" data-icon="alarm">2013-06-07 12:22:22</span></p>
             </li>
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p><span data-icon="user">张三</span> <span style="margin-left: 50px;" data-icon="alarm">2013-06-07 12:22:22</span></p>
             </li>
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p><span data-icon="user">张三</span> <span style="margin-left: 50px;" data-icon="alarm">2013-06-07 12:22:22</span></p>
             </li>
         </ul>
     </article>
 
-    <article  data-scroll="true" id="finished_apply_list_article">
+    <article  data-scroll="true"  id="finished_apply_list_article">
         <ul class="list">
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p>
                     <span data-icon="user">张三</span>
@@ -49,7 +49,7 @@
                 <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
             </li>
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p>
                     <span data-icon="user">张三</span>
@@ -58,7 +58,7 @@
                 <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
             </li>
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p>
                     <span data-icon="user">张三</span>
@@ -67,7 +67,7 @@
                 <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
             </li>
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p>
                     <span data-icon="user">张三</span>
@@ -76,7 +76,7 @@
                 <p><span data-icon="checkmark" style="color: #27AE60">2013-06-07 12:22:22</span></p>
             </li>
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p>
                     <span data-icon="user">张三</span>
@@ -85,7 +85,7 @@
                 <p><span data-icon="checkmark" style="color:#27AE60">2013-06-07 12:22:22</span></p>
             </li>
             <li class="selected" data-icon="next" data-id="11">
-                <div class="tag">已提交</div>
+                <div class="tag">已完成</div>
                 <strong>申请虚拟机(A10101020102)</strong>
                 <p>
                     <span data-icon="user">张三</span>
@@ -107,7 +107,7 @@
 </script>
 <script type="text/html" id="finished_list_tmpl">
     {each $data}
-    <li class="selected" data-icon="next">
+    <li class="selected" data-icon="next" data-id="{$value.id}">
         <div class="tag">{$value.status.label}</div>
         <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
         <p>

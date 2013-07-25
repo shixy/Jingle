@@ -157,6 +157,9 @@ Jingle.Service = (function(){
         options.dataType = 'json'
         return ajax(options)
     }
+    var clear = function(){
+        window.localStorage.clear();
+    }
     return {
         ajax : ajax,
         get : get,
@@ -165,6 +168,7 @@ Jingle.Service = (function(){
         getUnPostData : getUnPostData,
         removeUnPostData : removeUnPostData,
         syncPostData : syncPostData,
-        syncAllPostData : syncAllPostData
+        syncAllPostData : syncAllPostData,
+        clear : clear
     }
 })();

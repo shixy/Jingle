@@ -1,9 +1,9 @@
 aside{
     background: #393939;
     color: #fff;
-    font-size: 15px;
     display: -webkit-box;
     display: box;
+    font-size: 1.1em;
     box-orient:vertical;
     -webkit-box-orient:vertical;
 }
@@ -20,7 +20,7 @@ aside .header{
     color: #fff;
     text-shadow: 0 1px rgba(0, 0, 0, .3);
     text-align: center;
-    font-size: 20px;
+    font-size: 1.2em;
     font-weight: bold;
 }
 aside>ul.center{
@@ -43,7 +43,7 @@ aside > ul.menu li a .icon{
 aside>ul.menu li.anchor{
     padding: 2px 10px;
     color: #8b9195;
-    font-size: 12px;
+    font-size: 0.9em;
 }
 aside .footer{
     height: 44px;

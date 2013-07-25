@@ -12,18 +12,22 @@ Jingle.Element = (function(){
         var el = $(selector || 'body');
         if(el.length == 0)return;
         $.map($(SELECTOR.icon,el),_init_icon);
-        $.map($(SELECTOR.scroll,el),_init_scroll);
         $.map($(SELECTOR.toggle,el),_init_toggle);
         $.map($(SELECTOR.range,el),_init_range);
         $.map($(SELECTOR.progress,el),_init_progress);
         $.map($(SELECTOR.count,el),_init_count);
+        $.map($(SELECTOR.scroll,el),_init_scroll);
     }
-
     var _init_icon = function(el){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
     var _init_scroll = function(el){
-        J.Scroll.init(el);
+        var id = $(el).attr('id');
+        if(id){
+            J.Scroll(id);
+        }else{
+            console.error('Jingle.Scroll need a id');
+        }
     }
 
     var _init_toggle = function(el){
@@ -87,15 +91,15 @@ Jingle.Element = (function(){
         var $el = $(el);
         var count = parseInt($el.data('count'));
         var orient = $el.data('orient');
-        if(count>0){
-            var className = (orient == 'left')?'left':'';
-            var markup = '<span class="count '+className+'">'+count+'</span>'
-            $el.append(markup);
+        var className = (orient == 'left')?'left':'';
+        var markup = '<span class="count '+className+'">'+count+'</span>'
+        $el.append(markup);
+        if(count == 0){
+            $('.count',el).hide();
         }
-
     }
 
     return {
         init : init
     }
-})()
+})();

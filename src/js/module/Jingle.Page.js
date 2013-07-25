@@ -63,4 +63,4 @@ Jingle.Page = (function(J){
         load : loadPage,
         loadPageByTmpl : loadPageByTmpl
     }
-})(Jingle)
+})(Jingle);

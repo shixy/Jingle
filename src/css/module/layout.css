@@ -88,8 +88,14 @@ footer{
     bottom: 0;
     height: 51px;
 }
+footer.hide{
+    display: none;
+}
 footer ~ article {
     bottom: 51px;
+}
+footer.hide ~ article{
+    bottom:0;
 }
 header ~ article{
     top:44px;

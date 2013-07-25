@@ -14,7 +14,7 @@ Jingle.Popup = (function(){
             top:'50%',
             left:'10%',
             right:'10%',
-            'border-radius' : '5px'
+            'border-radius' : '3px'
         },
         'bottom' : {
             bottom:0,
@@ -30,7 +30,7 @@ Jingle.Popup = (function(){
     var ANIM = {
         top : ['slideDownIn','slideUpOut'],
         bottom : ['slideUpIn','slideDownOut'],
-        default : ['scaleIn','scaleOut']
+        defaultAnim : ['scaleIn','scaleOut']
     };
     var _popup,_mask;
     var transition;
@@ -47,10 +47,10 @@ Jingle.Popup = (function(){
         _popup.attr({'style':'','class':''});
         if(pos_type == 'object'){
             _popup.css(pos);
-            transition = ANIM['default'];
+            transition = ANIM['defaultAnim'];
         }else if(pos_type == 'string'){
             _popup.css(POSITION[pos])
-            var trans_key = pos.indexOf('top')>-1?'top':(pos.indexOf('bottom')>-1?'bottom':'default');
+            var trans_key = pos.indexOf('top')>-1?'top':(pos.indexOf('bottom')>-1?'bottom':'defaultAnim');
             transition = ANIM[trans_key];
         }else{
             console.error('错误的参数！');
@@ -58,6 +58,7 @@ Jingle.Popup = (function(){
         }
         if(arrow_direction){
             _popup.addClass('arrow '+arrow_direction);
+            _popup.css('padding','8px');
             if(arrow_direction=='top'||arrow_direction=='bottom'){
                 transition = ANIM[arrow_direction];
             }
@@ -88,12 +89,12 @@ Jingle.Popup = (function(){
     }
     _init();
 
-    var alert = function(title){
-        var markup = '<div class="title">'+title+'</div><div id="popup_btn_container"><button data-target="closePopup" data-icon="checkmark">OK</button></div>'
+    var alert = function(title,content){
+        var markup = '<div class="popup-title">'+title+'</div><div class="popup-content">'+content+'</div><div id="popup_btn_container"><a data-target="closePopup" data-icon="checkmark">OK</a></div>'
         show(markup,'center',false);
     }
-    var confirm = function(title,okCall,cancelCall){
-        var markup = '<div class="title">'+title+'</div><div id="popup_btn_container"><button data-icon="checkmark">确定</button><button class="cancel" data-icon="close">取消</button></div>'
+    var confirm = function(title,content,okCall,cancelCall){
+        var markup = '<div class="popup-title">'+title+'</div><div class="popup-content">'+content+'</div><div id="popup_btn_container"><a data-icon="checkmark">确定</a><a class="cancel" data-icon="close">取消</a></div>'
         show(markup,'center',true);
         $('#popup_btn_container [data-icon="checkmark"]').tap(function(){
             hide(okCall);

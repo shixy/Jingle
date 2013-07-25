@@ -2,14 +2,20 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Jingle</title>
+    <title>湖烟一体化管控平台</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="HandheldFriendly" content="True">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="cleartype" content="on">
+    <!-- iPhone -->
+    <link href="images/icon.png" sizes="57x57" rel="apple-touch-icon">
+    <link href="images/splashscreen.jpg" rel="apple-touch-startup-image">
 
     <link rel="stylesheet" href="css/Jingle.css">
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/theme.hy.css">
 </head>
 <body>
     <aside>
@@ -17,11 +23,10 @@
         <ul class="center menu">
             <li><a href="#index_section" data-icon="next" data-target="section">全局概览</a></li>
             <li><a href="#res_period_section" data-icon="next" data-target="section">资源使用对比</a></li>
-            <li><a href="#" data-icon="next" data-target="section">我的审批(未完成)</a></li>
-            <li><a href="#" data-icon="next" data-target="section">虚拟机查询(未完成)</a></li>
-            <li><a href="#" data-icon="next" data-target="section">资源分配趋势(未完成)</a></li>
+            <li><a href="#vm_apply_list_section" data-icon="next" data-target="section">我的审批</a></li>
+            <li><a href="#user_section" data-icon="next" data-target="section">用户列表</a></li>
             <li><a href="#" data-icon="next" data-target="section">DSR(未完成)</a></li>
-            <li><a href="#" data-icon="next" data-target="section">用户列表(未完成)</a></li>
+            <li><a href="#" data-icon="next" data-target="section">资源分配趋势(未完成)</a></li>
             <li class="anchor">设置</li>
             <li><a href="#" data-icon="switch" id="btn_change_user">切换账号</a></li>
             <li><a href="#" data-icon="exit" id="btn_exit_app">退出程序</a></li>
@@ -29,12 +34,12 @@
     </aside>
     <div id="section-container">
         <section id="login_section" class="active">
-            <article class="active" style="background-color: #3498DB">
-                <img src="images/logo.png" style="display: block;margin:80px auto 0;">
+            <article class="active" style="background-color: #006953">
+                <img src="images/logo.jpg" style="display: block;margin:10px auto 0;">
                 <form style="padding: 20px;" id="login_form">
                     <input type="text" placeholder="用户名" id="username" data-icon="home" value="">
                     <input type="password" placeholder="密码" id="password" value="">
-                    <button class="button block" type="submit" data-icon="lock" style="padding:10px 5px;" >登录</button>
+                    <button class="button block" type="submit" data-icon="lock" style="padding:10px 5px;background-color: #16A085" >登录</button>
                 </form>
             </article>
         </section>
@@ -44,15 +49,18 @@
     <script type="text/javascript" src="js/lib/zepto.js"></script>
     <script type="text/javascript" src="js/lib/touch.js"></script>
     <script type="text/javascript" src="js/lib/ichart.min.js"></script>
+    <script type="text/javascript" src="js/lib/iscroll-lite-min.js"></script>
     <!--<script type="text/javascript" src="js/lib/jq.desktopBrowsers.js"></script>-->
     <script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
     <script type="text/javascript" src="js/lib/template.min.js"></script>
     <script type="text/javascript" src="js/lib/template-syntax.js"></script>
+    <script type="text/javascript" src="js/lib/cookies.js"></script>
     <!--- app --->
     <script type="text/javascript" src="js/app/app.js"></script>
     <script type="text/javascript" src="js/app/app.page.js"></script>
     <script type="text/javascript" src="js/app/app.helper.js"></script>
     <script type="text/javascript" src="js/app/restAPI.js"></script>
+   <!-- <script src="http://172.20.1.33:8080/target/target-script-min.js#anonymous"></script>-->
     <script type="text/javascript">
         if(!((window.DocumentTouch&&document instanceof DocumentTouch)||'ontouchstart' in window)){
             var script=document.createElement("script");

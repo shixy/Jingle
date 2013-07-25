@@ -36,7 +36,8 @@
         </ul>
         <div id="index_container" >
             <div>
-                <div id="bizSysContainer" class="active"  data-scroll="true" style="position:relative;">
+                <div id="bizSysContainer" data-scroll="true" class="active" >
+                    <ul class="group_list list"></ul>
                 </div>
                 <div id="vm_num_canvas" >
                 </div>
@@ -47,10 +48,9 @@
         </div>
     </article>
     <script type="text/tmpl" id="bizInfoTmpl">
-        <ul class="group_list">
         {each $data}
         <li data-icon="next">
-            <div class="title">{$value.businessSystem.name}
+            <div class="title" style="font-size: {$getFontSize $value.businessSystem.name}">{$value.businessSystem.name}
                 <div class="progress"></div>
                 <div class="health-tip">健康值<span>100</span></div>
             </div>
@@ -62,6 +62,5 @@
             </div>
         </li>
         {/each}
-        </ul>
     </script>
 </section>

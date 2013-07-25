@@ -1,6 +1,6 @@
 .toggle {
     position: relative;
-    width: 75px;
+    width: 100px;
     height: 28px;
     background-color: #CBD2D8;
     border-radius: 5px;
@@ -36,11 +36,13 @@
     top: 0;
     left: 0;
     z-index: 2;
-    width: 28px;
+    width: 40px;
     height: 28px;
     background-color: #95a5a6;
     border: 1px solid rgba(0, 0, 0, .2);
-    border-radius: 6px 0 0 6px;
+    border-radius: 6px;
+    -webkit-border-top-right-radius: 0;
+    -webkit-border-bottom-right-radius: 0;
     -webkit-transition: -webkit-transform 0.1s ease-in-out, border 0.1s ease-in-out;
     transition: transform 0.1s ease-in-out, border 0.1s ease-in-out;
 }
@@ -53,9 +55,11 @@
 
 .toggle.active .toggle-handle {
     background-color: #1ABC9C;
-    border-radius: 0 6px 6px 0;
-    -webkit-transform: translate3d(48px, 0, 0);
-    transform: translate3d(48px, 0, 0);
+    border-radius: 6px;
+    -webkit-border-bottom-left-radius:0;
+    -webkit-border-top-left-radius: 0;
+    -webkit-transform: translate3d(60px, 0, 0);
+    transform: translate3d(60px, 0, 0);
 }
 
 .toggle.active:before {
