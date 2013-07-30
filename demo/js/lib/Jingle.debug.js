@@ -1,8 +1,8 @@
 var Jingle = J = {
     settings : {
         transitionType : 'slide',
-        transitionTime : 300,
-        transitionTimingFunc : 'linear',
+        transitionTime : 400,
+        transitionTimingFunc : 'ease',
         sectionPath : 'html/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
@@ -94,12 +94,7 @@ Jingle.Element = (function(){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
     var _init_scroll = function(el){
-        var id = $(el).attr('id');
-        if(id){
-            J.Scroll(id);
-        }else{
-            console.error('Jingle.Scroll need a id');
-        }
+        J.Scroll(el);
     }
 
     var _init_toggle = function(el){
@@ -198,47 +193,8 @@ Jingle.Page = (function(J){
             }
         })
     }
-    /**
-     * 使用JSON数据来渲染模板
-     * @param data  JSON数据
-     * @param tmplUrl 模板地址
-     * @param callback 渲染后生成的html
-     */
-    var _processTmpl = function(data,tmplUrl,callback){
-        $.get(J.templateFoler+tmplUrl,function(html){
-            var content = $.tmpl(html,data);
-            callback(content);
-        })
-    }
-    /**
-     * 远程加载数据并渲染模板，然后显示页面
-     * @param pageId 页面ID
-     * @param dataUrl JSON数据获取路径
-     * @param tmplUrl 模板地址
-     */
-    var loadPageByTmpl = function(pageId,dataUrl,tmplUrl){
-        if($('#'+pageId).length>0){
-            go(pageId);
-            return;
-        }
-        $.get(dataUrl,function(data){
-            _processTmpl(data,tmplUrl,function(html){
-                $('body').append(html);
-                go(pageId);
-            })
-
-        })
-    }
-    /**
-     * 加载html片段
-     * @param url
-     */
-    var loadContent = function(url){
-        //TODO
-    }
     return {
-        load : loadPage,
-        loadPageByTmpl : loadPageByTmpl
+        load : loadPage
     }
 })(Jingle);
 /**
@@ -354,7 +310,18 @@ Jingle.Router = (function(){
 //TODO  改造iscroll为插件形式
 ;(function(){
     var scrollCache = {};
-    J.Scroll = function(id,options){
+    var generateScrollIndex = 1;
+    J.Scroll = function(selector,options){
+        var id;
+        if($.type(selector) == 'string'){
+            id = selector;
+        }else{
+            id = $(selector).attr('id');
+            if(!id){
+                id = "scroll-"+generateScrollIndex++;
+                $(selector).attr('id',id);
+            }
+        }
         var scroll;
         if(scrollCache[id]){
             scroll = scrollCache[id];
@@ -654,6 +621,7 @@ Jingle.Transition = (function(J){
             target.addClass('active');
             J.anim(current,transitionName[0]);
             J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
+
         }
 
     }
@@ -765,10 +733,8 @@ Jingle.Popup = (function(){
         });
     }
     var _subscribeEvents = function(){
-        _mask.on('tap',hide);
-        _popup.on('tap','[data-target="closePopup"]',function(){
-            hide();
-        });
+        _mask.on('tap',function(){ hide();});
+        _popup.on('tap','[data-target="closePopup"]',function(){hide();});
     }
     _init();
 
