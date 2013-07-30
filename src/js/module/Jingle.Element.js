@@ -22,12 +22,7 @@ Jingle.Element = (function(){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
     var _init_scroll = function(el){
-        var id = $(el).attr('id');
-        if(id){
-            J.Scroll(id);
-        }else{
-            console.error('Jingle.Scroll need a id');
-        }
+        J.Scroll(el);
     }
 
     var _init_toggle = function(el){

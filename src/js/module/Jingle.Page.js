@@ -21,46 +21,7 @@ Jingle.Page = (function(J){
             }
         })
     }
-    /**
-     * 使用JSON数据来渲染模板
-     * @param data  JSON数据
-     * @param tmplUrl 模板地址
-     * @param callback 渲染后生成的html
-     */
-    var _processTmpl = function(data,tmplUrl,callback){
-        $.get(J.templateFoler+tmplUrl,function(html){
-            var content = $.tmpl(html,data);
-            callback(content);
-        })
-    }
-    /**
-     * 远程加载数据并渲染模板，然后显示页面
-     * @param pageId 页面ID
-     * @param dataUrl JSON数据获取路径
-     * @param tmplUrl 模板地址
-     */
-    var loadPageByTmpl = function(pageId,dataUrl,tmplUrl){
-        if($('#'+pageId).length>0){
-            go(pageId);
-            return;
-        }
-        $.get(dataUrl,function(data){
-            _processTmpl(data,tmplUrl,function(html){
-                $('body').append(html);
-                go(pageId);
-            })
-
-        })
-    }
-    /**
-     * 加载html片段
-     * @param url
-     */
-    var loadContent = function(url){
-        //TODO
-    }
     return {
-        load : loadPage,
-        loadPageByTmpl : loadPageByTmpl
+        load : loadPage
     }
 })(Jingle);

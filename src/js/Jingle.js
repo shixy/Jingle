@@ -1,8 +1,8 @@
 var Jingle = J = {
     settings : {
         transitionType : 'slide',
-        transitionTime : 300,
-        transitionTimingFunc : 'linear',
+        transitionTime : 400,
+        transitionTimingFunc : 'ease',
         sectionPath : 'html/'
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",

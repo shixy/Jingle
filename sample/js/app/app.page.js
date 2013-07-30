@@ -198,13 +198,15 @@ App.page('index',function(){
         })
     }
     var _renderHealth = function(){
-        var data_health = [70,60,20,40,40,70,90,50];
-        $('#bizSysContainer li').each(function(i,el){
-            var data = data_health[i];
-            $(el).find('.progress').css('height',data+'%');
-            $(el).find('.health-tip span').text(data);
-        })
 
+        RsAPI.res.getHealth(function(data){
+            $('#bizSysContainer li').each(function(i,el){
+                var bizId = $(this).data('id');
+                var hdata = data[bizId];
+                $(el).find('.progress').css('height',hdata+'%');
+                $(el).find('.health-tip span').text(hdata);
+            })
+        })
     }
     var _renderUsageChart = function(data){
         var cpudata = [],mmdata = [],srdata =[], vmdata = [];
@@ -265,20 +267,20 @@ App.page('res_period',function(){
         });
     }
     var _renderChart = function(){
+        var beginDate,endDate
         RsAPI.res.getBizResUsage(AHelper.formatDate(searchDate,'yyyy-MM-dd'),serverType,function(data){
             var cpuWorkingData = {name : '工作时间',color:'#4572a7',value:[]};
             var cpuFreedomData = {name : '非工作时间',color:'#aa4643',value:[]};
             var mmWorkingData = {name : '工作时间',color:'#4572a7',value:[]};
             var mmFreedomData = {name : '非工作时间',color:'#aa4643',value:[]};
             var labels = [];
-            for(var i=0;i<data.workingTime.length;i++){
-                var workingObj = data.workingTime[i];
-                var freedomObj = data.freedomTime[i];
-                cpuWorkingData.value.push(workingObj.totalCpuRate);
-                cpuFreedomData.value.push(freedomObj.totalCpuRate);
-                mmWorkingData.value.push(workingObj.totalMemoryRate);
-                mmFreedomData.value.push(freedomObj.totalMemoryRate);
-                labels.push(workingObj.businessName);
+            for(var i=0;i<data.length;i++){
+                var obj = data[i];
+                cpuWorkingData.value.push(obj.workingAvgCpuRate);
+                cpuFreedomData.value.push(obj.freedomAvgCpuRate);
+                mmWorkingData.value.push(obj.workingAvgMemoryRate);
+                mmFreedomData.value.push(obj.freedomAvgMemoryRate);
+                labels.push(obj.businessName);
             }
             _drawChart('cpu',[cpuWorkingData,cpuFreedomData],labels);
             _drawChart('memory',[mmWorkingData,mmFreedomData],labels);

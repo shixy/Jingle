@@ -21,6 +21,7 @@ Jingle.Transition = (function(J){
             target.addClass('active');
             J.anim(current,transitionName[0]);
             J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
+
         }
 
     }

@@ -119,3 +119,6 @@ sub,sup{
     left: 1px;
     font-size: 0.9em;
 }
+[data-scroll="true"]{
+    overflow: auto;
+}

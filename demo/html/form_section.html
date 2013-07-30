@@ -5,37 +5,126 @@
         </nav>
         <h1 class="title">Form</h1>
     </header>
-    <article class="active indented">
-        <!-- Input -->
-        <form>
-            <input type="date" >
-            <input type="time">
-            <input type="month">
-            <input type="week">
-            <a class="button block">Choose existing</a>
-        </form>
+    <footer>
+        <a  href="#form_article" data-target="article" data-icon="list" class="active">表单</a>
+        <a  href="#form_module_article" data-target="article" data-icon="stack">组件</a>
+    </footer>
+    <article class="active indented" data-scroll="true" id="form_article" >
+        <div>
+            <!-- Input -->
+            <form>
+                <input type="date" >
+                <input type="time">
+                <input type="month">
+                <input type="week">
+                <a class="button block" data-icon="cogs">保存</a>
+            </form>
 
-        <!-- Input group -->
-        <form class="input-group">
-            <input type="text" placeholder="Full name">
-            <input type="email" placeholder="Email">
-            <input type="text" placeholder="Username">
-        </form>
+            <!-- Input group -->
+            <form class="input-group">
+                <input type="text" placeholder="真实姓名">
+                <input type="email" placeholder="电子邮箱">
+                <input type="text" placeholder="用户名">
+            </form>
 
-        <!-- Input group with labels-->
-        <form class="input-group">
-            <div class="input-row">
-                <label>Full name</label>
-                <input type="text" placeholder="Mister Ratchet">
-            </div>
-            <div class="input-row">
-                <label>Email</label>
-                <input type="email" placeholder="ratchetframework@gmail.com">
-            </div>
-            <div class="input-row">
-                <label>Username</label>
-                <input id="username_form" type="text" placeholder="goRatchet">
-            </div>
-        </form>
+            <!-- Input group with labels-->
+            <form class="input-group">
+                <div class="input-row">
+                    <label>姓名</label>
+                    <input type="text" placeholder="张三">
+                </div>
+                <div class="input-row">
+                    <label>邮箱</label>
+                    <input type="email" placeholder="example@gmail.com">
+                </div>
+                <div class="input-row">
+                    <label>用户名</label>
+                    <input id="username_form" type="text" placeholder="字母、数字、下划线">
+                </div>
+            </form>
+        </div>
+    </article>
+    <article data-scroll="true" id="form_module_article" >
+        <ul class="list">
+            <li class="divider">toggle</li>
+            <li>
+                <div class="demo-btn-group">
+                    <div style="text-align: left">默认：</div>
+                    <div class="toggle active" >
+                        <div class="toggle-handle"></div>
+                    </div>
+                    <div class="toggle" >
+                        <div class="toggle-handle"></div>
+                    </div>
+                    <div style="text-align: left">自定义文字 data-on="开启" data-off="关闭"</div>
+                    <div class="toggle active" data-on="开启" data-off="关闭">
+                        <div class="toggle-handle"></div>
+                    </div>
+                    <div class="toggle" data-on="开启" data-off="关闭">
+                        <div class="toggle-handle"></div>
+                    </div>
+                </div>
+            </li>
+            <li class="divider">range</li>
+            <li>
+                <div class="demo-btn-group">
+                    <div style="text-align: left">默认：</div>
+                    <div>
+                        <input type="range" min=4 max=10 value="7"/>
+                    </div>
+                    <div style="text-align: left">右侧显示值：</div>
+                    <div  data-rangeinput="right">
+                        <input type="range" min=4 max=10 value="7"/>
+                    </div>
+                    <div style="text-align: left">左侧显示值：</div>
+                    <div  data-rangeinput="left">
+                        <input type="range" min=4 max=10 value="8"/>
+                    </div>
+                </div>
+            </li>
+            <li class="divider">progress</li>
+            <li>
+                <div class="demo-btn-group">
+                    <div style="text-align: left">默认：</div>
+                    <div data-progress="40"></div>
+                    <div style="text-align: left">自定义文字：</div>
+                    <div data-progress="80" data-title="已完成"></div>
+                </div>
+            </li>
+            <li class="divider">navbar</li>
+            <li>
+                <div class="demo-btn-group">
+                    <div style="text-align: left">默认(只有文字)：</div>
+                    <ul class="control-group">
+                        <li class="active"><a href="#">Hello</a></li>
+                        <li><a href="#">Jingle</a></li>
+                        <li><a href="#" >html5</a></li>
+                    </ul>
+                    <div style="text-align: left">只有图标：</div>
+                    <ul class="control-group">
+                        <li data-icon="home"></li>
+                        <li class="active" data-icon="bell"></li>
+                        <li data-icon="spinner"></li>
+                    </ul>
+                    <div style="text-align: left">文字+图标(左右)：</div>
+                    <ul class="control-group">
+                        <li class="active"><a href="#" data-icon="home">Hello</a></li>
+                        <li><a href="#" data-icon="bell">Jingle</a></li>
+                        <li><a href="#" data-icon="spinner">html5</a></li>
+                    </ul>
+                    <div style="text-align: left">文字+图标(上下)：</div>
+                    <ul class="control-group">
+                        <li class="active" data-icon="home"><a href="#">Hello</a></li>
+                        <li data-icon="bell"><a href="#">Jingle</a></li>
+                        <li data-icon="spinner"><a href="#" >html5</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+
+
+
+
+
     </article>
 </section>

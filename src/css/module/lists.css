@@ -5,38 +5,38 @@ ul.list {
     background-color: #fff;
 }
 
-.list li {
+.list>li {
     position: relative;
     padding: 15px 20px 15px 10px;;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
-.list li.selected:active{
+.list>li.selected:active{
     background-color: #3498DB;
     color: #fff;
 }
 
-.list li:first-child {
+.list>li:first-child {
     border-top: 1px solid rgba(0, 0, 0, .1);
 }
 
-.list li > a:not([class*="button"]) {
+.list>li > a:not([class*="button"]) {
     position: relative;
     display: block;
     padding: inherit;
     margin:-15px -20px -15px -10px;;
     color: inherit;
 }
-.list li strong{
+.list>li strong{
     color: #333;
     font-weight: 600;
     font-size: 1.2em;
 }
-.list li p{
+.list>li p{
     color:#7a7a7a;
     font-size: 0.9em;
     padding-top: 5px;
 }
-.list li > .icon{
+.list>li > .icon{
     position: absolute;
     right: 5px;
     top:50%;
@@ -44,7 +44,7 @@ ul.list {
     margin-top: -9px;
     color: #BDC3C7;
 }
-.list li .tag{
+.list>li .tag{
     position: absolute;
     top:10px;
     right: 10px;
@@ -70,10 +70,10 @@ ul.list {
     box-sizing: border-box;
 }
 
-.list.inset li:first-child {
+.list.inset>li:first-child {
     border-top-width: 0;
 }
-.list.inset li:last-child {
+.list.inset>li:last-child {
     border-bottom-width: 0;
 }
 

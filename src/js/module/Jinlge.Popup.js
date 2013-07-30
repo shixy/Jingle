@@ -82,10 +82,8 @@ Jingle.Popup = (function(){
         });
     }
     var _subscribeEvents = function(){
-        _mask.on('tap',hide);
-        _popup.on('tap','[data-target="closePopup"]',function(){
-            hide();
-        });
+        _mask.on('tap',function(){ hide();});
+        _popup.on('tap','[data-target="closePopup"]',function(){hide();});
     }
     _init();
 

@@ -10,7 +10,7 @@ aside{
 aside > *{
     -webkit-box-flex : 0;
 }
-aside .header{
+aside>.header{
     overflow: hidden;
     line-height: 44px;
     border-bottom: 1px solid #000;
@@ -23,28 +23,26 @@ aside .header{
     font-size: 1.2em;
     font-weight: bold;
 }
-aside>ul.center{
+aside>.center{
     -webkit-box-flex : 1;
+    overflow: auto;
 }
-aside>ul.menu li {
+aside ul.menu li {
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
-aside>ul.menu li a {
+aside ul.menu li a {
     padding: 10px 20px;
     display: block;
     color: #fff;
 }
-aside>ul.menu a:active{
+aside ul.menu a:active{
     background-color: #2980B9;
 }
-aside > ul.menu li a .icon{
+aside ul.menu li a .icon{
     float:left;
 }
-aside>ul.menu li.anchor{
+aside ul.menu li.anchor{
     padding: 2px 10px;
     color: #8b9195;
     font-size: 0.9em;
-}
-aside .footer{
-    height: 44px;
 }

@@ -30,7 +30,7 @@ aside{
     left:0;
     right:0;
     bottom: 0;
-    background-color: #fff;
+    background-color: #000;
     z-index: 1;
 }
 
@@ -42,7 +42,8 @@ section{
     left: 0;
     display: none;
     background-color: #fff;
-    z-index: 2
+    z-index: 2;
+    -webkit-backface-visibility: hidden;
 }
 section.active{
     z-index: 4;

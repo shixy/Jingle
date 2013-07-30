@@ -49,8 +49,8 @@
     </article>
     <script type="text/tmpl" id="bizInfoTmpl">
         {each $data}
-        <li data-icon="next">
-            <div class="title" style="font-size: {$getFontSize $value.businessSystem.name}">{$value.businessSystem.name}
+        <li data-icon="next" data-id="{$value.businessSystem.id}">
+            <div class="title"  style="font-size: {$getFontSize $value.businessSystem.name}">{$value.businessSystem.name}
                 <div class="progress"></div>
                 <div class="health-tip">健康值<span>100</span></div>
             </div>

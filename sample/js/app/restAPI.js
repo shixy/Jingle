@@ -5,9 +5,10 @@
  * Time: 上午9:42
  */
 ;(function(){
-//    var api = "http://172.20.1.195:6888/ws";
-    var api = "http://localhost:6888/ws";
-    var appKey = '751507d364d69b40';
+    var api = "http://172.20.1.195:6888/ws";
+//    var api = "http://localhost:6888/ws";
+//    var appKey = '751507d364d69b40';
+    var appKey = '000001';
     var sessionId;
 
     function _ajax(type,url,param,callback,noCache){
@@ -115,9 +116,9 @@
             getHealth : function(callback){
                 _get('/res/healthList',{},callback);
             },
-            getBizResUsage : function(date,serverType,callback){
+            getBizResUsage : function(beginDate,endDate,serverType,callback){
                 serverType = serverType || 'pc_server';
-                _get('/res//biz/resUsage',{date:date,serverType:serverType},callback);
+                _get('/res//biz/resUsage',{beginDate:date,endDate:endDate,serverType:serverType},callback);
             }
         },
         biz : {
