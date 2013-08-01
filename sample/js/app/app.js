@@ -30,22 +30,38 @@ var App = (function(){
         _subscribeAsideEvents();
         $.each(pages,function(k,v){
             var sectionId = '#'+k+'_section';
-            $('body').delegate(sectionId,'in',function(e,isBack){
-                //只在页面第一次初始化的时候执行
-                if(!v.init_flag && v.hasOwnProperty('init')){
+            $('body').delegate(sectionId,'pageinit',function(){
+                if(v.hasOwnProperty('init')){
                     v.init.call(v);
-                    v.init_flag = true;
                 }
-                //页面每次显示的时候都会执行
+            });
+            $('body').delegate(sectionId,'pageshow',function(e,isBack){
+                //页面加载的时候都会执行
                 if(v.hasOwnProperty('show')){
                     v.show.call(v);
                 }
-
-                //页面加载的时候都会执行
+                //后退时不执行
                 if(!isBack && v.hasOwnProperty('load')){
                     v.load.call(v);
                 }
             });
+
+//            $('body').delegate(sectionId,'in',function(e,isBack){
+//                //只在页面第一次初始化的时候执行
+//                if(!v.init_flag && v.hasOwnProperty('init')){
+//                    v.init.call(v);
+//                    v.init_flag = true;
+//                }
+//                //页面每次显示的时候都会执行
+//                if(v.hasOwnProperty('show')){
+//                    v.show.call(v);
+//                }
+//
+//                //页面加载的时候都会执行
+//                if(!isBack && v.hasOwnProperty('load')){
+//                    v.load.call(v);
+//                }
+//            });
         });
         Jingle.launch();
         AHelper.registerTemplateHelper();

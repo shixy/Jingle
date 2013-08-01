@@ -1,6 +1,9 @@
 ;(function(){
     function slider(selector,noDots){
-        var gestureStarted = false,
+
+        var afterSlide = function(){},
+            beforeSlide = function(){return true},
+            gestureStarted = false,
             index = 0,
             speed = 300,
             wrapper,
@@ -10,8 +13,6 @@
             slideNum,
             slideWidth,
             deltaX;
-        var afterSlide = function(){};
-        var beforeSlide = function(){return true};
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);

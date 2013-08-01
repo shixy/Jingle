@@ -16,7 +16,7 @@ var Jingle = J = {
         $.extend(this.settings,opts);
         this.Router.init();
         this.Element.init();
-        $('body').delegate('article','show',function(){
+        $('body').delegate('article','articleshow',function(){
             if($(this).data('scroll')){
                 J.Scroll(this.id);
             }

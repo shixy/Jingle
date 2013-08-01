@@ -58,16 +58,11 @@
     <script type="text/javascript" src="js/lib/zepto.js"></script>
     <script type="text/javascript" src="js/lib/touch.js"></script>
     <script type="text/javascript" src="js/lib/ichart.min.js"></script>
-    <script type="text/javascript" src="js/lib/iscroll-lite-min.js"></script>
     <script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
     <!--- app --->
     <script type="text/javascript" src="js/app/app.js"></script>
+    <script type="text/javascript" src="js/lib/zepto.touch2mouse.js"></script>
     <script type="text/javascript">
-        if(!((window.DocumentTouch&&document instanceof DocumentTouch)||'ontouchstart' in window)){
-            var script=document.createElement("script");
-            script.src="js/lib/jq.desktopBrowsers.js";
-            var tag=$("head").append(script);
-        }
     $(function () {
         Jingle.launch();
     })

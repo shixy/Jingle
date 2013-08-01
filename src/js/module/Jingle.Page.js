@@ -11,13 +11,16 @@ Jingle.Page = (function(J){
      * ajax远程加载页面
      */
     var loadPage = function(hash){
-        //TODO need loading block
+        var id = _formatHash(hash);
         $.ajax({
-            url : J.settings.sectionPath+_formatHash(hash)+'.html',
+            url : J.settings.sectionPath+id+'.html',
             timeout : 5000,
             async : false,
             success : function(html){
+                //添加到dom树中
                 $('#section-container').append(html);
+                //触发pageload事件
+                $('#'+id).trigger('page.load');
             }
         })
     }

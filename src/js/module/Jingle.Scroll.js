@@ -16,10 +16,11 @@
         var scroll;
         if(scrollCache[id]){
             scroll = scrollCache[id];
+            $.extend(scroll.options,options)
             scroll.refresh();
         }else{
-           scroll = new IScroll('#'+id,options);
-            scrollCache[id] = scroll;
+           scroll = new iScroll(id,options);
+           scrollCache[id] = scroll;
         }
         return scroll;
     }

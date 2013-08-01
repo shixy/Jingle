@@ -375,20 +375,20 @@ App.page('biz_vm_list',function(){
     exports.init = function(){
         var $title = $('#biz_vm_list_title'),$group = $('#biz_vm_title_group');
         var $all =  $('#biz_vm_list_article'),$cpu = $('#biz_vm_cpu_top10_article'),$mm = $('#biz_vm_memory_top10_article');
-        $all.on('show',function(){
+        $all.on('articleshow',function(){
             currentArticle = 'all';
             $title.show();
             $group.hide();
             _syncAndRender(currentArticle);
         });
-        $cpu.on('show',function(){
+        $cpu.on('articleshow',function(){
             currentArticle = 'cpuTop10';
             $('.control-group li[data-period="'+period+'"]',$cpu).addClass('active').siblings().removeClass('active');
             $title.hide();
             $group.show();
             _syncAndRender(currentArticle);
         });
-        $mm.on('show',function(){
+        $mm.on('articleshow',function(){
             currentArticle = 'mmTop10';
             $('.control-group li[data-period="'+period+'"]',$mm).addClass('active').siblings().removeClass('active');
             $title.hide();

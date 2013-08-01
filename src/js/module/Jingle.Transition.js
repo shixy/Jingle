@@ -29,10 +29,14 @@ Jingle.Transition = (function(J){
     var _finishTransition = function(current, target) {
         current.removeClass('activing active');
         target.removeClass('activing').addClass('active');
-        current.trigger('out',[isBack]);
-        target.trigger('in',[isBack]);
-        current.find('article.active').trigger('hide');
-        target.find('article.active').trigger('show');
+        if(!target.data('init')){
+            target.trigger('pageinit');
+            target.data('init',true);
+        }
+        current.trigger('pagehide',[isBack]);
+        target.trigger('pageshow',[isBack]);
+        current.find('article.active').trigger('articlehide');
+        target.find('article.active').trigger('articleshow');
     }
 
     var run = function(current,target,back){

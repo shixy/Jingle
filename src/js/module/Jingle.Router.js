@@ -15,7 +15,7 @@ Jingle.Router = (function(){
         $(document).on('click','a',function(e){e.preventDefault()});
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
 
-        var initSectionId = $('#section-container section.active').trigger('in').attr('id');
+        var initSectionId = $('#section-container section.active').trigger('pageinit').trigger('pageshow').attr('id');
         add2History('#'+initSectionId);
     }
 
@@ -66,6 +66,7 @@ Jingle.Router = (function(){
         var currentPage = $(_history[0]);
         add2History(hash);
         if($(hash).length === 0){
+            //同步加载模板
             J.Page.load(hash);
             J.Element.init(hash);
         }
@@ -91,8 +92,8 @@ Jingle.Router = (function(){
         el.addClass('active').siblings('.active').removeClass('active');
         var activeArticle = article.addClass('active').siblings('.active').removeClass('active');
         J.anim(article,'scaleIn',300,function(){
-            article.trigger('show');
-            activeArticle.trigger('hide');
+            article.trigger('articleshow');
+            activeArticle.trigger('articlehide');
 
         });
     }

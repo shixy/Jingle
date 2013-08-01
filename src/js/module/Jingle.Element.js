@@ -21,6 +21,7 @@ Jingle.Element = (function(){
     var _init_icon = function(el){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
+
     var _init_scroll = function(el){
         J.Scroll(el);
     }
