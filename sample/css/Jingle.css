@@ -1585,6 +1585,16 @@ input[type="range"]::-webkit-slider-thumb{
     height: 30px;
    display: inline-block;
 }
+.refresh-container{
+    padding:10px;
+    text-align: center;
+}
+.refresh-icon{
+    font-size: 1.1em;
+}
+.refresh-label{
+    font-size: 1em;
+}
 #jingle_toast_mask{
     display: none;
     position: absolute;

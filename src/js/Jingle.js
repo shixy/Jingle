@@ -16,11 +16,6 @@ var Jingle = J = {
         $.extend(this.settings,opts);
         this.Router.init();
         this.Element.init();
-        $('body').delegate('article','articleshow',function(){
-            if($(this).data('scroll')){
-                J.Scroll(this.id);
-            }
-        });
     },
     anim : function(el,animName,duration,ease,callback){
         var d, e,c;

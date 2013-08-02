@@ -68,7 +68,6 @@ Jingle.Router = (function(){
         if($(hash).length === 0){
             //同步加载模板
             J.Page.load(hash);
-            J.Element.init(hash);
         }
         _changePage(currentPage,hash);
     }

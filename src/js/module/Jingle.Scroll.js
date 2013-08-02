@@ -2,7 +2,15 @@
 ;(function(){
     var scrollCache = {};
     var generateScrollIndex = 1;
-    J.Scroll = function(selector,options){
+    J.Scroll = function(selector,opts){
+        var options = {
+           hScroll : false,
+           bounce : false,
+           lockDirection : true,
+           useTransform: true,
+           useTransition: false,
+           checkDOMChanges: false
+        }
         var id;
         if($.type(selector) == 'string'){
             id = selector;
@@ -16,11 +24,12 @@
         var scroll;
         if(scrollCache[id]){
             scroll = scrollCache[id];
-            $.extend(scroll.options,options)
+            $.extend(scroll.options,opts)
             scroll.refresh();
         }else{
-           scroll = new iScroll(id,options);
-           scrollCache[id] = scroll;
+            $.extend(options,opts);
+            scroll = new iScroll(id,options);
+            scrollCache[id] = scroll;
         }
         return scroll;
     }

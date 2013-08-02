@@ -16,12 +16,18 @@ Jingle.Element = (function(){
         $.map($(SELECTOR.range,el),_init_range);
         $.map($(SELECTOR.progress,el),_init_progress);
         $.map($(SELECTOR.count,el),_init_count);
-        $.map($(SELECTOR.scroll,el),_init_scroll);
+    }
+    var initScroll = function(selector){
+        var el = $(selector || 'body');
+        if(el.data('scroll')){
+            _init_scroll();
+        }else{
+            $.map($(SELECTOR.scroll,el),_init_scroll);
+        }
     }
     var _init_icon = function(el){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
-
     var _init_scroll = function(el){
         J.Scroll(el);
     }
@@ -96,6 +102,33 @@ Jingle.Element = (function(){
     }
 
     return {
-        init : init
+        /**
+         * 初始化容器内组件
+         */
+        init : init,
+        /**
+         * 构造icon组件
+         */
+        initIcon : _init_icon,
+        /**
+         * 构造toggle组件
+         */
+        initToggle : _init_toggle,
+        /**
+         * 构造progress组件
+         */
+        initProgress : _init_progress,
+        /**
+         * 构造range组件
+         */
+        initRange : _init_range,
+        /**
+         * 构造count组件
+         */
+        initCount : _init_count,
+        /**
+         * 初始化iscroll组件或容器内iscroll组件
+         */
+        initScroll : initScroll
     }
 })();

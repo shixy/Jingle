@@ -21,6 +21,8 @@ Jingle.Page = (function(J){
                 $('#section-container').append(html);
                 //触发pageload事件
                 $('#'+id).trigger('page.load');
+                //构造组件
+                J.Element.init(hash);
             }
         })
     }

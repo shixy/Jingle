@@ -23,15 +23,14 @@ Jingle.Transition = (function(J){
             J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
 
         }
-
     }
-
     var _finishTransition = function(current, target) {
         current.removeClass('activing active');
         target.removeClass('activing').addClass('active');
         if(!target.data('init')){
             target.trigger('pageinit');
             target.data('init',true);
+            J.Element.initScroll(target)
         }
         current.trigger('pagehide',[isBack]);
         target.trigger('pageshow',[isBack]);

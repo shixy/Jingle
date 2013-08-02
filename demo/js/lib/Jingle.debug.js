@@ -16,11 +16,6 @@ var Jingle = J = {
         $.extend(this.settings,opts);
         this.Router.init();
         this.Element.init();
-        $('body').delegate('article','articleshow',function(){
-            if($(this).data('scroll')){
-                J.Scroll(this.id);
-            }
-        });
     },
     anim : function(el,animName,duration,ease,callback){
         var d, e,c;
@@ -88,12 +83,18 @@ Jingle.Element = (function(){
         $.map($(SELECTOR.range,el),_init_range);
         $.map($(SELECTOR.progress,el),_init_progress);
         $.map($(SELECTOR.count,el),_init_count);
-        $.map($(SELECTOR.scroll,el),_init_scroll);
+    }
+    var initScroll = function(selector){
+        var el = $(selector || 'body');
+        if(el.data('scroll')){
+            _init_scroll();
+        }else{
+            $.map($(SELECTOR.scroll,el),_init_scroll);
+        }
     }
     var _init_icon = function(el){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
     }
-
     var _init_scroll = function(el){
         J.Scroll(el);
     }
@@ -168,7 +169,34 @@ Jingle.Element = (function(){
     }
 
     return {
-        init : init
+        /**
+         * 初始化容器内组件
+         */
+        init : init,
+        /**
+         * 构造icon组件
+         */
+        initIcon : _init_icon,
+        /**
+         * 构造toggle组件
+         */
+        initToggle : _init_toggle,
+        /**
+         * 构造progress组件
+         */
+        initProgress : _init_progress,
+        /**
+         * 构造range组件
+         */
+        initRange : _init_range,
+        /**
+         * 构造count组件
+         */
+        initCount : _init_count,
+        /**
+         * 初始化iscroll组件或容器内iscroll组件
+         */
+        initScroll : initScroll
     }
 })();
 /**
@@ -194,6 +222,8 @@ Jingle.Page = (function(J){
                 $('#section-container').append(html);
                 //触发pageload事件
                 $('#'+id).trigger('page.load');
+                //构造组件
+                J.Element.init(hash);
             }
         })
     }
@@ -201,31 +231,96 @@ Jingle.Page = (function(J){
         load : loadPage
     }
 })(Jingle);
-/**
- * 上拉/下拉刷新、加载更多
- */
-Jingle.Refresh = function(opts){
-    this.options = {
-        containerId : null,
-        onPull: "下拉刷新...",
-        onRelease: "放开即可刷新...",
-        onRefresh: "加载中...",
-        callback: undefined
-    }
-    $.extend(this.options,opts);
-    $('<div class="pullDown"> <span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span></div>').prependTo('#'+this.options.containerId);
-
-    J.Scroll(this.options.containerId,{
-        topOffset:100,
-        onScrollMove : function(){
-
-        },
-        onScrollEnd : function(){
-
+Jingle.Refresh = (function(){
+    var scroller,refreshEl,iconEl,labelEl,topOffset,isPullDown;
+    var _init = function(opts){
+        scroller = $('#'+opts.containerId).children()[0];
+        var refreshTpl = '<div class="refresh-container"><span class="refresh-icon icon '+opts.onPullIcon+'"></span><span class="refresh-label">'+opts.onPull+'</span></div>';
+        if(isPullDown){
+            refreshEl = $(refreshTpl).prependTo(scroller);
+        }else{
+            refreshEl = $(refreshTpl).appendTo(scroller);
         }
-    });
-}
+        topOffset = refreshEl.height();
+        iconEl = refreshEl.find('.refresh-icon');
+        labelEl = refreshEl.find('.refresh-label');
+    }
+    var _pullDown = function(opts){
+        isPullDown = true;
+        var options = {
+            containerId : null,
+            onPull: "下拉刷新...",
+            onRelease: "松开立即刷新...",
+            onRefresh: "刷新中...",
+            onPullIcon : 'arrow-down-2',
+            onReleaseIcon  : 'arrow-up-3',
+            onRefreshIcon : 'spinner',
+            callback: undefined
+        }
+        $.extend(options,opts);
+        _init(options);
+        _excuteScroll(options);
 
+    }
+    var _pullUp = function(opts){
+        isPullDown = false;
+        var options = {
+            containerId : null,
+            onPull: "上拉加载更多...",
+            onRelease: "松开开立即加载...",
+            onRefresh: "加载中...",
+            onPullIcon : 'arrow-up-3',
+            onReleaseIcon  : 'arrow-down-2',
+            onRefreshIcon : 'spinner',
+            callback: undefined
+        }
+        $.extend(options,opts);
+        _init(options);
+        _excuteScroll(options);
+    }
+
+    var _excuteScroll = function(opts){
+        J.Scroll(opts.containerId,{
+            topOffset:isPullDown?topOffset:0,
+            bounce : true,
+            onScrollMove : function(){
+                if (this.y > 5 && isPullDown && !iconEl.hasClass(opts.onReleaseIcon)) {
+                    iconEl.removeClass(opts.onPullIcon).addClass(opts.onReleaseIcon);
+                    labelEl.html(opts.onRelease);
+                    this.minScrollY = 0;
+                } else if (this.y < 5 && isPullDown && !iconEl.hasClass(opts.onPullIcon)) {
+                    iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onPullIcon);
+                    labelEl.html(opts.onPull);
+                    this.minScrollY = -topOffset;
+                }else if (this.y < (this.maxScrollY - 5) && !iconEl.hasClass(opts.onReleaseIcon)) {
+                    iconEl.removeClass(opts.onPullIcon).addClass(opts.onReleaseIcon);
+                    labelEl.html(opts.onRelease);
+                    this.maxScrollY = this.maxScrollY;
+                } else if (this.y > (this.maxScrollY + 5) && !iconEl.hasClass(opts.onPullIcon)) {
+                    iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onPullIcon);
+                    labelEl.html(opts.onPull);
+                    this.maxScrollY = topOffset;
+                }
+            },
+            onScrollEnd : function(){
+                if(iconEl.hasClass(opts.onReleaseIcon)){
+                    iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onRefreshIcon);
+                    labelEl.html(opts.onRefresh);
+                    opts.callback.call(this);
+                }
+            },
+            onRefresh: function () {
+                iconEl.removeClass(opts.onRefreshIcon).addClass(opts.onPullIcon);
+                labelEl.html(opts.onPull);
+            }
+        });
+    }
+
+    return {
+        pullDown : _pullDown,
+        pullUp : _pullUp
+    }
+}());
 /**
  * 框架的运作机制
  */
@@ -296,7 +391,6 @@ Jingle.Router = (function(){
         if($(hash).length === 0){
             //同步加载模板
             J.Page.load(hash);
-            J.Element.init(hash);
         }
         _changePage(currentPage,hash);
     }
@@ -341,7 +435,15 @@ Jingle.Router = (function(){
 ;(function(){
     var scrollCache = {};
     var generateScrollIndex = 1;
-    J.Scroll = function(selector,options){
+    J.Scroll = function(selector,opts){
+        var options = {
+           hScroll : false,
+           bounce : false,
+           lockDirection : true,
+           useTransform: true,
+           useTransition: false,
+           checkDOMChanges: false
+        }
         var id;
         if($.type(selector) == 'string'){
             id = selector;
@@ -355,11 +457,12 @@ Jingle.Router = (function(){
         var scroll;
         if(scrollCache[id]){
             scroll = scrollCache[id];
-            $.extend(scroll.options,options)
+            $.extend(scroll.options,opts)
             scroll.refresh();
         }else{
-           scroll = new iScroll(id,options);
-           scrollCache[id] = scroll;
+            $.extend(options,opts);
+            scroll = new iScroll(id,options);
+            scrollCache[id] = scroll;
         }
         return scroll;
     }
@@ -654,15 +757,14 @@ Jingle.Transition = (function(J){
             J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
 
         }
-
     }
-
     var _finishTransition = function(current, target) {
         current.removeClass('activing active');
         target.removeClass('activing').addClass('active');
         if(!target.data('init')){
             target.trigger('pageinit');
             target.data('init',true);
+            J.Element.initScroll(target)
         }
         current.trigger('pagehide',[isBack]);
         target.trigger('pageshow',[isBack]);
