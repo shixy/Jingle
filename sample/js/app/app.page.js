@@ -85,7 +85,7 @@ App.page('setting',function(){
 
 App.page('index',function(){
     var exports = {};
-    var serverType;
+    var serverType = 'PC';
     exports.init = function(){
         var h = AHelper.getArticleOffset().height - 90;
         $('#bizSysContainer').height(h);
@@ -191,14 +191,13 @@ App.page('index',function(){
                 $('#index_container').children().children().html('未获取到相关数据！');
             }else{
                 J.tmpl('#bizSysContainer ul.group_list','bizInfoTmpl',data.list);
-                J.Scroll('bizSysContainer');
+                J.Scroll('#bizSysContainer');
                 _renderUsageChart(data);
                 _renderHealth();
             }
         })
     }
     var _renderHealth = function(){
-
         RsAPI.res.getHealth(function(data){
             $('#bizSysContainer li').each(function(i,el){
                 var bizId = $(this).data('id');
@@ -438,7 +437,7 @@ App.page('biz_vm_list',function(){
     }
     var _renderList = function(articleId,tmplId,data){
         J.tmpl('#'+articleId+' ul.list',tmplId,data);
-        J.Scroll(articleId);
+        J.Scroll('#'+articleId);
         J.hideMask();
     }
     return exports;
@@ -539,7 +538,13 @@ App.page('vm_apply_list',function(){
             var applicationId = $(this).data('id');
             App.page('vm_apply').setData({id:applicationId});
             J.Router.turnTo('#vm_apply_section');
-        })
+        });
+        J.Refresh('#underway_apply_list_article','pullDown',function(){
+            this.refresh();
+        });
+        J.Refresh('#finished_apply_list_article','pullUp',function(){
+            this.refresh();
+        });
     }
     exports.load = function(){
         _renderUnderwayList();
@@ -554,6 +559,9 @@ App.page('vm_apply_list',function(){
     var _renderFinishedList = function(){
         J.showMask();
         RsAPI.vmApply.getFinishedList(pageNo, function(data){
+            if(pageNo == 0 && data.length == 0){
+                $('#finished_apply_list_article .refresh-container').hide();
+            }
             J.tmpl('#finished_apply_list_article ul.list','finished_list_tmpl',data);
             J.hideMask();
         });
@@ -673,7 +681,7 @@ App.page('user',function(){
     var _render = function(){
         RsAPI.user.findAll(function(data){
             J.tmpl('#user_article ul.list','user_tmpl',data);
-            J.Scroll('user_article');
+            J.Scroll('#user_article');
         })
     }
     return exports;

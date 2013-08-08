@@ -18,15 +18,23 @@ Jingle.Page = (function(J){
             async : false,
             success : function(html){
                 //添加到dom树中
-                $('#section-container').append(html);
+                $('#section_container').append(html);
                 //触发pageload事件
-                $('#'+id).trigger('page.load');
+                $('#'+id).trigger('pageload');
                 //构造组件
                 J.Element.init(hash);
             }
         })
     }
+    var loadContent = function(url){
+        return $.ajax({
+                url : url,
+                timeout : 5000,
+                async : false
+            }).responseText;
+    }
     return {
-        load : loadPage
+        load : loadPage,
+        loadContent : loadContent
     }
 })(Jingle);

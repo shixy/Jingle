@@ -39,4 +39,7 @@
 	0% {-webkit-transform: translate3d(0,100%,0)}
 	100% {-webkit-transform: translate3d(0,0,0)}
 }
-
+@-webkit-keyframes bigScaleIn {
+	0% {opacity: .7;-webkit-transform: scale(1.3)}
+	100% {opacity: 1;}
+}

@@ -3,7 +3,8 @@ var Jingle = J = {
         transitionType : 'slide',
         transitionTime : 400,
         transitionTimingFunc : 'ease',
-        sectionPath : 'html/'
+        sectionPath : 'html/',
+        showWelcome : true
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
     hasTouch : 'ontouchstart' in window,
@@ -14,8 +15,13 @@ var Jingle = J = {
     isWebApp : location.protocol == 'http:',
     launch : function(opts){
         $.extend(this.settings,opts);
+        var hasShowWelcome = window.localStorage.getItem('hasShowWelcome');
+        if(!hasShowWelcome){
+            this.showWelcome();
+        }
         this.Router.init();
         this.Element.init();
+        this.Menu.init();
     },
     anim : function(el,animName,duration,ease,callback){
         var d, e,c;
@@ -63,6 +69,24 @@ var Jingle = J = {
     },
     tmpl : function(containerSelector,templateId,data){
         this.Template.render(containerSelector,templateId,data);
+    },
+    showWelcome : function(){
+        $.ajax({
+            url : J.settings.sectionPath+'welcome.html',
+            timeout : 5000,
+            async : false,
+            success : function(html){
+                //添加到dom树中
+                $('body').append(html);
+                new J.Slider('#jingle_welcome');
+            }
+        })
+    },
+    hideWelcome : function(){
+        this.anim('#jingle_welcome','slideLeftOut',function(){
+            $(this).remove();
+            window.localStorage.setItem('hasShowWelcome',true);
+        })
     }
 };
 Jingle.Element = (function(){
@@ -83,6 +107,7 @@ Jingle.Element = (function(){
         $.map($(SELECTOR.range,el),_init_range);
         $.map($(SELECTOR.progress,el),_init_progress);
         $.map($(SELECTOR.count,el),_init_count);
+        $.map($(SELECTOR.scroll,el),_init_scroll);
     }
     var initScroll = function(selector){
         var el = $(selector || 'body');
@@ -219,108 +244,26 @@ Jingle.Page = (function(J){
             async : false,
             success : function(html){
                 //添加到dom树中
-                $('#section-container').append(html);
+                $('#section_container').append(html);
                 //触发pageload事件
-                $('#'+id).trigger('page.load');
+                $('#'+id).trigger('pageload');
                 //构造组件
                 J.Element.init(hash);
             }
         })
     }
+    var loadContent = function(url){
+        return $.ajax({
+                url : url,
+                timeout : 5000,
+                async : false
+            }).responseText;
+    }
     return {
-        load : loadPage
+        load : loadPage,
+        loadContent : loadContent
     }
 })(Jingle);
-Jingle.Refresh = (function(){
-    var scroller,refreshEl,iconEl,labelEl,topOffset,isPullDown;
-    var _init = function(opts){
-        scroller = $('#'+opts.containerId).children()[0];
-        var refreshTpl = '<div class="refresh-container"><span class="refresh-icon icon '+opts.onPullIcon+'"></span><span class="refresh-label">'+opts.onPull+'</span></div>';
-        if(isPullDown){
-            refreshEl = $(refreshTpl).prependTo(scroller);
-        }else{
-            refreshEl = $(refreshTpl).appendTo(scroller);
-        }
-        topOffset = refreshEl.height();
-        iconEl = refreshEl.find('.refresh-icon');
-        labelEl = refreshEl.find('.refresh-label');
-    }
-    var _pullDown = function(opts){
-        isPullDown = true;
-        var options = {
-            containerId : null,
-            onPull: "下拉刷新...",
-            onRelease: "松开立即刷新...",
-            onRefresh: "刷新中...",
-            onPullIcon : 'arrow-down-2',
-            onReleaseIcon  : 'arrow-up-3',
-            onRefreshIcon : 'spinner',
-            callback: undefined
-        }
-        $.extend(options,opts);
-        _init(options);
-        _excuteScroll(options);
-
-    }
-    var _pullUp = function(opts){
-        isPullDown = false;
-        var options = {
-            containerId : null,
-            onPull: "上拉加载更多...",
-            onRelease: "松开开立即加载...",
-            onRefresh: "加载中...",
-            onPullIcon : 'arrow-up-3',
-            onReleaseIcon  : 'arrow-down-2',
-            onRefreshIcon : 'spinner',
-            callback: undefined
-        }
-        $.extend(options,opts);
-        _init(options);
-        _excuteScroll(options);
-    }
-
-    var _excuteScroll = function(opts){
-        J.Scroll(opts.containerId,{
-            topOffset:isPullDown?topOffset:0,
-            bounce : true,
-            onScrollMove : function(){
-                if (this.y > 5 && isPullDown && !iconEl.hasClass(opts.onReleaseIcon)) {
-                    iconEl.removeClass(opts.onPullIcon).addClass(opts.onReleaseIcon);
-                    labelEl.html(opts.onRelease);
-                    this.minScrollY = 0;
-                } else if (this.y < 5 && isPullDown && !iconEl.hasClass(opts.onPullIcon)) {
-                    iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onPullIcon);
-                    labelEl.html(opts.onPull);
-                    this.minScrollY = -topOffset;
-                }else if (this.y < (this.maxScrollY - 5) && !iconEl.hasClass(opts.onReleaseIcon)) {
-                    iconEl.removeClass(opts.onPullIcon).addClass(opts.onReleaseIcon);
-                    labelEl.html(opts.onRelease);
-                    this.maxScrollY = this.maxScrollY;
-                } else if (this.y > (this.maxScrollY + 5) && !iconEl.hasClass(opts.onPullIcon)) {
-                    iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onPullIcon);
-                    labelEl.html(opts.onPull);
-                    this.maxScrollY = topOffset;
-                }
-            },
-            onScrollEnd : function(){
-                if(iconEl.hasClass(opts.onReleaseIcon)){
-                    iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onRefreshIcon);
-                    labelEl.html(opts.onRefresh);
-                    opts.callback.call(this);
-                }
-            },
-            onRefresh: function () {
-                iconEl.removeClass(opts.onRefreshIcon).addClass(opts.onPullIcon);
-                labelEl.html(opts.onPull);
-            }
-        });
-    }
-
-    return {
-        pullDown : _pullDown,
-        pullUp : _pullUp
-    }
-}());
 /**
  * 框架的运作机制
  */
@@ -337,8 +280,11 @@ Jingle.Router = (function(){
         $(document).on('tap','a',function(e){e.preventDefault()});
         $(document).on('click','a',function(e){e.preventDefault()});
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
+        _initIndex();
+    }
 
-        var initSectionId = $('#section-container section.active').trigger('pageinit').trigger('pageshow').attr('id');
+    var _initIndex = function(){
+        var initSectionId = $('#section_container section.active').trigger('pageinit').trigger('pageshow').data('init',true).attr('id');
         add2History('#'+initSectionId);
     }
 
@@ -373,7 +319,7 @@ Jingle.Router = (function(){
                 _showArticle(href,_this);
                 break;
             case 'menu' :
-                _toggleMenu();
+                _toggleMenu(href);
                 break;
             case 'back' :
                 back();
@@ -413,15 +359,15 @@ Jingle.Router = (function(){
         if(article.hasClass('active'))return;
         el.addClass('active').siblings('.active').removeClass('active');
         var activeArticle = article.addClass('active').siblings('.active').removeClass('active');
-        J.anim(article,'scaleIn',300,function(){
+        J.anim(article,'bigScaleIn',300,function(){
             article.trigger('articleshow');
             activeArticle.trigger('articlehide');
 
         });
     }
 
-    var _toggleMenu = function(){
-        J.isMenuOpen?J.Menu.hide():J.Menu.show();
+    var _toggleMenu = function(hash){
+        J.isMenuOpen?J.Menu.hide():J.Menu.show(hash);
     }
 
     return {
@@ -431,44 +377,6 @@ Jingle.Router = (function(){
     }
 
 })();
-//TODO  改造iscroll为插件形式
-;(function(){
-    var scrollCache = {};
-    var generateScrollIndex = 1;
-    J.Scroll = function(selector,opts){
-        var options = {
-           hScroll : false,
-           bounce : false,
-           lockDirection : true,
-           useTransform: true,
-           useTransition: false,
-           checkDOMChanges: false
-        }
-        var id;
-        if($.type(selector) == 'string'){
-            id = selector;
-        }else{
-            id = $(selector).attr('id');
-            if(!id){
-                id = "scroll-"+generateScrollIndex++;
-                $(selector).attr('id',id);
-            }
-        }
-        var scroll;
-        if(scrollCache[id]){
-            scroll = scrollCache[id];
-            $.extend(scroll.options,opts)
-            scroll.refresh();
-        }else{
-            $.extend(options,opts);
-            scroll = new iScroll(id,options);
-            scrollCache[id] = scroll;
-        }
-        return scroll;
-    }
-})();
-
-
 /**
  * 对zeptojs的ajax进行封装，实现离线访问
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
@@ -904,37 +812,104 @@ Jingle.Popup = (function(){
 })();
 Jingle.Menu = (function(J){
     var SELECTOR = {
-        MENU : 'body>aside',
-        SECTION_CONTAINER : '#section-container'
+        ASIDE_CONTAINER : '#aside_container>aside',
+        SECTION_CONTAINER : '#section_container'
     }
-    var showMenu = function(){
-        $(SELECTOR.MENU).animate({
-            translateX : '0%'
-        }, J.settings.transitionTime,'linear',function(){
-            J.isMenuOpen = true;
-        });
-        $(SELECTOR.SECTION_CONTAINER).animate({
-            translateX : '264px'
-        },J.settings.transitionTime);
+    var $asideContainer,$sectionContainer;
+
+    var init = function(selector){
+        $asideContainer = $(SELECTOR.ASIDE_CONTAINER);
+        $sectionContainer = $(SELECTOR.SECTION_CONTAINER);
+
+        var $el = selector?$(selector):$asideContainer;
+        $el.each(function(i,aside){
+            var position = $(aside).data('position');//left  right
+            var showClose = $(aside).data('show-close');
+            if(showClose){
+                $(aside).append('<div class="aside-close icon close"></div>');
+            }
+            if(position == 'right'){
+                $(aside).on('swipeRight',hideMenu);
+            }else{
+                $(aside).on('swipeLeft',hideMenu);
+            }
+            $('.aside-close').on('tap',hideMenu);
+        })
+    }
+    var showMenu = function(selector){
+        var $aside = $(selector).addClass('active');
+        var transition = $aside.data('transition');// push overlay  reveal
+        var position = $aside.data('position') || 'left';
+        var width = $aside.width();
+        var translateX = position == 'left'?width+'px':'-'+width+'px';
+
+        if(transition == 'overlay'){
+            J.anim($aside,{translateX : '0%'});
+        }else if(transition == 'reveal'){
+            J.anim($sectionContainer,{translateX : translateX});
+        }else{//默认为push
+            J.anim($aside,{translateX : '0%'});
+            J.anim($sectionContainer,{translateX : translateX});
+        }
+        J.isMenuOpen = true;
     }
     var hideMenu = function(){
-        $(SELECTOR.MENU).animate({
-            translateX : '-100%'
-        },J.settings.transitionTime,'linear',function(){
+
+        var $aside = $('#aside_container aside.active');
+        var transition = $aside.data('transition');// push overlay  reveal
+        var position = $aside.data('position') || 'left';
+        var translateX = position == 'left'?'-100%':'100%';
+        var finishTransition = function(){
+            $aside.removeClass('active');
             J.isMenuOpen = false;
-        });
-        $(SELECTOR.SECTION_CONTAINER).animate({
-            translateX : 0
-        },J.settings.transitionTime);
+        }
+        if(transition == 'overlay'){
+            J.anim($aside,{translateX : translateX},finishTransition);
+        }else if(transition == 'reveal'){
+            J.anim($sectionContainer,{translateX : '0'},finishTransition);
+        }else{//默认为push
+            J.anim($aside,{translateX : translateX});
+            J.anim($sectionContainer,{translateX : '0'},finishTransition);
+        }
     }
     return {
+        init : init,
         show : showMenu,
         hide : hideMenu
     }
 })(Jingle);
 ;(function(){
-    function slider(selector,noDots){
+    var scrollCache = {};
+    var index = 1;
+    J.Scroll = function(selector,opts){
+        var scroll,scrollId,$el = $(selector),
+            options = {
+               hScroll : false,
+               bounce : false,
+               lockDirection : true,
+               useTransform: true,
+               useTransition: false,
+               checkDOMChanges: false
+            };
+        scrollId = $el.data('_jscroll_');
+        if(scrollId && scrollCache[scrollId]){
+            scroll = scrollCache[scrollId];
+            $.extend(scroll.options,opts)
+            scroll.refresh();
+        }else{
+            scrollId = '_jscroll_'+index++;
+            $el.data('_jscroll_',scrollId);
+            $.extend(options,opts);
+            scroll = new iScroll($el[0],options);
+            scrollCache[scrollId] = scroll;
+        }
+        return scroll;
+    }
+})();
 
+
+;(function(){
+    function slider(selector,noDots){
         var afterSlide = function(){},
             beforeSlide = function(){return true},
             gestureStarted = false,
@@ -1094,6 +1069,124 @@ Jingle.Menu = (function(J){
     }
     J.Slider = slider;
 }());
+;(function(){
+    var refreshCache = {};
+    var index = 1;
+    function Refresh(selector,type,callback){
+        var iscroll, scroller,refreshEl,iconEl,labelEl,topOffset,isPullDown,
+            options = {
+                selector : undefined,
+                type : 'pullDown',//pullDown pullUp
+                onPull: "下拉刷新...",
+                onRelease: "松开立即刷新...",
+                onRefresh: "刷新中...",
+                onPullIcon : 'arrow-down-2',
+                onReleaseIcon  : 'arrow-up-3',
+                onRefreshIcon : 'spinner',
+                callback : undefined
+            }
+        //装载配置
+        if(typeof selector === 'object'){
+            $.extend(options,selector);
+        }else{
+            options.selector = selector;
+            options.type = type;
+            options.callback = callback;
+            if(type === 'pullUp'){
+                $.extend(options,{
+                    onPull: "上拉加载更多...",
+                    onRelease: "松开开立即加载...",
+                    onRefresh: "加载中...",
+                    onPullIcon : 'arrow-up-3',
+                    onReleaseIcon  : 'arrow-down-2'
+                })
+            }
+        }
+        isPullDown = options.type === 'pullDown' ? true : false;
+
+        /**
+         * 初始化dom节点
+         * @param opts
+         * @private
+         */
+        var _init = function(opts){
+            scroller = $(opts.selector).children()[0];
+            var refreshTpl = '<div class="refresh-container"><span class="refresh-icon icon '+opts.onPullIcon+'"></span><span class="refresh-label">'+opts.onPull+'</span></div>';
+            if(isPullDown){
+                refreshEl = $(refreshTpl).prependTo(scroller);
+            }else{
+                refreshEl = $(refreshTpl).appendTo(scroller);
+            }
+            topOffset = refreshEl.height();
+            iconEl = refreshEl.find('.refresh-icon');
+            labelEl = refreshEl.find('.refresh-label');
+        }
+
+        /**
+         * 构造iscroll组件，并绑定滑动事件
+         * @param opts
+         * @private
+         */
+        var _excuteScroll = function(opts){
+            return J.Scroll(opts.selector,{
+                    topOffset:isPullDown?topOffset:0,
+                    bounce : true,
+                    onScrollMove : function(){
+                        if (this.y > 5 && isPullDown && !iconEl.hasClass(opts.onReleaseIcon)) {
+                            iconEl.removeClass(opts.onPullIcon).addClass(opts.onReleaseIcon);
+                            labelEl.html(opts.onRelease);
+                            this.minScrollY = 0;
+                        } else if (this.y < 5 && isPullDown && !iconEl.hasClass(opts.onPullIcon)) {
+                            iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onPullIcon);
+                            labelEl.html(opts.onPull);
+                            this.minScrollY = -topOffset;
+                        }else if (this.y < (this.maxScrollY - 5) && !isPullDown && !iconEl.hasClass(opts.onReleaseIcon)) {
+                            iconEl.removeClass(opts.onPullIcon).addClass(opts.onReleaseIcon);
+                            labelEl.html(opts.onRelease);
+                            this.maxScrollY = this.maxScrollY;
+                        } else if (this.y > (this.maxScrollY + 5) && !isPullDown && !iconEl.hasClass(opts.onPullIcon)) {
+                            iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onPullIcon);
+                            labelEl.html(opts.onPull);
+                            this.maxScrollY = topOffset;
+                        }
+                    },
+                    onScrollEnd : function(){
+                        if(iconEl.hasClass(opts.onReleaseIcon)){
+                            iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onRefreshIcon);
+                            labelEl.html(opts.onRefresh);
+                            opts.callback.call(this);
+                        }
+                    },
+                    onRefresh: function () {
+                        iconEl.removeClass(opts.onRefreshIcon).addClass(opts.onPullIcon);
+                        labelEl.html(opts.onPull);
+                    }
+                });
+        }
+
+        //run
+        _init(options);
+        iscroll = _excuteScroll(options);
+        this.iscroll = iscroll;
+    }
+
+    Jingle.Refresh = function(selector,type,callback){
+        var el,jRefreshId;
+        if(typeof selector === 'object'){
+            el = $(selector.selector)
+        }else{
+            el = $(selector);
+        }
+        jRefreshId = el.data('_jrefresh_');
+        if(jRefreshId && refreshCache[jRefreshId]){
+            return refreshCache[jRefreshId];
+        }else{
+            jRefreshId = '_jrefresh_'+index++;
+            el.data('_jrefresh_',jRefreshId);
+            return refreshCache[jRefreshId] = new Refresh(selector,type,callback);
+        }
+    }
+})();
 /*!
  * iScroll v4.2.5 ~ Copyright (c) 2012 Matteo Spinelli, http://cubiq.org
  * Released under MIT license, http://cubiq.org/license

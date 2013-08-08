@@ -16,6 +16,7 @@ Jingle.Element = (function(){
         $.map($(SELECTOR.range,el),_init_range);
         $.map($(SELECTOR.progress,el),_init_progress);
         $.map($(SELECTOR.count,el),_init_count);
+        $.map($(SELECTOR.scroll,el),_init_scroll);
     }
     var initScroll = function(selector){
         var el = $(selector || 'body');

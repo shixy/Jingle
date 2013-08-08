@@ -30,3 +30,7 @@ footer .active .icon{
 .control-group li.active {
     background-color: #16A085;
 }
+#jingle_popup .nav.active,#jingle_popup .nav:active{
+    background-color: #16A085;
+    color: #fff;
+}

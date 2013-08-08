@@ -14,8 +14,11 @@ Jingle.Router = (function(){
         $(document).on('tap','a',function(e){e.preventDefault()});
         $(document).on('click','a',function(e){e.preventDefault()});
         $(document).on('tap',TARGET_SELECTOR,_targetHandler);
+        _initIndex();
+    }
 
-        var initSectionId = $('#section-container section.active').trigger('pageinit').trigger('pageshow').attr('id');
+    var _initIndex = function(){
+        var initSectionId = $('#section_container section.active').trigger('pageinit').trigger('pageshow').data('init',true).attr('id');
         add2History('#'+initSectionId);
     }
 
@@ -50,7 +53,7 @@ Jingle.Router = (function(){
                 _showArticle(href,_this);
                 break;
             case 'menu' :
-                _toggleMenu();
+                _toggleMenu(href);
                 break;
             case 'back' :
                 back();
@@ -90,15 +93,15 @@ Jingle.Router = (function(){
         if(article.hasClass('active'))return;
         el.addClass('active').siblings('.active').removeClass('active');
         var activeArticle = article.addClass('active').siblings('.active').removeClass('active');
-        J.anim(article,'scaleIn',300,function(){
+        J.anim(article,'bigScaleIn',300,function(){
             article.trigger('articleshow');
             activeArticle.trigger('articlehide');
 
         });
     }
 
-    var _toggleMenu = function(){
-        J.isMenuOpen?J.Menu.hide():J.Menu.show();
+    var _toggleMenu = function(hash){
+        J.isMenuOpen?J.Menu.hide():J.Menu.show(hash);
     }
 
     return {

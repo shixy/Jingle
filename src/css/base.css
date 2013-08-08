@@ -122,3 +122,13 @@ sub,sup{
 [data-scroll="true"]{
     overflow: auto;
 }
+#jingle_welcome{
+    position: absolute;
+    top:0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 999;
+    overflow: hidden;
+    background-color: #fff;
+}

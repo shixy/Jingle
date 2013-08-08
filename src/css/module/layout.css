@@ -18,12 +18,11 @@ aside{
     width: 264px;
     top:0;
     bottom:0;
-    z-index:11;
     -webkit-transform : translateX(-100%);
     z-index: 3;
 }
 
-#section-container{
+#section_container{
     position: absolute;
     overflow: hidden;
     top:0;
@@ -31,7 +30,7 @@ aside{
     right:0;
     bottom: 0;
     background-color: #000;
-    z-index: 1;
+    z-index: 3;
 }
 
 section{

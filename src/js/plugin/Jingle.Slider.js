@@ -1,6 +1,5 @@
 ;(function(){
     function slider(selector,noDots){
-
         var afterSlide = function(){},
             beforeSlide = function(){return true},
             gestureStarted = false,

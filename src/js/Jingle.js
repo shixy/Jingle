@@ -3,7 +3,8 @@ var Jingle = J = {
         transitionType : 'slide',
         transitionTime : 400,
         transitionTimingFunc : 'ease',
-        sectionPath : 'html/'
+        sectionPath : 'html/',
+        showWelcome : true
     },
     mode : window.innerWidth < 800 ? "phone" : "tablet",
     hasTouch : 'ontouchstart' in window,
@@ -14,8 +15,13 @@ var Jingle = J = {
     isWebApp : location.protocol == 'http:',
     launch : function(opts){
         $.extend(this.settings,opts);
+        var hasShowWelcome = window.localStorage.getItem('hasShowWelcome');
+        if(!hasShowWelcome){
+            this.showWelcome();
+        }
         this.Router.init();
         this.Element.init();
+        this.Menu.init();
     },
     anim : function(el,animName,duration,ease,callback){
         var d, e,c;
@@ -63,5 +69,23 @@ var Jingle = J = {
     },
     tmpl : function(containerSelector,templateId,data){
         this.Template.render(containerSelector,templateId,data);
+    },
+    showWelcome : function(){
+        $.ajax({
+            url : J.settings.sectionPath+'welcome.html',
+            timeout : 5000,
+            async : false,
+            success : function(html){
+                //添加到dom树中
+                $('body').append(html);
+                new J.Slider('#jingle_welcome');
+            }
+        })
+    },
+    hideWelcome : function(){
+        this.anim('#jingle_welcome','slideLeftOut',function(){
+            $(this).remove();
+            window.localStorage.setItem('hasShowWelcome',true);
+        })
     }
 };

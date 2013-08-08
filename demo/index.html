@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="css/app.css">
 </head>
 <body>
-    <aside>
+<div id="aside_container">
+    <aside id="index_aside" data-position="left" data-transition="reveal" data-show-close="true">
         <div class="header">菜单</div>
         <div class="center">
             <ul class="menu">
@@ -24,19 +25,23 @@
                 <li><a href="#popup_section" data-icon="next" data-target="section">popup</a></li>
                 <li><a href="#slider_section" data-icon="next" data-target="section">slider</a></li>
                 <li><a href="#scroll_section" data-icon="next" data-target="section">scroll</a></li>
+                <li><a href="#menu_section" data-icon="next" data-target="section">menu</a></li>
                 <li><a href="#icon_section" data-icon="next" data-target="section">icons</a></li>
                 <li><a href="#color_section" data-icon="next" data-target="section">colors</a></li>
                 <li><a href="#" data-icon="next" >更多功能开发中</a></li>
                 <li class="anchor">others</li>
+                <li><a href="#" data-icon="exit" id="btn_show_welcome">欢迎页</a></li>
                 <li><a href="#" data-icon="exit" id="btn_exit_app">退出</a></li>
             </ul>
         </div>
     </aside>
-    <div id="section-container">
+    </div>
+
+    <div id="section_container">
         <section id="index_section" class="active">
             <header>
                 <nav class="left">
-                    <a data-target="menu" data-icon="menu" href="#"></a>
+                    <a data-target="menu" data-icon="menu" href="#index_aside"></a>
                 </nav>
                 <h1 class="title">Jingle</h1>
                 <nav class="right">

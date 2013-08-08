@@ -20,21 +20,21 @@
 <body>
     <aside>
         <div class="header">菜单</div>
-        <div class="center">
+        <div class="center" data-scroll="true">
             <ul class="menu">
                 <li><a href="#index_section" data-icon="next" data-target="section">全局概览</a></li>
                 <li><a href="#res_period_section" data-icon="next" data-target="section">资源使用对比</a></li>
                 <li><a href="#vm_apply_list_section" data-icon="next" data-target="section">我的审批</a></li>
                 <li><a href="#user_section" data-icon="next" data-target="section">用户列表</a></li>
-                <li><a href="#" data-icon="next" data-target="section">DSR(未完成)</a></li>
-                <li><a href="#" data-icon="next" data-target="section">资源分配趋势(未完成)</a></li>
+                <!--<li><a href="#" data-icon="next" data-target="section">DSR(未完成)</a></li>
+                <li><a href="#" data-icon="next" data-target="section">资源分配趋势(未完成)</a></li>-->
                 <li class="anchor">设置</li>
                 <li><a href="#" data-icon="switch" id="btn_change_user">切换账号</a></li>
                 <li><a href="#" data-icon="exit" id="btn_exit_app">退出程序</a></li>
             </ul>
         </div>
     </aside>
-    <div id="section-container">
+    <div id="section_container">
         <section id="login_section" class="active">
             <article class="active" style="background-color: #006953">
                 <img src="images/logo.jpg" style="display: block;margin:10px auto 0;">
@@ -50,8 +50,8 @@
     <script type="text/javascript" src="js/lib/cordova-2.4.0.js"></script>
     <script type="text/javascript" src="js/lib/zepto.js"></script>
     <script type="text/javascript" src="js/lib/touch.js"></script>
+    <script type="text/javascript" src="js/lib/zepto.touch2mouse.js"></script>
     <script type="text/javascript" src="js/lib/ichart.min.js"></script>
-    <!--<script type="text/javascript" src="js/lib/jq.desktopBrowsers.js"></script>-->
     <script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
     <script type="text/javascript" src="js/lib/template.min.js"></script>
     <script type="text/javascript" src="js/lib/template-syntax.js"></script>
@@ -62,12 +62,5 @@
     <script type="text/javascript" src="js/app/app.helper.js"></script>
     <script type="text/javascript" src="js/app/restAPI.js"></script>
    <!-- <script src="http://172.20.1.33:8080/target/target-script-min.js#anonymous"></script>-->
-    <script type="text/javascript">
-        if(!((window.DocumentTouch&&document instanceof DocumentTouch)||'ontouchstart' in window)){
-            var script=document.createElement("script");
-            script.src="js/lib/jq.desktopBrowsers.js";
-            var tag=$("head").append(script);
-        }
-</script>
 </body>
 </html>
