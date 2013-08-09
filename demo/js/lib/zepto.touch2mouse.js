@@ -43,6 +43,7 @@
             // touches property to the event.
 
             return _fakeCallbacks[callback] = function (event) {
+                if(event.liveFired)context = this;//if it is delegate event,change context to target element
                 if (event.button) {
                     return false;
                 }
