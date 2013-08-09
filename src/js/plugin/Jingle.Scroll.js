@@ -1,6 +1,8 @@
-;(function(){
-    var scrollCache = {};
-    var index = 1;
+/**
+ *  哥屋恩动组件(iscroll)
+ */
+;(function(J,$){
+    var scrollCache = {},index = 1;
     J.Scroll = function(selector,opts){
         var scroll,scrollId,$el = $(selector),
             options = {
@@ -25,5 +27,5 @@
         }
         return scroll;
     }
-})();
+})(Jingle,Zepto);
 

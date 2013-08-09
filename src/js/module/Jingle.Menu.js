@@ -1,15 +1,13 @@
-Jingle.Menu = (function(J){
-    var SELECTOR = {
-        ASIDE_CONTAINER : '#aside_container>aside',
-        SECTION_CONTAINER : '#section_container'
-    }
+/**
+ * 侧边栏
+ */
+Jingle.Menu = (function(J,$){
     var $asideContainer,$sectionContainer;
-
     var init = function(selector){
-        $asideContainer = $(SELECTOR.ASIDE_CONTAINER);
-        $sectionContainer = $(SELECTOR.SECTION_CONTAINER);
-
+        $asideContainer = $('#aside_container>aside');
+        $sectionContainer = $('#section_container');
         var $el = selector?$(selector):$asideContainer;
+        //初始化事件钩子
         $el.each(function(i,aside){
             var position = $(aside).data('position');//left  right
             var showClose = $(aside).data('show-close');
@@ -25,11 +23,14 @@ Jingle.Menu = (function(J){
         })
     }
     var showMenu = function(selector){
-        var $aside = $(selector).addClass('active');
-        var transition = $aside.data('transition');// push overlay  reveal
-        var position = $aside.data('position') || 'left';
-        var width = $aside.width();
-        var translateX = position == 'left'?width+'px':'-'+width+'px';
+        var $aside = $(selector).addClass('active'),
+            transition = $aside.data('transition'),// push overlay  reveal
+            position = $aside.data('position') || 'left',
+            width = $aside.width(),
+            translateX = position == 'left'?width+'px':'-'+width+'px';
+
+        //aside中可能需要scroll组件
+        J.Element.initScroll($aside);
 
         if(transition == 'overlay'){
             J.anim($aside,{translateX : '0%'});
@@ -42,22 +43,23 @@ Jingle.Menu = (function(J){
         J.isMenuOpen = true;
     }
     var hideMenu = function(){
+        var $aside = $('#aside_container aside.active'),
+            transition = $aside.data('transition'),// push overlay  reveal
+            position = $aside.data('position') || 'left',
+            translateX = position == 'left'?'-100%':'100%';
 
-        var $aside = $('#aside_container aside.active');
-        var transition = $aside.data('transition');// push overlay  reveal
-        var position = $aside.data('position') || 'left';
-        var translateX = position == 'left'?'-100%':'100%';
-        var finishTransition = function(){
-            $aside.removeClass('active');
-            J.isMenuOpen = false;
-        }
+        var _finishTransition = function(){
+                $aside.removeClass('active');
+                J.isMenuOpen = false;
+        };
+
         if(transition == 'overlay'){
-            J.anim($aside,{translateX : translateX},finishTransition);
+            J.anim($aside,{translateX : translateX},_finishTransition);
         }else if(transition == 'reveal'){
-            J.anim($sectionContainer,{translateX : '0'},finishTransition);
+            J.anim($sectionContainer,{translateX : '0'},_finishTransition);
         }else{//默认为push
             J.anim($aside,{translateX : translateX});
-            J.anim($sectionContainer,{translateX : '0'},finishTransition);
+            J.anim($sectionContainer,{translateX : '0'},_finishTransition);
         }
     }
     return {
@@ -65,4 +67,4 @@ Jingle.Menu = (function(J){
         show : showMenu,
         hide : hideMenu
     }
-})(Jingle);
+})(Jingle,Zepto);

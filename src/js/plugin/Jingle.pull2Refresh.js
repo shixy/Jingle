@@ -1,6 +1,8 @@
-;(function(){
-    var refreshCache = {};
-    var index = 1;
+/**
+ * 上拉/下拉组件
+ */
+;(function(J,$){
+    var refreshCache = {},index = 1;
     function Refresh(selector,type,callback){
         var iscroll, scroller,refreshEl,iconEl,labelEl,topOffset,isPullDown,
             options = {
@@ -13,7 +15,7 @@
                 onReleaseIcon  : 'arrow-up-3',
                 onRefreshIcon : 'spinner',
                 callback : undefined
-            }
+            };
         //装载配置
         if(typeof selector === 'object'){
             $.extend(options,selector);
@@ -99,7 +101,7 @@
         this.iscroll = iscroll;
     }
 
-    Jingle.Refresh = function(selector,type,callback){
+    J.Refresh = function(selector,type,callback){
         var el,jRefreshId;
         if(typeof selector === 'object'){
             el = $(selector.selector)
@@ -115,4 +117,4 @@
             return refreshCache[jRefreshId] = new Refresh(selector,type,callback);
         }
     }
-})();
+})(Jingle,Zepto);

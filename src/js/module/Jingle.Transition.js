@@ -1,12 +1,14 @@
-Jingle.Transition = (function(J){
-
-    var isBack = false;
-
+/**
+ * section之间的动画过渡
+ */
+Jingle.Transition = (function(J,$){
     var TRANSITION = {
         //[back,in]
         slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],
         scale : [['scaleOut','none'],['none','scaleIn']]
-    }
+        },
+        isBack = false;
+
 
     var _doTransition = function(current, target, transitionName){
         if(transitionName[0] == 'none'){
@@ -51,4 +53,4 @@ Jingle.Transition = (function(J){
         run : run
     }
 
-})(Jingle);
+})(Jingle,$);

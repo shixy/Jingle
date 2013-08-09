@@ -1,39 +1,41 @@
-Jingle.Popup = (function(){
-    var POSITION = {
-        'top':{
-            top:0,
-            left:0,
-            right:0
+/**
+ * 弹出框组件
+ */
+Jingle.Popup = (function(J,$){
+    var _popup,_mask,transition,
+        POSITION = {
+            'top':{
+                top:0,
+                left:0,
+                right:0
+            },
+            'top-second':{
+                top:'44px',
+                left:0,
+                right:0
+            },
+            'center':{
+                top:'50%',
+                left:'10%',
+                right:'10%',
+                'border-radius' : '3px'
+            },
+            'bottom' : {
+                bottom:0,
+                left:0,
+                right:0
+            },
+            'bottom-second':{
+                bottom : '51px',
+                left:0,
+                right:0
+            }
         },
-        'top-second':{
-            top:'44px',
-            left:0,
-            right:0
-        },
-        'center':{
-            top:'50%',
-            left:'10%',
-            right:'10%',
-            'border-radius' : '3px'
-        },
-        'bottom' : {
-            bottom:0,
-            left:0,
-            right:0
-        },
-        'bottom-second':{
-            bottom : '51px',
-            left:0,
-            right:0
-        }
-    };
-    var ANIM = {
-        top : ['slideDownIn','slideUpOut'],
-        bottom : ['slideUpIn','slideDownOut'],
-        defaultAnim : ['scaleIn','scaleOut']
-    };
-    var _popup,_mask;
-    var transition;
+        ANIM = {
+            top : ['slideDownIn','slideUpOut'],
+            bottom : ['slideUpIn','slideDownOut'],
+            defaultAnim : ['scaleIn','scaleOut']
+        };
     var _init = function(){
         $('body').append('<div id="jingle_popup"></div><div id="jingle_popup_mask"></div>');
         _mask = $('#jingle_popup_mask');
@@ -113,4 +115,4 @@ Jingle.Popup = (function(){
     confirm : confirm,
     popover : popover
 }
-})();
+})(Jingle,Zepto);

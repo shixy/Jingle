@@ -1,4 +1,8 @@
-Jingle.Toast = (function(){
+/**
+ *  通知组件(包含loading)
+ */
+Jingle.Toast = (function(J,$){
+    //定义模板
     var TEMPLATE = {
         toast : '<a href="#">{value}</a>',
         success : '<i class="icon checkmark-circle"></i>{value}',
@@ -6,10 +10,7 @@ Jingle.Toast = (function(){
         info : '<i class="icon info-2"></i>{value}',
         loading : '<i class="icon spinner"></i><p>{value}</p><div id="tag_close_toast" class="icon cancel-circle"></div>'
     }
-    var toast_type = 'toast';
-    var _toast,_mask;
-    var timer;
-    var _closeToastCallback = function(){};
+    var toast_type = 'toast',_toast,_mask,timer,_closeToastCallback = function(){};
     var _init = function(){
         $('body').append('<div id="jingle_toast"></div><div id="jingle_toast_mask"></div>');
         _mask = $('#jingle_toast_mask');
@@ -52,11 +53,9 @@ Jingle.Toast = (function(){
             _closeToastCallback();
         })
     }
-
     _init();
-
     return {
         show : show,
         hide : hide
     }
-})();
+})(Jingle,Zepto);

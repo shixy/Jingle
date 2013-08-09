@@ -2,7 +2,7 @@
  * 对zeptojs的ajax进行封装，实现离线访问
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
  */
-Jingle.Service = (function(){
+Jingle.Service = (function(J,$){
     var UNPOST_KEY = 'JINGLE_POST_DATA';
 
     var ajax = function(options){
@@ -171,4 +171,4 @@ Jingle.Service = (function(){
         syncAllPostData : syncAllPostData,
         clear : clear
     }
-})();
+})(Jingle,Zepto);

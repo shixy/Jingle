@@ -1,4 +1,7 @@
-Jingle.Element = (function(){
+/**
+ * 初始化一些页面组件元素
+ */
+Jingle.Element = (function(J,$){
     var SELECTOR  = {
         'icon' : '[data-icon]',
         'scroll' : '[data-scroll="true"]',
@@ -132,4 +135,4 @@ Jingle.Element = (function(){
          */
         initScroll : initScroll
     }
-})();
+})(Jingle,Zepto);

@@ -1,4 +1,8 @@
-;(function(){
+/**
+ * 幻灯片组件
+ * TODO  自动播放
+ */
+;(function(J,$){
     function slider(selector,noDots){
         var afterSlide = function(){},
             beforeSlide = function(){return true},
@@ -158,4 +162,4 @@
         };
     }
     J.Slider = slider;
-}());
+})(Jingle,Zepto);

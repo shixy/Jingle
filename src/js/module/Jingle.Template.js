@@ -1,4 +1,7 @@
-Jingle.Template = (function(){
+/**
+ * 提供一些简单的模板，及artTemplate的渲染
+ */
+Jingle.Template = (function(J,$){
     var background = function(el,title,icon){
         var markup = '<div class="back-mask"><div class="icon '+icon+'"></div><div>'+title+'</div></div>';
         $(el).html(markup);
@@ -24,4 +27,4 @@ Jingle.Template = (function(){
         loading : loading,
         no_result : no_result
     }
-})();
+})(Jingle,Zepto);

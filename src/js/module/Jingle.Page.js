@@ -1,7 +1,7 @@
 /**
- * 页面跳转相关
+ * section 页面远程加载
  */
-Jingle.Page = (function(J){
+Jingle.Page = (function(J,$){
 
     var _formatHash = function(hash){
         return hash.indexOf('#') == 0 ? hash.substr(1) : hash;
@@ -37,4 +37,4 @@ Jingle.Page = (function(J){
         load : loadPage,
         loadContent : loadContent
     }
-})(Jingle);
+})(Jingle,Zepto);

@@ -1,7 +1,7 @@
 /**
- * 框架的运作机制
+ * controller 控制页面的流转
  */
-Jingle.Router = (function(){
+Jingle.Router = (function(J,$){
     var TARGET_SELECTOR = 'a[data-target]';
     var _history = [];
 
@@ -13,7 +13,8 @@ Jingle.Router = (function(){
         //取消所有锚点的tap click的默认事件，由框架来控制
         $(document).on('tap','a',function(e){e.preventDefault()});
         $(document).on('click','a',function(e){e.preventDefault()});
-        $(document).on('tap',TARGET_SELECTOR,_targetHandler);
+        //添加命名空间，防止冲突
+        $(document).on('tap.target',TARGET_SELECTOR,_targetHandler);
         _initIndex();
     }
 
@@ -42,9 +43,10 @@ Jingle.Router = (function(){
     }
     var _targetHandler = function(e){
         e.preventDefault();
-        var _this = $(this);
-        var target = _this.attr('data-target');
-        var href = _this.attr('href');
+        var _this = $(this),
+            target = _this.attr('data-target'),
+            href = _this.attr('href');
+
         switch(target){
             case 'section' :
                 _showSection(href);
@@ -110,4 +112,4 @@ Jingle.Router = (function(){
         back : back
     }
 
-})();
+})(Jingle,Zepto);
