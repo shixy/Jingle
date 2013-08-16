@@ -1,0 +1,41 @@
+<section id="calendar_section">
+    <header>
+        <nav class="left">
+            <a href="#" data-icon="undo" data-target="back">返回</a>
+        </nav>
+        <h1 class="title">日历</h1>
+    </header>
+    <article class="active" id="menu_article"  data-scroll="true">
+        <button class="button" id="btn_popup_calendar" style="margin: 20px;">点击弹出日历</button>
+        <div id="calendar_demo" style="margin:10px;">
+        </div>
+    </article>
+</section>
+<script type="text/javascript">
+   new J.Calendar('#calendar_demo',{
+       callback:function(date){
+           alert(date);
+       }
+   });
+
+   $('#btn_popup_calendar').tap(function(){
+       J.popup({
+           html : '<div id="popup_calendar"></div>',
+           pos : 'center',
+           backgroundOpacity : 0.4,
+           showCloseBtn : false,
+           onShow : function(){
+               new J.Calendar('#popup_calendar',{
+                   date : new Date(2013,7,1),
+                   callback:function(date){
+                       $('#btn_popup_calendar').text(date);
+                       J.closePopup();
+                   }
+               });
+           }
+       });
+   });
+
+
+
+</script>

@@ -42,24 +42,25 @@ Jingle.Menu = (function(J,$){
         }
         J.isMenuOpen = true;
     }
-    var hideMenu = function(){
+    var hideMenu = function(duration,callback){
         var $aside = $('#aside_container aside.active'),
             transition = $aside.data('transition'),// push overlay  reveal
             position = $aside.data('position') || 'left',
             translateX = position == 'left'?'-100%':'100%';
 
         var _finishTransition = function(){
-                $aside.removeClass('active');
-                J.isMenuOpen = false;
+            $aside.removeClass('active');
+            J.isMenuOpen = false;
+            callback.call(this);
         };
 
         if(transition == 'overlay'){
-            J.anim($aside,{translateX : translateX},_finishTransition);
+            J.anim($aside,{translateX : translateX},duration,_finishTransition);
         }else if(transition == 'reveal'){
-            J.anim($sectionContainer,{translateX : '0'},_finishTransition);
+            J.anim($sectionContainer,{translateX : '0'},duration,_finishTransition);
         }else{//默认为push
-            J.anim($aside,{translateX : translateX});
-            J.anim($sectionContainer,{translateX : '0'},_finishTransition);
+            J.anim($aside,{translateX : translateX},duration);
+            J.anim($sectionContainer,{translateX : '0'},duration,_finishTransition);
         }
     }
     return {

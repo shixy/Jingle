@@ -3063,16 +3063,11 @@ window.Zepto = Zepto
             }
             $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
         },
-        showMask : function(text,cancelCallback){
-            if($.type(text) == 'function'){
-                cancelCallback = text;
-                text = null;
-            }
-            text = text || 'Loading...';
-            this.Toast.show('loading',text,cancelCallback);
+        showMask : function(text){
+            this.Popup.loading(text);
         },
         hideMask : function(){
-            this.Toast.hide();
+            this.Popup.close();
         },
         showToast : function(text,type){
             type = type || 'toast';
@@ -3088,14 +3083,14 @@ window.Zepto = Zepto
         confirm : function(title,content,okCall,cancelCall){
             this.Popup.confirm(title,content,okCall,cancelCall);
         },
-        popup : function(html,pos,closeable){
-            this.Popup.show(html,pos,closeable);
+        popup : function(options){
+            this.Popup.show(options);
         },
         closePopup : function(){
             this.Popup.close();
         },
-        popover : function(html,pos,arrow_direction){
-            this.Popup.popover(html,pos,arrow_direction);
+        popover : function(html,pos,arrowDirection,onShow){
+            this.Popup.popover(html,pos,arrowDirection,onShow);
         },
         tmpl : function(containerSelector,templateId,data){
             this.Template.render(containerSelector,templateId,data);
@@ -3303,24 +3298,25 @@ Jingle.Menu = (function(J,$){
         }
         J.isMenuOpen = true;
     }
-    var hideMenu = function(){
+    var hideMenu = function(duration,callback){
         var $aside = $('#aside_container aside.active'),
             transition = $aside.data('transition'),// push overlay  reveal
             position = $aside.data('position') || 'left',
             translateX = position == 'left'?'-100%':'100%';
 
         var _finishTransition = function(){
-                $aside.removeClass('active');
-                J.isMenuOpen = false;
+            $aside.removeClass('active');
+            J.isMenuOpen = false;
+            callback.call(this);
         };
 
         if(transition == 'overlay'){
-            J.anim($aside,{translateX : translateX},_finishTransition);
+            J.anim($aside,{translateX : translateX},duration,_finishTransition);
         }else if(transition == 'reveal'){
-            J.anim($sectionContainer,{translateX : '0'},_finishTransition);
+            J.anim($sectionContainer,{translateX : '0'},duration,_finishTransition);
         }else{//默认为push
-            J.anim($aside,{translateX : translateX});
-            J.anim($sectionContainer,{translateX : '0'},_finishTransition);
+            J.anim($aside,{translateX : translateX},duration);
+            J.anim($sectionContainer,{translateX : '0'},duration,_finishTransition);
         }
     }
     return {
@@ -3373,17 +3369,20 @@ Jingle.Page = (function(J,$){
  * controller 控制页面的流转
  */
 Jingle.Router = (function(J,$){
-    var TARGET_SELECTOR = 'a[data-target]';
-    var _history = [];
+    var TARGET_SELECTOR = 'a[data-target]:not([data-target="link"])',//含有data-target标签，但是data-target != link的a
+        PREV_TARGET_SELECTOR = 'a:not([data-target="link"])',//data-target != link 的a ，包含没有data-target标签的a，只有data-targe=link的元素不会阻止其默认行为
+        _history = [];
 
     /**
      * 初始化events、state
      */
     var init = function(){
         $(window).on('popstate', _popstateHandler);
-        //取消所有锚点的tap click的默认事件，由框架来控制
-        $(document).on('tap','a',function(e){e.preventDefault()});
-        $(document).on('click','a',function(e){e.preventDefault()});
+        var tapEvent = J.hasTouch?'tap':'click';
+        //阻止data-target != 'link'的a元素的默认行为
+        $(document).on(tapEvent,PREV_TARGET_SELECTOR,function(e){
+            e.preventDefault()
+        });
         //添加命名空间，防止冲突
         $(document).on('tap.target',TARGET_SELECTOR,_targetHandler);
         _initIndex();
@@ -3436,7 +3435,10 @@ Jingle.Router = (function(J,$){
 
     var _showSection  = function(hash){
         if(J.isMenuOpen){
-            J.Menu.hide();
+            J.Menu.hide(1,function(){
+                _showSection(hash);
+            });
+            return;
         }
         if(_history[0] === hash)return;
         var currentPage = $(_history[0]);
@@ -3809,7 +3811,7 @@ Jingle.Transition = (function(J,$){
  * 弹出框组件
  */
 Jingle.Popup = (function(J,$){
-    var _popup,_mask,transition,
+    var _popup,_mask,transition,clickMask2close,
         POSITION = {
             'top':{
                 top:0,
@@ -3842,86 +3844,156 @@ Jingle.Popup = (function(J,$){
             top : ['slideDownIn','slideUpOut'],
             bottom : ['slideUpIn','slideDownOut'],
             defaultAnim : ['scaleIn','scaleOut']
+        },
+        TEMPLATE = {
+            alert : '<div class="popup-title">{title}</div><div class="popup-content">{content}</div><div id="popup_btn_container"><a data-target="closePopup" data-icon="checkmark">{ok}</a></div>',
+            confirm : '<div class="popup-title">{title}</div><div class="popup-content">{content}</div><div id="popup_btn_container"><a class="cancel" data-icon="close">{cancel}</a><a data-icon="checkmark">{ok}</a></div>',
+            loading : '<i class="icon spinner"></i><p>{title}</p>'
         };
+
     var _init = function(){
         $('body').append('<div id="jingle_popup"></div><div id="jingle_popup_mask"></div>');
         _mask = $('#jingle_popup_mask');
         _popup = $('#jingle_popup');
         _subscribeEvents();
     }
-    var show = function(html,pos,closeable,arrow_direction){
-        var pos_type = $.type(pos);
-        _mask.show();
+
+    var show = function(options){
+        var settings = {
+            height : undefined,
+            width : undefined,
+            backgroundOpacity : 0,
+            html : '',//@String popup内容
+            pos : 'center',//位置 @String top|top-second|center|bottom|bottom-second   @object  css样式
+            clickMask2Close : true,//@boolean 是否点击外层遮罩关闭popup
+            showCloseBtn : true,//@boolean 是否显示关闭按钮
+            arrowDirection : undefined,//popover的箭头指向
+            onShow : undefined //@event 在popup动画开始前执行
+        }
+        $.extend(settings,options);
+        clickMask2close = settings.clickMask2Close;
+        _mask.css('opacity',settings.backgroundOpacity);
         //rest position and class
         _popup.attr({'style':'','class':''});
-        if(pos_type == 'object'){
-            _popup.css(pos);
+        settings.width && _popup.height(settings.width);
+        settings.height && _popup.height(settings.height);
+        var pos_type = $.type(settings.pos);
+        if(pos_type == 'object'){// style
+            _popup.css(settings.pos);
             transition = ANIM['defaultAnim'];
         }else if(pos_type == 'string'){
-            _popup.css(POSITION[pos])
-            var trans_key = pos.indexOf('top')>-1?'top':(pos.indexOf('bottom')>-1?'bottom':'defaultAnim');
-            transition = ANIM[trans_key];
+            if(POSITION[settings.pos]){ //已经默认的样式
+                _popup.css(POSITION[settings.pos])
+                var trans_key = settings.pos.indexOf('top')>-1?'top':(settings.pos.indexOf('bottom')>-1?'bottom':'defaultAnim');
+                transition = ANIM[trans_key];
+            }else{// pos 为 class
+                _popup.addClass(settings.pos);
+                transition = ANIM['defaultAnim'];
+            }
         }else{
             console.error('错误的参数！');
             return;
         }
-        if(arrow_direction){
-            _popup.addClass('arrow '+arrow_direction);
+        //是否显示关闭按钮
+        if(settings.showCloseBtn){
+            settings.html += '<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>';
+        }
+        //popover 箭头方向
+        if(settings.arrowDirection){
+            _popup.addClass('arrow '+settings.arrowDirection);
             _popup.css('padding','8px');
-            if(arrow_direction=='top'||arrow_direction=='bottom'){
-                transition = ANIM[arrow_direction];
+            if(settings.arrowDirection=='top'||settings.arrowDirection=='bottom'){
+                transition = ANIM[settings.arrowDirection];
             }
         }
-        if(closeable){
-            _popup.append('<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>');
+
+        _mask.show();
+        _popup.html(settings.html).show();
+
+        //执行onShow事件，可以动态添加内容
+        settings.onShow && settings.onShow.call(this);
+
+        //显示获取容器高度，调整至垂直居中
+        if(settings.pos == 'center'){
+            var height = _popup.height();
+            _popup.css('margin-top','-'+height/2+'px')
         }
-        _popup.html(html).show();;
         J.Element.init(_popup);
         J.anim(_popup,transition[0]);
-        _popup.trigger('open');
         J.hasPopupOpen = true;
     }
-    var hide = function(callback){
+    var hide = function(){
         _mask.hide();
         J.anim(_popup,transition[1],function(){
             _popup.hide();
             J.hasPopupOpen = false;
-            _popup.trigger('close');
-            if(callback)callback();
         });
     }
     var _subscribeEvents = function(){
-        _mask.on('tap',function(){ hide();});
+        _mask.on('tap',function(){
+            if(clickMask2close){
+                hide();
+            }
+        });
         _popup.on('tap','[data-target="closePopup"]',function(){hide();});
     }
-    _init();
 
     var alert = function(title,content){
-        var markup = '<div class="popup-title">'+title+'</div><div class="popup-content">'+content+'</div><div id="popup_btn_container"><a data-target="closePopup" data-icon="checkmark">OK</a></div>'
-        show(markup,'center',false);
+        var markup = TEMPLATE.alert.replace('{title}',title).replace('{content}',content).replace('{ok}','确定');
+        show({
+            html : markup,
+            pos : 'center',
+            clickMask2Close : false,
+            showCloseBtn : false
+        });
     }
     var confirm = function(title,content,okCall,cancelCall){
-        var markup = '<div class="popup-title">'+title+'</div><div class="popup-content">'+content+'</div><div id="popup_btn_container"><a data-icon="checkmark">确定</a><a class="cancel" data-icon="close">取消</a></div>'
-        show(markup,'center',true);
+        var markup = TEMPLATE.confirm.replace('{title}',title).replace('{content}',content).replace('{cancel}','取消').replace('{ok}','确定');
+        show({
+            html : markup,
+            pos : 'center',
+            clickMask2Close : false,
+            showCloseBtn : false
+        });
         $('#popup_btn_container [data-icon="checkmark"]').tap(function(){
-            hide(okCall);
+            hide();
+            okCall.call(this);
         });
         $('#popup_btn_container [data-icon="close"]').tap(function(){
-            hide(cancelCall);
+            hide();
+            cancelCall.call(this);
         });
     }
 
-    var popover = function(html,pos,arrow_direction){
-        show(html,pos,false,arrow_direction)
+    var popover = function(html,pos,arrow_direction,onShow){
+        show({
+            html : html,
+            pos : pos,
+            showCloseBtn : false,
+            arrowDirection : arrow_direction,
+            onShow : onShow
+        });
     }
 
+    var loading = function(text){
+        var markup = TEMPLATE.loading.replace('{title}',text||'加载中...');
+        show({
+            html : markup,
+            pos : 'loading',
+            clickMask2Close : false
+        });
+    }
+
+    _init();
+
     return {
-    show : show,
-    close : hide,
-    alert : alert,
-    confirm : confirm,
-    popover : popover
-}
+        show : show,
+        close : hide,
+        alert : alert,
+        confirm : confirm,
+        popover : popover,
+        loading : loading
+    }
 })(Jingle,Zepto);
 /**
  * 高亮组件？(不太好命名)
@@ -3936,7 +4008,7 @@ Jingle.Selected = (function(J,$){
             //在滑动的时候有闪烁，添加一个延时器,防止误操作
             timer = setTimeout(function(){
                 activeEl = $el.addClass($el.data('selected'));
-            },100);
+            },50);
 
         });
         $(document).on('touchmove.selected touchend.selected touchcancel.selected',function(){
@@ -3951,6 +4023,176 @@ Jingle.Selected = (function(J,$){
         init : init
     }
 })(Jingle,Zepto)
+;(function(J,$){
+    var calendar = function(selector,options){
+        var defaults = {
+            months : ["01月", "02月", "03月", "04月", "05月", "06月",
+                "07月", "08月", "09月", "10月", "11月", "12月"],
+            days : ["日", "一", "二", "三", "四", "五", "六"],
+            swipeable : true,
+            date : new Date(),
+            callback : undefined
+            },
+            _this = this,
+            $el = $(selector),
+            $yearText,
+            $monthText,
+            $calendarBody,
+            currentDate,currentYear,currentMonth;
+        var _init = function(){
+            _this.settings = $.extend({},defaults,options);
+            currentYear = _this.settings.date.getFullYear();
+            currentMonth = _this.settings.date.getMonth();
+            currentDate = new Date(currentYear,currentMonth,_this.settings.date.getDate());
+            _render();
+            _subscribeEvents();
+        }
+
+        //获取月份第一天是星期几[0-6]
+        var _fisrtDayOfMonth = function(date){
+            return ( new Date(date.getFullYear(), date.getMonth(), 1) ).getDay();
+        }
+        //获取月份总天数[1-31]
+        var _daysInMonth = function(date){
+            return ( new Date(date.getFullYear(),date.getMonth()+1,0) ).getDate();
+        }
+
+        var _render = function(){
+            var html = '';
+            html += '<div class="jingle-calendar">';
+            html += _renderNav(currentYear,currentMonth);
+            html += _renderHead();
+            html += '<div class="jingle-calendar-body">';
+            html += _renderBody(currentDate);
+            html += '</div></div>'
+            $el.html(html);
+            $yearText = $el.find('span:eq(0)');
+            $monthText = $el.find('span:eq(1)');
+            $calendarBody = $el.find('.jingle-calendar-body');
+        }
+
+        var _renderNav = function(year,month){
+            var html = '<div class="jingle-calendar-nav">';
+            html += '<div> <i class="icon previous" data-year='+year+'></i><span>'+year+'</span><i class="icon next" data-year='+year+'></i></div>';
+            html += '<div ><i class="icon previous" data-month='+month+'></i> <span>'+_this.settings.months[month]+'</span><i class="icon next" data-month='+month+'></i></div>';
+            html += '</div>';
+            return html;
+        }
+
+        var _renderHead = function(){
+            var html = '<table><thead><tr>';
+            for(var i = 0; i < 7; i++){
+                html += '<th>'+_this.settings.days[i]+'</th>';
+            }
+            html += '</tr></thead></table>'
+            return html;
+        }
+
+        var _renderBody = function(date){
+            var firstDay = _fisrtDayOfMonth(date),
+                days = _daysInMonth(date),
+                rows = Math.ceil((firstDay+days) / 7),
+                beginDate,
+                html = '';
+            currentYear = date.getFullYear();
+            currentMonth = date.getMonth();
+            beginDate = new Date(currentYear,currentMonth,1-firstDay);//日历开始的日期
+            html += '<table><tbody>';
+            for(var i = 0; i < rows; i++){
+                html += '<tr>';
+                for(var j = 0; j < 7; j++){
+                    html += _renderDay(beginDate,currentMonth);
+                    beginDate.setDate(beginDate.getDate() + 1);
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            return html;
+        }
+        var _renderDay = function(date,month){
+            var otherMonth = (date.getMonth() !== month);
+            var dateStr = _this.format(date);
+            var classname = (_this.format(_this.settings.date) == dateStr) ? 'active':'';
+
+            return otherMonth ? '<td>&nbsp;</td>' : '<td data-selected="selected" class="'+classname+ '" data-date= '+dateStr+'>'+date.getDate()+'</td>';
+        }
+
+        var _subscribeEvents = function(){
+            var $target;
+            $el.on('tap',function(e){
+                $target = $(e.target);
+                if($target.is('[data-year].next')){
+                    //后一年
+                    currentDate.setFullYear(currentDate.getFullYear()+1);
+                    _this.refresh(currentDate);
+                }else if($target.is('[data-year].previous')){
+                    //前一年
+                    currentDate.setFullYear(currentDate.getFullYear()-1);
+                    _this.refresh(currentDate);
+                }else if($target.is('[data-month].next')){
+                    //后一月
+                    currentDate.setMonth(currentDate.getMonth()+1);
+                    _this.refresh(currentDate);
+                }else if($target.is('[data-month].previous')){
+                    //前一月
+                    currentDate.setMonth(currentDate.getMonth()-1);
+                    _this.refresh(currentDate);
+                }
+                if($target.is('td')){
+                    var dateStr = $target.data('date');
+                    if(dateStr && _this.settings.callback){
+                        _this.settings.callback.call(_this,dateStr)
+                    }
+                }
+            });
+            $el.on('swipeLeft',function(){
+                currentDate.setMonth(currentDate.getMonth()+1);
+                _this.refresh(currentDate);
+            });
+            $el.on('swipeRight',function(){
+                currentDate.setMonth(currentDate.getMonth()-1);
+                _this.refresh(currentDate);
+            })
+        }
+
+        this.refresh = function(date){
+            var oldDate = new Date(currentYear,currentMonth,1),
+                newDate = new Date(date.getFullYear(),date.getMonth(),1),
+                transition = undefined;
+
+            if(oldDate.getTime() == newDate.getTime())return;
+            transition = oldDate<newDate ? 'slideLeftIn' : 'slideRightIn';
+
+            $yearText.text(date.getFullYear());
+            $monthText.text(this.settings.months[date.getMonth()]);
+            $calendarBody.find('table').addClass('old');
+            $calendarBody.append(_renderBody(date));
+            var $newTable = $calendarBody.find('table:not(.old)');
+            J.anim($newTable,transition,function(){
+                $calendarBody.find('table.old').remove();
+            });
+
+        }
+        _init();
+    }
+    /**
+     * 字符串转化为日期对象，只支持yyyy-MM-dd 和 yyyy/MM/dd
+     * @param date
+     * @return {*}
+     */
+    calendar.prototype.parse = function(date){
+        var dateRE = /^(\d{4})(?:\-|\/)(\d{1,2})(?:\-|\/)(\d{1,2})$/;
+        return dateRE.test(date) ? new Date(parseInt(RegExp.$1, 10), parseInt(RegExp.$2, 10) - 1, parseInt(RegExp.$3, 10)) : null;
+    }
+    /**
+     * 格式化日期  yyyy-MM-dd
+     * @return {String}
+     */
+    calendar.prototype.format = function(date){
+        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    }
+    J.Calendar = calendar;
+})(Jingle,Zepto);
 /**
  *  哥屋恩动组件(iscroll)
  */

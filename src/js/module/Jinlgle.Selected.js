@@ -11,7 +11,7 @@ Jingle.Selected = (function(J,$){
             //在滑动的时候有闪烁，添加一个延时器,防止误操作
             timer = setTimeout(function(){
                 activeEl = $el.addClass($el.data('selected'));
-            },100);
+            },50);
 
         });
         $(document).on('touchmove.selected touchend.selected touchcancel.selected',function(){

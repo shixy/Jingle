@@ -7,8 +7,7 @@
 ;(function(){
     var api = "http://172.20.1.195:6888/ws";
 //    var api = "http://localhost:6888/ws";
-//    var appKey = '751507d364d69b40';
-    var appKey = '000001';
+    var appKey = '751507d364d69b40';
     var sessionId;
 
     function _ajax(type,url,param,callback,noCache){
@@ -39,15 +38,10 @@
             url : requestUrl,
             type : type,
             data : param,
+            timeout : 20000,
             success : callback,
-            error : function(xhr){
-                var data = JSON.parse(xhr.responseText);
-                if(data.code && data.message){
-                    J.showToast(data.message,'error');
-                }else{
-                    J.showToast('连接服务器失败！','error');
-                }
-
+            error : function(xhr,type){
+                _parseError(xhr,type,url);
             },
             dataType : 'json'
         }
@@ -70,6 +64,26 @@
     function _post(url,param,callback,noCache){
         _ajax('post',url,param,callback,noCache);
     };
+    function _parseError(xhr,type,url){
+        J.hideMask();
+        if(type == 'timeout'){
+            J.showToast('连接服务器超时,请检查网络是否畅通！','error');
+        }else if(type == 'parsererror'){
+            J.showToast('解析返回结果失败！','error');
+        }else if(type == 'error'){
+            var data;
+            try{
+                data = JSON.parse(xhr.responseText);
+                if(data.code && data.message){
+                    J.showToast(data.message,'error');
+                }else{
+                    J.showToast('连接服务器失败！','error');
+                }
+            }catch(e){
+                J.showToast('连接服务器失败！','error');
+            }
+        }
+    }
 
     window.RsAPI = {
         'auth':{

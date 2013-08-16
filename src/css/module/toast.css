@@ -38,34 +38,6 @@
 #jingle_toast.error{background-color: #E74C3C;}
 #jingle_toast.info{background-color: #F1C40F;}
 
-#jingle_toast.loading{
-    top:50%;
-    left: 50%;
-    margin: -75px 0 0 -75px;
-    background-color: #1f1f1f;
-    opacity: .7;
-    text-align: center;
-    width: 150px;
-    height: 150px;
-    border-radius: 10px;
-}
-#jingle_toast.loading i.icon{
-    font-size: 4em;
-    line-height: 110px;
-    margin:0;
-}
-#jingle_toast.loading p{
-    color: #BDC3C7;
-}
-
 #jingle_toast i.icon{
     margin-right: 10px;
-}
-#tag_close_toast{
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 1.2em;
-    color: #BDC3C7;
-    padding: 5px 5px 10px 10px;
 }

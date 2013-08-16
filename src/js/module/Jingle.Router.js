@@ -2,17 +2,20 @@
  * controller 控制页面的流转
  */
 Jingle.Router = (function(J,$){
-    var TARGET_SELECTOR = 'a[data-target]';
-    var _history = [];
+    var TARGET_SELECTOR = 'a[data-target]:not([data-target="link"])',//含有data-target标签，但是data-target != link的a
+        PREV_TARGET_SELECTOR = 'a:not([data-target="link"])',//data-target != link 的a ，包含没有data-target标签的a，只有data-targe=link的元素不会阻止其默认行为
+        _history = [];
 
     /**
      * 初始化events、state
      */
     var init = function(){
         $(window).on('popstate', _popstateHandler);
-        //取消所有锚点的tap click的默认事件，由框架来控制
-        $(document).on('tap','a',function(e){e.preventDefault()});
-        $(document).on('click','a',function(e){e.preventDefault()});
+        var tapEvent = J.hasTouch?'tap':'click';
+        //阻止data-target != 'link'的a元素的默认行为
+        $(document).on(tapEvent,PREV_TARGET_SELECTOR,function(e){
+            e.preventDefault()
+        });
         //添加命名空间，防止冲突
         $(document).on('tap.target',TARGET_SELECTOR,_targetHandler);
         _initIndex();
@@ -65,7 +68,10 @@ Jingle.Router = (function(J,$){
 
     var _showSection  = function(hash){
         if(J.isMenuOpen){
-            J.Menu.hide();
+            J.Menu.hide(1,function(){
+                _showSection(hash);
+            });
+            return;
         }
         if(_history[0] === hash)return;
         var currentPage = $(_history[0]);

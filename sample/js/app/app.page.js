@@ -26,7 +26,9 @@ App.page('login',function(){
         if(username == '' || pwd == ''){
             J.alert('提示','请填写完整的信息！');
         }else{
+            J.showMask('登录中...');
             RsAPI.auth.login(username,pwd,function(data){
+                J.hideMask();
                 if(data.error){
                     J.showToast(data.error,'error');
                 }else{
@@ -48,7 +50,9 @@ App.page('login',function(){
     var _autoLogin = function(){
         var sessionId = localStorage.getItem('sessionId');
         if(sessionId){
+            J.showMask('自动登录中...');
             RsAPI.auth.reLogin(function(data){
+                J.hideMask();
                 if(data.error){
                     J.showToast(data.error,'error');
                 }else{
@@ -240,9 +244,12 @@ App.page('res_period',function(){
             $this.addClass('active').siblings().removeClass('active');
             serverType = $(this).data('type');
             _renderChart();
-
         })
-        _renderBar();
+        $('#btn_begin_date').tap(function(){
+            $(this).next().trigger('tap');
+        });
+
+        //_renderBar();
         _renderChart();
     }
     /**

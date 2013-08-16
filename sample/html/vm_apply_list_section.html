@@ -26,7 +26,7 @@
 </section>
 <script type="text/html" id="underway_list_tmpl">
     {each $data}
-    <li class="selected" data-icon="next" data-id="{$value.id}">
+    <li data-selected="selected" data-icon="next" data-id="{$value.id}">
         <div class="tag">{$value.status.label}</div>
         <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
         <p><span data-icon="user">{$value.userName}</span> <span style="margin-left: 50px;" data-icon="alarm">{$value.submitTime}</span></p>
@@ -35,7 +35,7 @@
 </script>
 <script type="text/html" id="finished_list_tmpl">
     {each $data}
-    <li class="selected" data-icon="next" data-id="{$value.id}">
+    <li data-selected="selected" data-icon="next" data-id="{$value.id}">
         <div class="tag">{$value.status.label}</div>
         <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
         <p>

@@ -1,0 +1,51 @@
+.jingle-calendar{
+    width: 100%;
+}
+.jingle-calendar-nav{
+    height: 50px;
+    line-height: 50px;
+    display: -webkit-box;
+    display: box;
+    text-align: center;
+    background-color: #222;
+    color: #fff;
+}
+.jingle-calendar-nav>div{
+    -webkit-box-flex : 1;
+}
+.jingle-calendar-nav i.icon{
+    padding: 10px;
+}
+.jingle-calendar-body{
+    position: relative;
+    height: 300px;
+    overflow-x: hidden;
+}
+.jingle-calendar-body table{
+    position: absolute;
+    z-index: 2;
+}
+.jingle-calendar-body table.old{
+    z-index: 1;
+}
+.jingle-calendar table{
+    width: 100%;
+}
+.jingle-calendar table thead{
+    background: #eee;
+}
+.jingle-calendar table tbody{
+    background: #f5f5f5;
+}
+.jingle-calendar table th{
+    text-align: center;
+    padding: 5px 0;
+}
+.jingle-calendar table td{
+    border: 1px solid #fff;
+    text-align: center;
+    padding: 15px 0;
+}
+.jingle-calendar table td.active{
+    background-color: #1ABC9C;
+}

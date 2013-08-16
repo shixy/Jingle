@@ -132,3 +132,7 @@ sub,sup{
     overflow: hidden;
     background-color: #fff;
 }
+.selected{
+    background-color: #3498DB;
+    color: #fff;
+}

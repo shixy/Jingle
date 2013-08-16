@@ -39,16 +39,11 @@
             }
             $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
         },
-        showMask : function(text,cancelCallback){
-            if($.type(text) == 'function'){
-                cancelCallback = text;
-                text = null;
-            }
-            text = text || 'Loading...';
-            this.Toast.show('loading',text,cancelCallback);
+        showMask : function(text){
+            this.Popup.loading(text);
         },
         hideMask : function(){
-            this.Toast.hide();
+            this.Popup.close();
         },
         showToast : function(text,type){
             type = type || 'toast';
@@ -64,14 +59,14 @@
         confirm : function(title,content,okCall,cancelCall){
             this.Popup.confirm(title,content,okCall,cancelCall);
         },
-        popup : function(html,pos,closeable){
-            this.Popup.show(html,pos,closeable);
+        popup : function(options){
+            this.Popup.show(options);
         },
         closePopup : function(){
             this.Popup.close();
         },
-        popover : function(html,pos,arrow_direction){
-            this.Popup.popover(html,pos,arrow_direction);
+        popover : function(html,pos,arrowDirection,onShow){
+            this.Popup.popover(html,pos,arrowDirection,onShow);
         },
         tmpl : function(containerSelector,templateId,data){
             this.Template.render(containerSelector,templateId,data);

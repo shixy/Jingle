@@ -95,7 +95,3 @@ header .control-group{
     box-flex : 1;
     display: block;
 }
-.header-secondary > a[data-icon]{
-    -webkit-box-flex : 0;
-    box-flex : 0;
-}

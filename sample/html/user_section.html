@@ -19,7 +19,8 @@
     </article>
     <script type="text/html" id="user_tmpl">
         {each $data}
-        <li data-id="{$value.id}" data-icon="phone">
+        <li data-id="{$value.id}" data-selected="selected" data-icon="phone">
+            <a href="tel:123456">
             <strong>{$value.name}<span style="font-size:0.8em;color:#E67E22">({$value.id})</span></strong>
             <p>{$value.desc}</p>
             <p>
@@ -34,6 +35,7 @@
                 {/each}
             {/if}
             </p>
+            </a>
         </li>
         {/each}
     </script>

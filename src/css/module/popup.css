@@ -108,3 +108,22 @@
     background-color: #3498DB;
     color: #fff;
 }
+
+#jingle_popup.loading{
+    top:50%;
+    left: 50%;
+    margin: -75px 0 0 -75px;
+    opacity: .9;
+    text-align: center;
+    width: 150px;
+    height: 150px;
+    border-radius: 10px;
+}
+#jingle_popup.loading i.icon{
+    font-size: 4em;
+    line-height: 110px;
+    margin:0;
+}
+#jingle_popup.loading p{
+    color: #BDC3C7;
+}

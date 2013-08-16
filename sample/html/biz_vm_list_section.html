@@ -43,7 +43,7 @@
     </article>
     <script type="text/tmpl" id="biz_vm_list_tmpl">
         {each $data}
-        <li data-icon="next"  data-vmid="{$value.vmId}">
+        <li data-icon="next"  data-selected="selected" data-vmid="{$value.vmId}">
             <div class="tag {$getVMStatusClass $value.status.name}">
                 {$value.status.label}
             </div>
@@ -57,7 +57,7 @@
     </script>
     <script type="text/tmpl" id="biz_vm_cpu_top10_list_tmpl">
         {each $data}
-        <li data-icon="next"   data-vmid="{$value.targetId}" style="display:-webkit-box;">
+        <li data-icon="next" data-selected="selected"  data-vmid="{$value.targetId}" style="display:-webkit-box;">
             <div style="-webkit-box-flex:1;"><strong>{$value.name}</strong></div>
             <div style="width:60px;">{$value.remark}</div>
             <div style="width:100px;"><span style="font-size:9px;">CPU使用率:</span><span class="label">{$value.cpuRate}%</span></div>
@@ -66,7 +66,7 @@
     </script>
     <script type="text/tmpl" id="biz_vm_mm_top10_list_tmpl">
         {each $data}
-        <li data-icon="next"   data-vmid="{$value.targetId}" style="display:-webkit-box;">
+        <li data-icon="next"  data-selected="selected" data-vmid="{$value.targetId}" style="display:-webkit-box;">
             <div style="-webkit-box-flex:1;"><strong>{$value.name}</strong></div>
             <div style="width:100px;"><span style="font-size:9px;">内存使用率:</span><span class="label">{$value.memoryRate}%</span></div>
         </li>

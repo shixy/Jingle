@@ -10,10 +10,6 @@ ul.list {
     padding: 15px 20px 15px 10px;;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
-.list>li.selected{
-    background-color: #3498DB;
-    color: #fff;
-}
 
 .list>li:first-child {
     border-top: 1px solid rgba(0, 0, 0, .1);

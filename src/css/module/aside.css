@@ -67,9 +67,6 @@ aside ul.menu li a {
     display: block;
     color: #fff;
 }
-aside ul.menu a:active{
-    background-color: #2980B9;
-}
 aside ul.menu li a .icon{
     float:left;
 }
