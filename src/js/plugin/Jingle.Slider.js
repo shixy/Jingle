@@ -8,7 +8,7 @@
             beforeSlide = function(){return true},
             gestureStarted = false,
             index = 0,
-            speed = 300,
+            speed = 200,
             wrapper,
             dots,
             container,
@@ -75,9 +75,10 @@
          */
         var _slide = function(i, duration) {
             duration = duration || speed;
-            container.animate({
-                translateX : -(i * slideWidth)+'px'
-            },duration)
+            container.css({
+                '-webkit-transition-duration':duration + 'ms',
+                '-webkit-transform':'translate3D(' + -(i * slideWidth) + 'px,0,0)'
+            });
             index = i;
             if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
             afterSlide(index);
@@ -111,7 +112,7 @@
             deltaX = e.pageX - start.pageX;
             if ( typeof isScrolling == 'undefined') {
                 //根据X、Y轴的偏移量判断用户的意图是左右滑动还是上下滑动
-                isScrolling = !!( isScrolling || Math.abs(deltaX) < Math.abs(e.pageY - start.pageY) );
+                isScrolling = Math.abs(deltaX) < Math.abs(e.pageY - start.pageY)
             }
             if (!isScrolling) {
                 event.preventDefault();
@@ -119,14 +120,14 @@
                 var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
                 if(isPastBounds)return;
                 var pos = (deltaX - index * slideWidth);
-                container[0].style.webkitTransform = 'translateX('+pos+'px)';
+                container[0].style.webkitTransform = 'translate3D('+pos+'px,0,0)';
             }
         };
 
         var _touchEnd = function(e) {
             //判定是否跳转到下一个卡片
             //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3
-            var isValidSlide = Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20 || Math.abs(deltaX) > slideWidth/3;
+            var isValidSlide = (Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20) || Math.abs(deltaX) > slideWidth/3;
                 //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
             if (!isScrolling) {

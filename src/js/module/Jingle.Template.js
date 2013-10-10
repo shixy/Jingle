@@ -12,13 +12,19 @@ Jingle.Template = (function(J,$){
     var loading = function(el){
         background(el,'加载中...','cloud-download');
     }
-    var render = function(containerSelector,templateId,data){
-        var el =  $(containerSelector);
+    var render = function(containerSelector,templateId,data,type){
+        var el =  $(containerSelector),
+            type = type || 'replace';//replace  add
         if($.type(data) == 'array' && data.length == 0 ){
             no_result(el);
         }else{
-            el.html(template(templateId,data));
-            J.Element.init(el);
+            var html = $(template(templateId,data));
+            if(type == 'replace'){
+                el.html(html);
+            }else{
+                el.append(html);
+            }
+            J.Element.init(html);
         }
     }
     return {

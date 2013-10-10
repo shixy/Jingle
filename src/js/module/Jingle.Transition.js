@@ -1,7 +1,7 @@
 /**
  * section之间的动画过渡
  */
-Jingle.Transition = (function(J,$){
+Jingle.Transition11 = (function(J,$){
     var TRANSITION = {
         //[back,in]
         slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],

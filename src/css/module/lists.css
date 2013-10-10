@@ -10,6 +10,9 @@ ul.list {
     padding: 15px 20px 15px 10px;;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
+.list>li.active{
+    background-color: #BDC3C7 !important;
+}
 
 .list>li:first-child {
     border-top: 1px solid rgba(0, 0, 0, .1);
@@ -24,7 +27,6 @@ ul.list {
 }
 .list>li strong{
     color: #333;
-    font-weight: 600;
     font-size: 1.2em;
 }
 .list>li p{
@@ -39,6 +41,9 @@ ul.list {
     font-size: 18px;
     margin-top: -9px;
     color: #BDC3C7;
+}
+.list>li.active>.icon{
+    color: #3498DB;
 }
 .list>li .tag{
     position: absolute;

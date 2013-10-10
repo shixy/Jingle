@@ -51,7 +51,7 @@ Jingle.Menu = (function(J,$){
         var _finishTransition = function(){
             $aside.removeClass('active');
             J.isMenuOpen = false;
-            callback.call(this);
+            callback && callback.call(this);
         };
 
         if(transition == 'overlay'){

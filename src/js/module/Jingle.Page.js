@@ -14,7 +14,7 @@ Jingle.Page = (function(J,$){
         var id = _formatHash(hash);
         $.ajax({
             url : J.settings.sectionPath+id+'.html',
-            timeout : 5000,
+            timeout : 10000,
             async : false,
             success : function(html){
                 //添加到dom树中
@@ -29,7 +29,7 @@ Jingle.Page = (function(J,$){
     var loadContent = function(url){
         return $.ajax({
                 url : url,
-                timeout : 5000,
+                timeout : 10000,
                 async : false
             }).responseText;
     }

@@ -55,6 +55,7 @@ sub,sup{
 .group_list{
     list-style: none;
     background-color:#fff;
+    padding-bottom: 10px;
 }
 
 .group_list .title{
@@ -62,8 +63,6 @@ sub,sup{
     text-align: center;
     color: #000;
     text-shadow: 2px 2px 0 #E4F1FF;
-    border-right: 1px solid #eee;
-    background-color: #fff;
     position: absolute;
     overflow: hidden;
 }
@@ -90,10 +89,11 @@ sub,sup{
 }
  section .group_list li{
      border: solid 1px #C8C8C8;
-     border-top: none;
-     border-radius: 5px 5px 0 0;background-color: #2980B9;
+     border-top: none !important;
+     border-radius: 5px;
+     /*background-color: #16A085;*/
     margin-bottom: 10px;
-    padding: 5px 0 0 0;
+    padding: 0;
     position: relative;
 }
 .group_list .content{
@@ -111,7 +111,7 @@ sub,sup{
 
 }
 .group_list a span{
-    font-size: 1.3em;font-weight: bold;color: #E67E22;padding:0 4px;
+    font-size: 1.3em;color: #E67E22;padding:0 4px;
     margin-left: 6px;
 }
 

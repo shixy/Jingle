@@ -19,7 +19,7 @@
 </head>
 <body>
     <div id="aside_container">
-        <aside id="index_aside">
+        <aside id="index_aside" data-show-close="true" data-position="left">
             <div class="header">菜单</div>
             <div class="center" data-scroll="true">
                 <ul class="menu">
@@ -27,11 +27,11 @@
                     <li><a href="#res_period_section" data-icon="next" data-target="section">统计分析</a></li>
                     <li><a href="#vm_apply_list_section" data-icon="next" data-target="section">我的审批</a></li>
                     <li><a href="#user_section" data-icon="next" data-target="section">用户列表</a></li>
+                    <!--<li><a href="#log_analy_section" data-icon="next" data-target="section">日志分析</a></li>-->
+                    <li><a href="#utils_section" data-icon="next" data-target="section">工具服务</a></li>
                     <!--<li><a href="#" data-icon="next" data-target="section">DSR(未完成)</a></li>
                     <li><a href="#" data-icon="next" data-target="section">资源分配趋势(未完成)</a></li>-->
-                    <li class="anchor">设置</li>
-                    <li><a href="#" data-icon="switch" id="btn_change_user">切换账号</a></li>
-                    <li><a href="#" data-icon="exit" id="btn_exit_app">退出程序</a></li>
+                    <li><a href="#setting_section" data-icon="next" data-target="section">设置</a></li>
                 </ul>
             </div>
         </aside>
@@ -42,15 +42,16 @@
             <article class="active" style="background-color: #006953">
                 <img src="images/logo.jpg" style="display: block;margin:10px auto 0;">
                 <form style="padding: 20px;" id="login_form">
-                    <input type="text" placeholder="用户名" id="username" data-icon="home" value="">
-                    <input type="password" placeholder="密码" id="password" value="">
+                    <input type="text" placeholder="用户名" style="border: none;" id="username" data-icon="home" value="">
+                    <input type="password" placeholder="密码" style="border: none;" id="password" value="">
                     <button class="button block" type="submit" data-icon="lock" id="btn_login" style="padding:10px 5px;background-color: #16A085" >登录</button>
                 </form>
             </article>
         </section>
     </div>
     <!-- lib -->
-    <script type="text/javascript" src="js/lib/cordova-2.4.0.js"></script>
+    <!--<script type="text/javascript" src="js/lib/cordova.js"></script>-->
+    <script type="text/javascript" src="js/lib/component.js"></script>
     <script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
     <script type="text/javascript" src="js/lib/zepto.touch2mouse.js"></script>
     <script type="text/javascript" src="js/lib/ichart.min.js"></script>
@@ -61,6 +62,6 @@
     <script type="text/javascript" src="js/app/app.page.js"></script>
     <script type="text/javascript" src="js/app/app.helper.js"></script>
     <script type="text/javascript" src="js/app/restAPI.js"></script>
-   <!-- <script src="http://172.20.1.33:8080/target/target-script-min.js#anonymous"></script>-->
+    <!--<script src="http://172.20.1.33:8080/target/target-script-min.js#anonymous"></script>-->
 </body>
 </html>

@@ -41,15 +41,14 @@ section{
     left: 0;
     display: none;
     background-color: #fff;
-    z-index: 2;
-    -webkit-backface-visibility: hidden;
+    z-index: 4;
 }
 section.active{
-    z-index: 4;
+    z-index: 6 ;
     display: block;
 }
 section.activing{
-    z-index: 3;
+    z-index: 5 ;
     display: block;
 }
 article{
@@ -88,14 +87,8 @@ footer{
     bottom: 0;
     height: 51px;
 }
-footer.hide{
-    display: none;
-}
 footer ~ article {
     bottom: 51px;
-}
-footer.hide ~ article{
-    bottom:0;
 }
 header ~ article{
     top:44px;

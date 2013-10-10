@@ -6,8 +6,8 @@
     var Jingle = {
         settings : {
             transitionType : 'slide',
-            transitionTime : 400,
-            transitionTimingFunc : 'ease',
+            transitionTime : 200,
+            transitionTimingFunc : 'linear',
             sectionPath : 'html/',
             showWelcome : true
         },
@@ -45,9 +45,9 @@
         hideMask : function(){
             this.Popup.close();
         },
-        showToast : function(text,type){
+        showToast : function(text,type,duration){
             type = type || 'toast';
-            this.Toast.show(type,text);
+            this.Toast.show(type,text,duration);
         },
         hideToast : function(){
             this.Toast.hide();
@@ -68,10 +68,11 @@
         popover : function(html,pos,arrowDirection,onShow){
             this.Popup.popover(html,pos,arrowDirection,onShow);
         },
-        tmpl : function(containerSelector,templateId,data){
-            this.Template.render(containerSelector,templateId,data);
+        tmpl : function(containerSelector,templateId,data,type){
+            this.Template.render(containerSelector,templateId,data,type);
         },
         showWelcome : function(){
+            if(!this.settings.showWelcome)return;
             $.ajax({
                 url : J.settings.sectionPath+'welcome.html',
                 timeout : 5000,

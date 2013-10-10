@@ -54,11 +54,15 @@ Jingle.Popup = (function(J,$){
             height : undefined,
             width : undefined,
             backgroundOpacity : 0,
+            url : null,//远程加载内容
+            tplId : null,//加载模板
+            tplData : null,//配合tpl使用
             html : '',//@String popup内容
             pos : 'center',//位置 @String top|top-second|center|bottom|bottom-second   @object  css样式
             clickMask2Close : true,//@boolean 是否点击外层遮罩关闭popup
             showCloseBtn : true,//@boolean 是否显示关闭按钮
             arrowDirection : undefined,//popover的箭头指向
+            animation : true,
             onShow : undefined //@event 在popup动画开始前执行
         }
         $.extend(settings,options);
@@ -66,7 +70,7 @@ Jingle.Popup = (function(J,$){
         _mask.css('opacity',settings.backgroundOpacity);
         //rest position and class
         _popup.attr({'style':'','class':''});
-        settings.width && _popup.height(settings.width);
+        settings.width && _popup.width(settings.width);
         settings.height && _popup.height(settings.height);
         var pos_type = $.type(settings.pos);
         if(pos_type == 'object'){// style
@@ -85,9 +89,19 @@ Jingle.Popup = (function(J,$){
             console.error('错误的参数！');
             return;
         }
+        _mask.show();
+        var html;
+        if(settings.html){
+            html = settings.html;
+        }else if(settings.url){//远程加载
+            html = J.Page.loadContent(settings.url);
+        }else if(settings.tplId){//加载模板
+            html = template(settings.tplId,settings.tplData)
+        }
+
         //是否显示关闭按钮
         if(settings.showCloseBtn){
-            settings.html += '<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>';
+            html += '<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>';
         }
         //popover 箭头方向
         if(settings.arrowDirection){
@@ -98,8 +112,7 @@ Jingle.Popup = (function(J,$){
             }
         }
 
-        _mask.show();
-        _popup.html(settings.html).show();
+        _popup.html(html).show();
 
         //执行onShow事件，可以动态添加内容
         settings.onShow && settings.onShow.call(this);
@@ -110,7 +123,9 @@ Jingle.Popup = (function(J,$){
             _popup.css('margin-top','-'+height/2+'px')
         }
         J.Element.init(_popup);
-        J.anim(_popup,transition[0]);
+        if(settings.animation){
+            J.anim(_popup,transition[0]);
+        }
         J.hasPopupOpen = true;
     }
     var hide = function(){
@@ -171,6 +186,7 @@ Jingle.Popup = (function(J,$){
         show({
             html : markup,
             pos : 'loading',
+            animation : false,
             clickMask2Close : false
         });
     }

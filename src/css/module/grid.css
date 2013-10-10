@@ -17,10 +17,10 @@
     box-flex:1
 }
 .two-part{
-    -webkit-box-flex:1;
-    box-flex:1
+    -webkit-box-flex:2;
+    box-flex:2
 }
 .three-part{
-    -webkit-box-flex:1;
-    box-flex:1
+    -webkit-box-flex:3;
+    box-flex:3
 }

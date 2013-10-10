@@ -34,3 +34,5 @@ footer .active .icon{
     background-color: #16A085;
     color: #fff;
 }
+.toggle.active .toggle-handle {
+}

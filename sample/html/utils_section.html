@@ -1,0 +1,33 @@
+<section id="utils_section">
+    <header>
+        <nav class="left">
+            <a href="#back" data-target="back" data-icon="arrow-down-left-2">返回</a>
+        </nav>
+        <h1 class="title">工具服务</h1>
+        <nav class="right">
+            <!--<button id="uninstall_test">卸载</button>-->
+        </nav>
+    </header>
+
+    <article class="active" data-scroll="true" id="utils_list_article">
+        <div style="border-radius: 5px;background-color: #eeeebb;font-size: .9em;margin: 5px;padding: 10px;">
+            应用服务均通过云端访问，缓存至本地后可以离线访问;可缓存应用在第一次访问后会自动缓存至本地;
+        </div>
+        <ul class="list" id="service_list">
+            <li class="divider">可缓存应用</li>
+            <li data-selected="selected" class="grid">
+                <div class="one-part" data-service="log">
+                    <strong>日志分析</strong><div style="color:#E74C3C;font-size: .8em">已缓存</div>
+                </div>
+                <button class="small" style="font-size: .8em">清除缓存</button>
+            </li>
+            <li class="divider">云端应用</li>
+            <li data-selected="selected"  class="grid">
+                <div class="one-part" data-url="http://www.baidu.com">百度</div>
+            </li>
+            <li data-selected="selected" class="grid">
+                <div class="one-part" data-url="http://webapp.weather.com.cn">天气预报</div>
+            </li>
+        </ul>
+    </article>
+</section>

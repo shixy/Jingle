@@ -1,7 +1,7 @@
-<style type="text/css">
-    .vm-tag{position:absolute;top:20px;right: 20px;color: #fff;background-color: #E67E22;border-radius: 3px;padding: 2px 4px;font-size: 10px;}
-</style>
 <section id="vm_apply_section">
+    <style type="text/css">
+        .vm-tag{position:absolute;top:20px;right: 20px;color: #fff;background-color: #E67E22;border-radius: 3px;padding: 2px 4px;font-size: 10px;}
+    </style>
     <header>
         <nav class="left">
             <a href="#" data-target="back" data-icon="undo">返回</a>
@@ -24,199 +24,132 @@
         </div>
     </footer>
     <article class="active" id="vm_apply_article" data-scroll="true">
-        <div>
-            <div style="position: relative;padding:15px 10px;margin:0;background-color:#2C3E50;color: #fff; ">
-                <div class="vm-tag">已提交</div>
-                <a href="#" style="position:absolute;right: 20px;bottom: 30px;font-size: 30px;" data-icon="phone"></a>
-                <div class="grid" style="padding: 5px;">
-                    <div class="grid-label">编号：</div>
-                    <div class="one-part" style="color: #E67E22">A1010101010</div>
-                </div>
-                <div class="grid" style="padding: 5px;">
-                    <div class="grid-label">申请人：</div>
-                    <div class="one-part">张三</div>
-                </div>
-                <div class="grid" style="padding: 5px;">
-                    <div class="grid-label">部门：</div>
-                    <div class="one-part">研究院</div>
-                </div>
-                <div class="grid" style="padding: 5px;">
-                    <div class="grid-label">申请时间：</div>
-                    <div class="one-part">2013-07-03 12:11</div>
-                </div>
+        <div class="scrollWrapper"></div>
+    </article>
+    <script type="text/html" id="vm_apply_article_tmpl">
+        <div style="padding:15px 10px;margin:0;background-color:#2C3E50;color: #fff; height:150px;">
+            <div class="vm-tag">{status.label}</div>
+            <a href="#" style="position:absolute;right: 20px;bottom: 30px;font-size: 30px;" data-icon="phone"></a>
+            <div class="grid" style="padding: 5px;">
+                <div class="grid-label">编号：</div>
+                <div class="one-part" style="color: #E67E22">{applicationNo}</div>
             </div>
-            <ul class="list">
-                <li class="divider">
-                    详细申请信息
-                </li>
-            </ul>
-            <div id="vmConfigList">
+            <div class="grid" style="padding: 5px;">
+                <div class="grid-label">申请人：</div>
+                <div class="one-part">{userName}</div>
+            </div>
+            <div class="grid" style="padding: 5px;">
+                <div class="grid-label">部门：</div>
+                <div class="one-part">{groupName}</div>
+            </div>
+            <div class="grid" style="padding: 5px;">
+                <div class="grid-label">申请时间：</div>
+                <div class="one-part">{submitTime}</div>
+            </div>
+        </div>
+        <ul class="list">
+            <li class="divider">
+                详细申请信息
+                {if itemCount > 1}
+                (<span style="color:red">{itemCount}</span>)
+                {/if}
+            </li>
+        </ul>
+        <div id="vmConfigList">
             <div>
+                {each appItems}
                 <div style="padding: 10px 0;">
-                    <ul class="list inset">
+                    <ul class="list inset" data-id="{$value.id}">
+                        {if status.name == 'APPROVED'}
+                        <li class="divider">已创建的虚拟机</li>
+                        {each $value.vmRevertInfos}
+                        <li class="grid" data-type="revertInfo" data-id="{$value.id}" style="padding:10px;">
+                            <div class="grid-label one-part" style="padding:0 10px;">
+                                <input type="text" name="vmName" value="{$value.vmName}" placeholder="虚拟机名称" style="margin:5px 0 0 0"/>
+                            </div>
+                            <div class="one-part" style="padding:0 10px;">
+                                <input type="text" name="ip" value="{$value.ip}" placeholder="IP" style="margin:5px 0 0 0"/>
+                            </div>
+                        </li>
+                        {/each}
+                        {/if}
+                        {if status.name == 'CREATED'}
+                        <li class="divider">已创建的虚拟机</li>
+                        {each $value.vmRevertInfos}
+                        <li class="grid">
+                            <div class="grid-label one-part">{$value.vmName}</div>
+                            <div class="one-part">{$value.ip} </div>
+                        </li>
+                        {/each}
+                        {/if}
+                        <li class="divider">申请明细</li>
                         <li class="grid">
                             <div class="grid-label">申请理由：</div>
-                            <div class="one-part"></div>
+                            <div class="one-part">{$value.introduction}</div>
                         </li>
                         <li class="grid">
                             <div class="grid-label">平台：</div>
-                            <div class="one-part">PC服务器11</div>
+                            <div class="one-part">
+                                {if $value.vmType == 'PC'}
+                                PC服务器
+                                {else}
+                                小型机
+                                {/if}
+                            </div>
+                        </li>
+                        <li class="grid">
+                            <div class="grid-label">业务系统：</div>
+                            <div class="one-part">{$value.business}</div>
                         </li>
                         <li class="grid">
                             <div class="grid-label">虚拟机数：</div>
-                            <div class="one-part">1</div>
+                            <div class="one-part">{$value.vmCount}</div>
                         </li>
                         <li class="grid">
                             <div class="grid-label">操作系统：</div>
-                            <div class="one-part">Linux</div>
+                            <div class="one-part">{$value.os}</div>
                         </li>
                         <li class="grid">
                             <div class="grid-label" style="line-height: 30px;">CPU：</div>
-                            <div class="one-part" style="line-height: 30px;">2个</div>
-                            <div style="width:100px;">
-                                <input type="text" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">个
+                            <div class="one-part" style="line-height: 30px;">{$value.cpuCount}个</div>
+                            <div style="width:120px;line-height:30px;">
+                                {if status.name == 'WAIT_APPROVAL'}
+                                <input type="text" data-id="{$value.id}" name="finalCpuCount" value="{$value.finalCpuCount}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">个
+                                {else if status.name == 'APPROVED'|| status.name == 'CREATED'}
+                                {$value.finalCpuCount}个(最终值)
+                                {/if}
                             </div>
                         </li>
                         <li class="grid">
                             <div class="grid-label" style="line-height: 30px;">内存：</div>
-                            <div class="one-part" style="line-height: 30px;">4GB</div>
-                            <div style="width:100px;">
-                                <input type="text" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
+                            <div class="one-part" style="line-height: 30px;">{$value.memory}GB</div>
+                            <div style="width:120px;line-height:30px;">
+                                {if status.name == 'WAIT_APPROVAL'}
+                                <input type="text" data-id="{$value.id}" name="finalMemory" value="{$value.finalMemory}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
+                                {/if}
+                                {if status.name == 'APPROVED'|| status.name == 'CREATED'}
+                                {$value.finalMemory}GB(最终值)
+                                {/if}
                             </div>
                         </li>
                         <li class="grid">
                             <div class="grid-label" style="line-height: 30px;">存储：</div>
-                            <div class="one-part" style="line-height: 30px;">20GB</div>
-                            <div style="width:100px;">
-                                <input type="text" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
+                            <div class="one-part" style="line-height: 30px;">{$value.storage}GB</div>
+                            <div style="width:120px;line-height:30px;">
+                                {if status.name == 'WAIT_APPROVAL'}
+                                <input type="text" data-id="{$value.id}" name="finalStorage" value="{$value.finalStorage}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
+                                {/if}
+                                {if status.name == 'APPROVED'|| status.name == 'CREATED'}
+                                {$value.finalStorage}GB(最终值)
+                                {/if}
                             </div>
-                        </li>
-                        <li class="divider">已创建的虚拟机(2)</li>
-                        <li class="grid">
-                            <div class="grid-label">虚拟机1</div>
-                            <div class="one-part">172.20.1.1</div>
-                        </li>
-                        <li class="grid">
-                            <div class="grid-label">虚拟机2</div>
-                            <div class="one-part">172.20.1.2</div>
                         </li>
                     </ul>
                 </div>
+                {/each}
             </div>
         </div>
-        </div>
-    </article>
+    </script>
 </section>
-<script type="text/html" id="vm_apply_article_tmpl">
-    <div style="position: relative;padding:15px 10px;margin:0;background-color:#2C3E50;color: #fff; ">
-        <div class="vm-tag">{status.label}</div>
-        <a href="#" style="position:absolute;right: 20px;bottom: 30px;font-size: 30px;" data-icon="phone"></a>
-        <div class="grid" style="padding: 5px;">
-            <div class="grid-label">编号：</div>
-            <div class="one-part" style="color: #E67E22">{applicationNo}</div>
-        </div>
-        <div class="grid" style="padding: 5px;">
-            <div class="grid-label">申请人：</div>
-            <div class="one-part">{userName}</div>
-        </div>
-        <div class="grid" style="padding: 5px;">
-            <div class="grid-label">部门：</div>
-            <div class="one-part">{groupName}</div>
-        </div>
-        <div class="grid" style="padding: 5px;">
-            <div class="grid-label">申请时间：</div>
-            <div class="one-part">{submitTime}</div>
-        </div>
-    </div>
-    <ul class="list">
-        <li class="divider">
-            详细申请信息
-        </li>
-    </ul>
-    <div id="vmConfigList">
-        <div>
-            {each appItems}
-            <div style="padding: 10px 0;">
-                <ul class="list inset" data-id="{$value.id}">
-                   {if status.name == 'APPROVED'}
-                    <li class="divider">已创建的虚拟机</li>
-                    {each $value.vmRevertInfos}
-                    <li class="grid" data-type="revertInfo" data-id="{$value.id}" style="padding:10px;">
-                        <div class="grid-label one-part" style="padding:0 10px;">
-                            <input type="text" name="vmName" value="{$value.vmName}" placeholder="虚拟机名称" style="margin:5px 0 0 0"/>
-                        </div>
-                        <div class="one-part" style="padding:0 10px;">
-                            <input type="text" name="ip" value="{$value.ip}" placeholder="IP" style="margin:5px 0 0 0"/>
-                        </div>
-                    </li>
-                    {/each}
-                    {/if}
-                    {if status.name == 'CREATED'}
-                    <li class="divider">已创建的虚拟机</li>
-                    {each $value.vmRevertInfos}
-                    <li class="grid">
-                        <div class="grid-label one-part">{$value.vmName}</div>
-                        <div class="one-part">{$value.ip} </div>
-                    </li>
-                    {/each}
-                    {/if}
-                    <li class="divider">申请明细</li>
-                    <li class="grid">
-                        <div class="grid-label">申请理由：</div>
-                        <div class="one-part">{$value.introduction}</div>
-                    </li>
-                    <li class="grid">
-                        <div class="grid-label">平台：</div>
-                        <div class="one-part">{$value.vmType}</div>
-                    </li>
-                    <li class="grid">
-                        <div class="grid-label">虚拟机数：</div>
-                        <div class="one-part">{$value.vmCount}</div>
-                    </li>
-                    <li class="grid">
-                        <div class="grid-label">操作系统：</div>
-                        <div class="one-part">{$value.os}</div>
-                    </li>
-                    <li class="grid">
-                        <div class="grid-label" style="line-height: 30px;">CPU：</div>
-                        <div class="one-part" style="line-height: 30px;">{$value.cpuCount}个</div>
-                        <div style="width:100px;line-height:30px;">
-                            {if status.name == 'WAIT_APPROVAL'}
-                            <input type="text" data-id="{$value.id}" name="finalCpuCount" value="{$value.finalCpuCount}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">个
-                            {/if}
-                            {if status.name == 'APPROVED'|| status.name == 'CREATED'}
-                            {$value.finalCpuCount}个(最终值)
-                            {/if}
-                        </div>
-                    </li>
-                    <li class="grid">
-                        <div class="grid-label" style="line-height: 30px;">内存：</div>
-                        <div class="one-part" style="line-height: 30px;">{$value.memory}GB</div>
-                        <div style="width:100px;line-height:30px;">
-                            {if status.name == 'WAIT_APPROVAL'}
-                            <input type="text" data-id="{$value.id}" name="finalMemory" value="{$value.finalMemory}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
-                            {/if}
-                            {if status.name == 'APPROVED'|| status.name == 'CREATED'}
-                            {$value.finalMemory}GB(最终值)
-                            {/if}
-                        </div>
-                    </li>
-                    <li class="grid">
-                        <div class="grid-label" style="line-height: 30px;">存储：</div>
-                        <div class="one-part" style="line-height: 30px;">{$value.storage}GB</div>
-                        <div style="width:100px;line-height:30px;">
-                            {if status.name == 'WAIT_APPROVAL'}
-                            <input type="text" data-id="{$value.id}" name="finalStorage" value="{$value.finalStorage}" placeholder="审批值" style="margin-bottom: 0;padding: 5px;height: 30px;width: 80px;">GB
-                            {/if}
-                            {if status.name == 'APPROVED'|| status.name == 'CREATED'}
-                            {$value.finalStorage}GB(最终值)
-                            {/if}
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            {/each}
-        </div>
-    </div>
-</script>
+
 

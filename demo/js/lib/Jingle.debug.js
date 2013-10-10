@@ -3030,8 +3030,8 @@ window.Zepto = Zepto
     var Jingle = {
         settings : {
             transitionType : 'slide',
-            transitionTime : 400,
-            transitionTimingFunc : 'ease',
+            transitionTime : 200,
+            transitionTimingFunc : 'linear',
             sectionPath : 'html/',
             showWelcome : true
         },
@@ -3069,9 +3069,9 @@ window.Zepto = Zepto
         hideMask : function(){
             this.Popup.close();
         },
-        showToast : function(text,type){
+        showToast : function(text,type,duration){
             type = type || 'toast';
-            this.Toast.show(type,text);
+            this.Toast.show(type,text,duration);
         },
         hideToast : function(){
             this.Toast.hide();
@@ -3092,10 +3092,11 @@ window.Zepto = Zepto
         popover : function(html,pos,arrowDirection,onShow){
             this.Popup.popover(html,pos,arrowDirection,onShow);
         },
-        tmpl : function(containerSelector,templateId,data){
-            this.Template.render(containerSelector,templateId,data);
+        tmpl : function(containerSelector,templateId,data,type){
+            this.Template.render(containerSelector,templateId,data,type);
         },
         showWelcome : function(){
+            if(!this.settings.showWelcome)return;
             $.ajax({
                 url : J.settings.sectionPath+'welcome.html',
                 timeout : 5000,
@@ -3122,30 +3123,36 @@ window.Zepto = Zepto
 Jingle.Element = (function(J,$){
     var SELECTOR  = {
         'icon' : '[data-icon]',
-        'scroll' : '[data-scroll="true"]',
+        'scroll' : '[data-scroll="true"]',//可多次init，todo 将其作为一个单独module处理
         'toggle' : '.toggle',
         'range' : '[data-rangeinput]',
         'progress' : '[data-progress]',
-        'count' : '[data-count]'
+        'count' : '[data-count]',
+        'checkbox' : '[data-checkbox]'
     }
 
     var init = function(selector){
-        var el = $(selector || 'body');
-        if(el.length == 0)return;
-        $.map($(SELECTOR.icon,el),_init_icon);
-        $.map($(SELECTOR.toggle,el),_init_toggle);
-        $.map($(SELECTOR.range,el),_init_range);
-        $.map($(SELECTOR.progress,el),_init_progress);
-        $.map($(SELECTOR.count,el),_init_count);
-        $.map($(SELECTOR.scroll,el),_init_scroll);
+        if(!selector){
+            $(document).on('articleshow','article',function(){
+                J.Element.initScroll(this);
+            })
+        };
+        var $el = $(selector || 'body');
+        if($el.length == 0)return;
+
+        $.map(_getMatchElements($el,SELECTOR.icon),_init_icon);
+        $.map(_getMatchElements($el,SELECTOR.toggle),_init_toggle);
+        $.map(_getMatchElements($el,SELECTOR.range),_init_range);
+        $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
+        $.map(_getMatchElements($el,SELECTOR.count),_init_count);
+        $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
+    }
+    //自身与子集相结合
+    var _getMatchElements = function($el,selector){
+        return $el.find(selector).add($el.filter(selector));
     }
     var initScroll = function(selector){
-        var el = $(selector || 'body');
-        if(el.data('scroll')){
-            _init_scroll();
-        }else{
-            $.map($(SELECTOR.scroll,el),_init_scroll);
-        }
+        $.map(_getMatchElements($(selector),SELECTOR.scroll),_init_scroll);
     }
     var _init_icon = function(el){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
@@ -3221,6 +3228,19 @@ Jingle.Element = (function(J,$){
         if(count == 0){
             $('.count',el).hide();
         }
+    }
+
+    var _init_checkbox = function(el){
+        var $el = $(el);
+        var value = $el.data('checkbox');
+        $el.prepend('<i class="icon checkbox-'+value+'"></i>');
+        $el.on('tap',function(){
+            var status = ($el.data('checkbox') == 'checked') ? 'unchecked':'checked';
+            $el.find('i.icon').attr('class','icon checkbox-'+status);
+            $el.data('checkbox',status);
+            $el.trigger('change');
+        });
+
     }
 
     return {
@@ -3307,7 +3327,7 @@ Jingle.Menu = (function(J,$){
         var _finishTransition = function(){
             $aside.removeClass('active');
             J.isMenuOpen = false;
-            callback.call(this);
+            callback && callback.call(this);
         };
 
         if(transition == 'overlay'){
@@ -3341,7 +3361,7 @@ Jingle.Page = (function(J,$){
         var id = _formatHash(hash);
         $.ajax({
             url : J.settings.sectionPath+id+'.html',
-            timeout : 5000,
+            timeout : 10000,
             async : false,
             success : function(html){
                 //添加到dom树中
@@ -3356,7 +3376,7 @@ Jingle.Page = (function(J,$){
     var loadContent = function(url){
         return $.ajax({
                 url : url,
-                timeout : 5000,
+                timeout : 10000,
                 async : false
             }).responseText;
     }
@@ -3369,22 +3389,32 @@ Jingle.Page = (function(J,$){
  * controller 控制页面的流转
  */
 Jingle.Router = (function(J,$){
-    var TARGET_SELECTOR = 'a[data-target]:not([data-target="link"])',//含有data-target标签，但是data-target != link的a
-        PREV_TARGET_SELECTOR = 'a:not([data-target="link"])',//data-target != link 的a ，包含没有data-target标签的a，只有data-targe=link的元素不会阻止其默认行为
-        _history = [];
+        var _history = [];
 
     /**
      * 初始化events、state
      */
     var init = function(){
         $(window).on('popstate', _popstateHandler);
-        var tapEvent = J.hasTouch?'tap':'click';
-        //阻止data-target != 'link'的a元素的默认行为
-        $(document).on(tapEvent,PREV_TARGET_SELECTOR,function(e){
-            e.preventDefault()
+        $(document).on('click','a',function(e){
+            var target = $(this).data('target');
+            if(!target || target != 'link'){
+                e.preventDefault();
+                return false;
+            }
         });
-        //添加命名空间，防止冲突
-        $(document).on('tap.target',TARGET_SELECTOR,_targetHandler);
+        //阻止data-target != 'link'的a元素的默认行为
+        $(document).on('tap','a',function(e){
+            var target = $(this).data('target');
+            if(!target){
+                e.preventDefault();
+            }else{
+                if(target != 'link'){
+                    e.preventDefault();
+                    _targetHandler.call(this);
+                }
+            }
+        });
         _initIndex();
     }
 
@@ -3411,8 +3441,7 @@ Jingle.Router = (function(J,$){
         }
 
     }
-    var _targetHandler = function(e){
-        e.preventDefault();
+    var _targetHandler = function(){
         var _this = $(this),
             target = _this.attr('data-target'),
             href = _this.attr('href');
@@ -3435,19 +3464,18 @@ Jingle.Router = (function(J,$){
 
     var _showSection  = function(hash){
         if(J.isMenuOpen){
-            J.Menu.hide(1,function(){
+            J.Menu.hide(200,function(){
                 _showSection(hash);
             });
             return;
         }
         if(_history[0] === hash)return;
-        var currentPage = $(_history[0]);
         add2History(hash);
         if($(hash).length === 0){
             //同步加载模板
             J.Page.load(hash);
         }
-        _changePage(currentPage,hash);
+        _changePage(_history[1],hash);
     }
     var back = function(){
         _changePage(_history.shift(),_history[0],true);
@@ -3468,11 +3496,8 @@ Jingle.Router = (function(J,$){
         if(article.hasClass('active'))return;
         el.addClass('active').siblings('.active').removeClass('active');
         var activeArticle = article.addClass('active').siblings('.active').removeClass('active');
-        J.anim(article,'bigScaleIn',300,function(){
-            article.trigger('articleshow');
-            activeArticle.trigger('articlehide');
-
-        });
+        article.trigger('articleshow');
+        activeArticle.trigger('articlehide');
     }
 
     var _toggleMenu = function(hash){
@@ -3482,6 +3507,7 @@ Jingle.Router = (function(J,$){
     return {
         init : init,
         turnTo : _showSection,
+        showArticle : _showArticle,
         back : back
     }
 
@@ -3491,7 +3517,9 @@ Jingle.Router = (function(J,$){
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
  */
 Jingle.Service = (function(J,$){
-    var UNPOST_KEY = 'JINGLE_POST_DATA';
+    var UNPOST_KEY = 'JINGLE_POST_DATA',
+        GET_KEY_PREFIX = 'JINGLE_GET_';
+
 
     var ajax = function(options){
         if(options.type == 'post'){
@@ -3508,23 +3536,21 @@ Jingle.Service = (function(J,$){
         }else{//在线模式，直接提交
             $.ajax(options);
         }
-
     }
     var _doGet = function(options){
         var key = options.url +JSON.stringify(options.data);
         if(J.offline){//离线模式，直接从本地读取
             var result = _getCache(key);
             if(result){
-                options.success(result.data,result.createdTime);
-            }else{
+                options.success(result.data,key,result.cacheTime);
+            }else{//未缓存该数据
                 options.success(result);
             }
-
         }else{//在线模式，将数据保存到本地
             var callback = options.success;
             options.success = function(result){
                 _saveData2local(key,result);
-                callback(result);
+                callback(result,key);
             }
             $.ajax(options);
         }
@@ -3535,7 +3561,7 @@ Jingle.Service = (function(J,$){
      * @private
      */
     var _getCache = function(key){
-         return JSON.parse(localStorage.getItem(key));
+         return JSON.parse(localStorage.getItem(GET_KEY_PREFIX+key));
     }
     /**
      * 缓存数据到本地
@@ -3544,9 +3570,9 @@ Jingle.Service = (function(J,$){
     var _saveData2local = function(key,result){
         var data = {
             data : result,
-            createdTime : new Date()
+            cacheTime : new Date()
         }
-        localStorage.setItem(key,JSON.stringify(data));
+        localStorage.setItem(GET_KEY_PREFIX+key,JSON.stringify(data));
     }
 
     /**
@@ -3557,7 +3583,7 @@ Jingle.Service = (function(J,$){
      */
     var _setUnPostData = function(url,result){
         var data = getUnPostData();
-        if(!data)data = {};
+        data = data || {};
         data[url] = {
             data : result,
             createdTime : new Date()
@@ -3570,11 +3596,7 @@ Jingle.Service = (function(J,$){
      */
     var getUnPostData = function(url){
         var data = JSON.parse(localStorage.getItem(UNPOST_KEY));
-        if(url){
-            return data[url];
-        }else{
-            return data;
-        }
+        return (data && url ) ? data[url] : data;
     }
     /**
      * 移除未同步的数据
@@ -3617,6 +3639,7 @@ Jingle.Service = (function(J,$){
         for(var url in unPostData){
             syncPostData(url,success,error);
         }
+        removeUnPostData();
     }
 
     //copy from zepto
@@ -3641,12 +3664,21 @@ Jingle.Service = (function(J,$){
     }
 
     var getJSON = function(url, data, success){
-        var options = parseArguments.apply(null, arguments)
+        var options = parseArguments.apply(null, arguments);
         options.dataType = 'json'
         return ajax(options)
     }
     var clear = function(){
-        window.localStorage.clear();
+        var storage = window.localStorage;
+        var keys = [];
+        for(var i = 0; i< storage.length; i++){
+            var key = storage.key(i);
+            key.indexOf(GET_KEY_PREFIX) == 0 && keys.push(key);
+        }
+        for(var i = 0; i < keys.length; i++){
+            storage.removeItem(keys[i]);
+        }
+        storage.removeItem(UNPOST_KEY);
     }
     return {
         ajax : ajax,
@@ -3657,6 +3689,8 @@ Jingle.Service = (function(J,$){
         removeUnPostData : removeUnPostData,
         syncPostData : syncPostData,
         syncAllPostData : syncAllPostData,
+        getCacheData : _getCache,
+        saveCacheData : _saveData2local,
         clear : clear
     }
 })(Jingle,Zepto);
@@ -3674,13 +3708,19 @@ Jingle.Template = (function(J,$){
     var loading = function(el){
         background(el,'加载中...','cloud-download');
     }
-    var render = function(containerSelector,templateId,data){
-        var el =  $(containerSelector);
+    var render = function(containerSelector,templateId,data,type){
+        var el =  $(containerSelector),
+            type = type || 'replace';//replace  add
         if($.type(data) == 'array' && data.length == 0 ){
             no_result(el);
         }else{
-            el.html(template(templateId,data));
-            J.Element.init(el);
+            var html = $(template(templateId,data));
+            if(type == 'replace'){
+                el.html(html);
+            }else{
+                el.append(html);
+            }
+            J.Element.init(html);
         }
     }
     return {
@@ -3691,58 +3731,41 @@ Jingle.Template = (function(J,$){
     }
 })(Jingle,Zepto);
 /**
- *  通知组件(包含loading)
+ *  通知组件
  */
 Jingle.Toast = (function(J,$){
     //定义模板
     var TEMPLATE = {
         toast : '<a href="#">{value}</a>',
-        success : '<i class="icon checkmark-circle"></i>{value}',
-        error : '<i class="icon cancel-circle"></i>{value}',
-        info : '<i class="icon info-2"></i>{value}',
-        loading : '<i class="icon spinner"></i><p>{value}</p><div id="tag_close_toast" class="icon cancel-circle"></div>'
+        success : '<a href="#"><i class="icon checkmark-circle"></i>{value}</a>',
+        error : '<a href="#"><i class="icon cancel-circle"></i>{value}</a></div>',
+        info : '<a href="#"><i class="icon info-2"></i>{value}</a>'
     }
-    var toast_type = 'toast',_toast,_mask,timer,_closeToastCallback = function(){};
+    var toast_type = 'toast',_toast,timer;
     var _init = function(){
-        $('body').append('<div id="jingle_toast"></div><div id="jingle_toast_mask"></div>');
-        _mask = $('#jingle_toast_mask');
+        $('body').append('<div id="jingle_toast"></div>');
         _toast = $('#jingle_toast');
         _subscribeCloseTag();
     }
     var hide = function(){
-        if(toast_type == 'loading'){
+        J.anim(_toast,'scaleOut',function(){
             _toast.hide();
-            _mask.hide();
-        }else if(toast_type =='toast'){
-            J.anim(_toast,'scaleOut',function(){
-                _toast.hide();
-            });
-        }else{
-            J.anim(_toast,'slideUpOut',function(){
-                _toast.hide();
-            });
-        }
+        });
     }
-    var show = function(type,text,closeCallback){
-        _mask.hide();
+    var show = function(type,text,duration){
         if(timer) clearTimeout(timer);
         toast_type = type;
         _toast.attr('class',type).html(TEMPLATE[type].replace('{value}',text)).show();
-        if(type == 'loading'){
-            _mask.show();
-            if(closeCallback)_closeToastCallback=closeCallback;
-        }else if(type =='toast'){
-            J.anim(_toast,'scaleIn');
-            timer = setTimeout(hide,3000);
+        J.anim(_toast,'scaleIn');
+        if(duration === 0){//为0 不自动关闭
+            //todo 添加关闭按钮
         }else{
-            J.anim(_toast,'slideDownIn');
-            timer = setTimeout(hide,3000);
+            timer = setTimeout(hide,duration || 5000);
         }
     }
     var _subscribeCloseTag = function(){
-        _toast.on('tap','#tag_close_toast',function(){
+        _toast.on('tap','[data-target="close"]',function(){
             hide();
-            _closeToastCallback();
         })
     }
     _init();
@@ -3755,6 +3778,67 @@ Jingle.Toast = (function(J,$){
  * section之间的动画过渡
  */
 Jingle.Transition = (function(J,$){
+    var isBack,$current,$target,transitionName,
+        animationClass = {
+        //[[currentOut,targetIn],[currentOut,targetIn]]
+        slide : [['slideLeftOut','slideLeftIn'],['slideRightOut','slideRightIn']],
+        slideUp : [['','slideUpIn'],['slideDownOut','']],
+        slideDown : [['','slideDownIn'],['slideUpOut','']],
+        scale : [['','scaleIn'],['scaleOut','']]
+        };
+
+    var _doTransition = function(){
+        var c_class = transitionName[0] ,t_class = transitionName[1],tmpSection = $target;
+        if(t_class == ''){
+            t_class = ' activing ' + t_class;
+            c_class = ' active ' + c_class;
+            tmpSection = $current;
+        }else{
+            t_class = ' active ' + t_class;
+            c_class = ' activing ' + c_class;
+        }
+        tmpSection.bind('webkitAnimationEnd.jingle', _finishTransition);
+        $current.attr('class',c_class);
+        $target.attr('class',t_class);
+    }
+    var _finishTransition = function() {
+        $current.off('webkitAnimationEnd.jingle');
+        $target.off('webkitAnimationEnd.jingle');
+
+        //reset class
+        $current.attr('class','');
+        $target.attr('class','active');
+
+        if(!$target.data('init')){
+            $target.trigger('pageinit');
+            $target.data('init',true);
+        }
+        //add custom events
+        $current.trigger('pagehide',[isBack]);
+        $target.trigger('pageshow',[isBack]);
+
+        $current.find('article.active').trigger('articlehide');
+        $target.find('article.active').trigger('articleshow');
+    }
+
+    var run = function(current,target,back){
+        isBack = back;
+        $current = $(current);
+        $target = $(target);
+        var type = isBack?$current.attr('data-transition'):$target.attr('data-transition');
+        type = type|| J.settings.transitionType;
+        transitionName  = isBack ? animationClass[type][1] : animationClass[type][0];
+        _doTransition();
+    }
+    return {
+        run : run
+    }
+
+})(Jingle,$);
+/**
+ * section之间的动画过渡
+ */
+Jingle.Transition11 = (function(J,$){
     var TRANSITION = {
         //[back,in]
         slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],
@@ -3863,11 +3947,15 @@ Jingle.Popup = (function(J,$){
             height : undefined,
             width : undefined,
             backgroundOpacity : 0,
+            url : null,//远程加载内容
+            tplId : null,//加载模板
+            tplData : null,//配合tpl使用
             html : '',//@String popup内容
             pos : 'center',//位置 @String top|top-second|center|bottom|bottom-second   @object  css样式
             clickMask2Close : true,//@boolean 是否点击外层遮罩关闭popup
             showCloseBtn : true,//@boolean 是否显示关闭按钮
             arrowDirection : undefined,//popover的箭头指向
+            animation : true,
             onShow : undefined //@event 在popup动画开始前执行
         }
         $.extend(settings,options);
@@ -3875,7 +3963,7 @@ Jingle.Popup = (function(J,$){
         _mask.css('opacity',settings.backgroundOpacity);
         //rest position and class
         _popup.attr({'style':'','class':''});
-        settings.width && _popup.height(settings.width);
+        settings.width && _popup.width(settings.width);
         settings.height && _popup.height(settings.height);
         var pos_type = $.type(settings.pos);
         if(pos_type == 'object'){// style
@@ -3894,9 +3982,19 @@ Jingle.Popup = (function(J,$){
             console.error('错误的参数！');
             return;
         }
+        _mask.show();
+        var html;
+        if(settings.html){
+            html = settings.html;
+        }else if(settings.url){//远程加载
+            html = J.Page.loadContent(settings.url);
+        }else if(settings.tplId){//加载模板
+            html = template(settings.tplId,settings.tplData)
+        }
+
         //是否显示关闭按钮
         if(settings.showCloseBtn){
-            settings.html += '<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>';
+            html += '<div id="tag_close_popup" data-target="closePopup" class="icon cancel-circle"></div>';
         }
         //popover 箭头方向
         if(settings.arrowDirection){
@@ -3907,8 +4005,7 @@ Jingle.Popup = (function(J,$){
             }
         }
 
-        _mask.show();
-        _popup.html(settings.html).show();
+        _popup.html(html).show();
 
         //执行onShow事件，可以动态添加内容
         settings.onShow && settings.onShow.call(this);
@@ -3919,7 +4016,9 @@ Jingle.Popup = (function(J,$){
             _popup.css('margin-top','-'+height/2+'px')
         }
         J.Element.init(_popup);
-        J.anim(_popup,transition[0]);
+        if(settings.animation){
+            J.anim(_popup,transition[0]);
+        }
         J.hasPopupOpen = true;
     }
     var hide = function(){
@@ -3980,6 +4079,7 @@ Jingle.Popup = (function(J,$){
         show({
             html : markup,
             pos : 'loading',
+            animation : false,
             clickMask2Close : false
         });
     }
@@ -4235,7 +4335,7 @@ Jingle.Selected = (function(J,$){
             beforeSlide = function(){return true},
             gestureStarted = false,
             index = 0,
-            speed = 300,
+            speed = 200,
             wrapper,
             dots,
             container,
@@ -4302,9 +4402,10 @@ Jingle.Selected = (function(J,$){
          */
         var _slide = function(i, duration) {
             duration = duration || speed;
-            container.animate({
-                translateX : -(i * slideWidth)+'px'
-            },duration)
+            container.css({
+                '-webkit-transition-duration':duration + 'ms',
+                '-webkit-transform':'translate3D(' + -(i * slideWidth) + 'px,0,0)'
+            });
             index = i;
             if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
             afterSlide(index);
@@ -4338,7 +4439,7 @@ Jingle.Selected = (function(J,$){
             deltaX = e.pageX - start.pageX;
             if ( typeof isScrolling == 'undefined') {
                 //根据X、Y轴的偏移量判断用户的意图是左右滑动还是上下滑动
-                isScrolling = !!( isScrolling || Math.abs(deltaX) < Math.abs(e.pageY - start.pageY) );
+                isScrolling = Math.abs(deltaX) < Math.abs(e.pageY - start.pageY)
             }
             if (!isScrolling) {
                 event.preventDefault();
@@ -4346,14 +4447,14 @@ Jingle.Selected = (function(J,$){
                 var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
                 if(isPastBounds)return;
                 var pos = (deltaX - index * slideWidth);
-                container[0].style.webkitTransform = 'translateX('+pos+'px)';
+                container[0].style.webkitTransform = 'translate3D('+pos+'px,0,0)';
             }
         };
 
         var _touchEnd = function(e) {
             //判定是否跳转到下一个卡片
             //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3
-            var isValidSlide = Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20 || Math.abs(deltaX) > slideWidth/3;
+            var isValidSlide = (Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20) || Math.abs(deltaX) > slideWidth/3;
                 //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
             if (!isScrolling) {
@@ -4477,7 +4578,11 @@ Jingle.Selected = (function(J,$){
                         if(iconEl.hasClass(opts.onReleaseIcon)){
                             iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onRefreshIcon);
                             labelEl.html(opts.onRefresh);
-                            opts.callback.call(this);
+                            var _this = this;
+                            setTimeout(function(){//解决在chrome下onRefresh的时候文本无法更改的问题。奇怪的问题！
+                                opts.callback.call(_this);
+                            },1);
+
                         }
                     },
                     onRefresh: function () {

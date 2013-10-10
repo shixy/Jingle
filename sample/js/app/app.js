@@ -25,9 +25,7 @@ function onDeviceReady(){
 var App = (function(){
     var exports ={};
     var pages = {},userCache = {};
-    exports.offline=false;
     exports.run = function(){
-        _subscribeAsideEvents();
         $.each(pages,function(k,v){
             var sectionId = '#'+k+'_section';
             $('body').delegate(sectionId,'pageinit',function(){
@@ -46,10 +44,9 @@ var App = (function(){
                 }
             });
         });
+        _initDefaultSettings();
         Jingle.launch();
         AHelper.registerTemplateHelper();
-    };
-    exports.cacheUserInfo = function(userInfo){
     };
     exports.page = function(id,factory){
         return ((id && factory)?_addPage:_getPage).call(this,id,factory);
@@ -59,6 +56,12 @@ var App = (function(){
     };
     var _getPage = function(id){
         return pages[id];
+    }
+
+    var _initDefaultSettings = function(){
+        localStorage.getItem('auto-login') === null && localStorage.setItem("auto-login",1);
+        localStorage.getItem('auto-cache-data') === null && localStorage.setItem("auto-cache-data",1);
+        localStorage.getItem('auto-offline-mode') === null && localStorage.setItem("auto-offline-mode",1);
     }
 
     exports.checkNetwork = function(){
@@ -83,14 +86,6 @@ var App = (function(){
     }
     exports.updateApp = function(path){
         window.plugins.updateApp.checkAndUpdate(path);
-    }
-    var _subscribeAsideEvents = function(){
-        $('#btn_change_user').tap(function(){
-            J.Router.turnTo('#login_section');
-        });
-        $('#btn_exit_app').tap(function(){
-            navigator.app.exitApp();
-        });
     }
     return exports;
 }());

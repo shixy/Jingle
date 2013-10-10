@@ -6,7 +6,8 @@
  */
 ;(function(){
     var api = "http://172.20.1.195:6888/ws";
-//    var api = "http://localhost:6888/ws";
+//    var api = "http://121.199.16.151/ws";
+//    var api = "http://localhost:6888/ws"
     var appKey = '751507d364d69b40';
     var sessionId;
 
@@ -38,7 +39,7 @@
             url : requestUrl,
             type : type,
             data : param,
-            timeout : 20000,
+            timeout : 60000,//超时时间默认一分钟
             success : callback,
             error : function(xhr,type){
                 _parseError(xhr,type,url);
@@ -51,10 +52,10 @@
             options.contentType ='application/json';
         }
 
-        if(noCache){
-            $.ajax(options);
-        }else{
+        if(!noCache && localStorage.getItem('auto-cache-data')){
             Jingle.Service.ajax(options);
+        }else{
+            $.ajax(options);
         }
 
     };
@@ -65,7 +66,9 @@
         _ajax('post',url,param,callback,noCache);
     };
     function _parseError(xhr,type,url){
-        J.hideMask();
+        if(J.hasPopupOpen){
+            J.hideMask();
+        }
         if(type == 'timeout'){
             J.showToast('连接服务器超时,请检查网络是否畅通！','error');
         }else if(type == 'parsererror'){
@@ -132,7 +135,7 @@
             },
             getBizResUsage : function(beginDate,endDate,serverType,callback){
                 serverType = serverType || 'pc_server';
-                _get('/res//biz/resUsage',{beginDate:date,endDate:endDate,serverType:serverType},callback);
+                _get('/res/resUsageDaily',{beginDate:beginDate,endDate:endDate,serverType:serverType},callback);
             }
         },
         biz : {
@@ -206,7 +209,7 @@
                 _get('/user/findByName',{username:username},callback)
             },
             resetPassword : function(username,password,callback){
-                _post('/user/resetPassword',{username:username,password:password},callback);
+                _post('/user/resetPassword',{username:username,password:password},callback,true);
             }
         }
     }

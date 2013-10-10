@@ -147,7 +147,7 @@ var AHelper = {
             border:false,
             showpercent:true,
             donutwidth:0.5,
-            turn_off_touchmove:true,
+            //turn_off_touchmove:true,
             //offsety : 20,
             sub_option : {
                 mini_label_threshold_angle : 30,//迷你label的阀值,单位:角度

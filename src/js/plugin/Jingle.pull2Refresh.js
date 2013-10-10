@@ -85,7 +85,11 @@
                         if(iconEl.hasClass(opts.onReleaseIcon)){
                             iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onRefreshIcon);
                             labelEl.html(opts.onRefresh);
-                            opts.callback.call(this);
+                            var _this = this;
+                            setTimeout(function(){//解决在chrome下onRefresh的时候文本无法更改的问题。奇怪的问题！
+                                opts.callback.call(_this);
+                            },1);
+
                         }
                     },
                     onRefresh: function () {

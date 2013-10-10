@@ -21,28 +21,30 @@
     <article  id="finished_apply_list_article">
         <div class="scrollWrapper">
             <ul class="list"></ul>
+            <div id="btn_get_more_finished_apply" style="display: none;text-align: center;padding: 10px 0;">点击加载更多...</div>
         </div>
     </article>
+
+    <script type="text/html" id="underway_list_tmpl">
+        {each $data}
+        <li data-selected="selected" data-icon="next" data-id="{$value.id}">
+            <div class="tag">{$value.status.label}</div>
+            <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
+            <p><span data-icon="user">{$value.userName}</span> <span style="margin-left: 50px;" data-icon="alarm">{$value.submitTime}</span></p>
+        </li>
+        {/each}
+    </script>
+    <script type="text/html" id="finished_list_tmpl">
+        {each $data}
+        <li data-selected="selected" data-icon="next" data-id="{$value.id}">
+            <div class="tag">{$value.status.label}</div>
+            <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
+            <p>
+                <span data-icon="user">{$value.userName}</span>
+                <span data-icon="alarm" style="margin-left: 10px;">{$value.submitTime}</span>
+            </p>
+            <p><span data-icon="checkmark" style="color: #27AE60">{$value.approvalTime}</span></p>
+        </li>
+        {/each}
+    </script>
 </section>
-<script type="text/html" id="underway_list_tmpl">
-    {each $data}
-    <li data-selected="selected" data-icon="next" data-id="{$value.id}">
-        <div class="tag">{$value.status.label}</div>
-        <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
-        <p><span data-icon="user">{$value.userName}</span> <span style="margin-left: 50px;" data-icon="alarm">{$value.submitTime}</span></p>
-    </li>
-    {/each}
-</script>
-<script type="text/html" id="finished_list_tmpl">
-    {each $data}
-    <li data-selected="selected" data-icon="next" data-id="{$value.id}">
-        <div class="tag">{$value.status.label}</div>
-        <strong>{$value.applicationType.label}({$value.applicationNo})</strong>
-        <p>
-            <span data-icon="user">{$value.userName}</span>
-            <span data-icon="alarm" style="margin-left: 10px;">{$value.submitTime}</span>
-        </p>
-        <p><span data-icon="checkmark" style="color: #27AE60">{$value.approvalTime}</span></p>
-    </li>
-    {/each}
-</script>

@@ -4,30 +4,36 @@
 Jingle.Element = (function(J,$){
     var SELECTOR  = {
         'icon' : '[data-icon]',
-        'scroll' : '[data-scroll="true"]',
+        'scroll' : '[data-scroll="true"]',//可多次init，todo 将其作为一个单独module处理
         'toggle' : '.toggle',
         'range' : '[data-rangeinput]',
         'progress' : '[data-progress]',
-        'count' : '[data-count]'
+        'count' : '[data-count]',
+        'checkbox' : '[data-checkbox]'
     }
 
     var init = function(selector){
-        var el = $(selector || 'body');
-        if(el.length == 0)return;
-        $.map($(SELECTOR.icon,el),_init_icon);
-        $.map($(SELECTOR.toggle,el),_init_toggle);
-        $.map($(SELECTOR.range,el),_init_range);
-        $.map($(SELECTOR.progress,el),_init_progress);
-        $.map($(SELECTOR.count,el),_init_count);
-        $.map($(SELECTOR.scroll,el),_init_scroll);
+        if(!selector){
+            $(document).on('articleshow','article',function(){
+                J.Element.initScroll(this);
+            })
+        };
+        var $el = $(selector || 'body');
+        if($el.length == 0)return;
+
+        $.map(_getMatchElements($el,SELECTOR.icon),_init_icon);
+        $.map(_getMatchElements($el,SELECTOR.toggle),_init_toggle);
+        $.map(_getMatchElements($el,SELECTOR.range),_init_range);
+        $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
+        $.map(_getMatchElements($el,SELECTOR.count),_init_count);
+        $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
+    }
+    //自身与子集相结合
+    var _getMatchElements = function($el,selector){
+        return $el.find(selector).add($el.filter(selector));
     }
     var initScroll = function(selector){
-        var el = $(selector || 'body');
-        if(el.data('scroll')){
-            _init_scroll();
-        }else{
-            $.map($(SELECTOR.scroll,el),_init_scroll);
-        }
+        $.map(_getMatchElements($(selector),SELECTOR.scroll),_init_scroll);
     }
     var _init_icon = function(el){
         $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
@@ -103,6 +109,19 @@ Jingle.Element = (function(J,$){
         if(count == 0){
             $('.count',el).hide();
         }
+    }
+
+    var _init_checkbox = function(el){
+        var $el = $(el);
+        var value = $el.data('checkbox');
+        $el.prepend('<i class="icon checkbox-'+value+'"></i>');
+        $el.on('tap',function(){
+            var status = ($el.data('checkbox') == 'checked') ? 'unchecked':'checked';
+            $el.find('i.icon').attr('class','icon checkbox-'+status);
+            $el.data('checkbox',status);
+            $el.trigger('change');
+        });
+
     }
 
     return {

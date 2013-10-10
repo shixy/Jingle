@@ -3,9 +3,9 @@
         <nav class="left">
             <a data-target="menu" data-icon="menu" href="#index_aside"></a>
         </nav>
-        <h1 class="title"><a href="#" id="index_title" class="tip-arrow-down">PC机</a></h1>
+        <h1 class="title"><a href="#" id="index_title" class="tip-arrow-down">全局概览</a></h1>
         <nav class="right">
-            <a href="#vm_apply_list_section" data-target="section" data-count="4" class="button" id="btn_approval">我的审批</a>
+            <a href="#vm_apply_list_section" data-target="section" data-count="0" class="button" id="btn_approval">我的审批</a>
         </nav>
     </header>
     <article class="active indented" id="index_article">
@@ -36,7 +36,7 @@
         </ul>
         <div id="index_container" >
             <div>
-                <div id="bizSysContainer" data-scroll="true" class="active" >
+                <div id="bizSysContainer" data-scroll="true" class="active">
                     <ul class="group_list list"></ul>
                 </div>
                 <div id="vm_num_canvas" >
@@ -50,6 +50,7 @@
     <script type="text/tmpl" id="bizInfoTmpl">
         {each $data}
         <li data-icon="next" data-id="{$value.businessSystem.id}">
+            <div style="height:5px;background-color:#1ABC9C;border-radius:5px 5px 0 0 ;"></div>
             <div class="title"  style="font-size: {$getFontSize $value.businessSystem.name}">{$value.businessSystem.name}
                 <div class="progress"></div>
                 <div class="health-tip">健康值<span>100</span></div>

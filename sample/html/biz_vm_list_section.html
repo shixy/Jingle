@@ -57,18 +57,27 @@
     </script>
     <script type="text/tmpl" id="biz_vm_cpu_top10_list_tmpl">
         {each $data}
-        <li data-icon="next" data-selected="selected"  data-vmid="{$value.targetId}" style="display:-webkit-box;">
-            <div style="-webkit-box-flex:1;"><strong>{$value.name}</strong></div>
-            <div style="width:60px;">{$value.remark}</div>
-            <div style="width:100px;"><span style="font-size:9px;">CPU使用率:</span><span class="label">{$value.cpuRate}%</span></div>
+        <li data-icon="next" data-selected="selected"  data-vmid="{$value.targetId}">
+            <strong>{$value.name}</strong>
+            <p>
+                <span class="label">CPU使用率:{$value.cpuRate}%</span>
+                {if $value.remark}
+                <span class="label">{$value.remark}</span>
+                {/if}
+            </p>
         </li>
         {/each}
     </script>
     <script type="text/tmpl" id="biz_vm_mm_top10_list_tmpl">
         {each $data}
-        <li data-icon="next"  data-selected="selected" data-vmid="{$value.targetId}" style="display:-webkit-box;">
+        <li data-icon="next"  data-selected="selected" data-vmid="{$value.targetId}">
             <div style="-webkit-box-flex:1;"><strong>{$value.name}</strong></div>
-            <div style="width:100px;"><span style="font-size:9px;">内存使用率:</span><span class="label">{$value.memoryRate}%</span></div>
+            <p>
+                <span class="label">内存使用率:{$value.memoryRate}%</span>
+                {if $value.remark}
+                <span class="label">{$value.remark}</span>
+                {/if}
+            </p>
         </li>
         {/each}
     </script>

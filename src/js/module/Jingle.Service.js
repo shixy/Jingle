@@ -3,7 +3,9 @@
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
  */
 Jingle.Service = (function(J,$){
-    var UNPOST_KEY = 'JINGLE_POST_DATA';
+    var UNPOST_KEY = 'JINGLE_POST_DATA',
+        GET_KEY_PREFIX = 'JINGLE_GET_';
+
 
     var ajax = function(options){
         if(options.type == 'post'){
@@ -20,23 +22,21 @@ Jingle.Service = (function(J,$){
         }else{//在线模式，直接提交
             $.ajax(options);
         }
-
     }
     var _doGet = function(options){
         var key = options.url +JSON.stringify(options.data);
         if(J.offline){//离线模式，直接从本地读取
             var result = _getCache(key);
             if(result){
-                options.success(result.data,result.createdTime);
-            }else{
+                options.success(result.data,key,result.cacheTime);
+            }else{//未缓存该数据
                 options.success(result);
             }
-
         }else{//在线模式，将数据保存到本地
             var callback = options.success;
             options.success = function(result){
                 _saveData2local(key,result);
-                callback(result);
+                callback(result,key);
             }
             $.ajax(options);
         }
@@ -47,7 +47,7 @@ Jingle.Service = (function(J,$){
      * @private
      */
     var _getCache = function(key){
-         return JSON.parse(localStorage.getItem(key));
+         return JSON.parse(localStorage.getItem(GET_KEY_PREFIX+key));
     }
     /**
      * 缓存数据到本地
@@ -56,9 +56,9 @@ Jingle.Service = (function(J,$){
     var _saveData2local = function(key,result){
         var data = {
             data : result,
-            createdTime : new Date()
+            cacheTime : new Date()
         }
-        localStorage.setItem(key,JSON.stringify(data));
+        localStorage.setItem(GET_KEY_PREFIX+key,JSON.stringify(data));
     }
 
     /**
@@ -69,7 +69,7 @@ Jingle.Service = (function(J,$){
      */
     var _setUnPostData = function(url,result){
         var data = getUnPostData();
-        if(!data)data = {};
+        data = data || {};
         data[url] = {
             data : result,
             createdTime : new Date()
@@ -82,11 +82,7 @@ Jingle.Service = (function(J,$){
      */
     var getUnPostData = function(url){
         var data = JSON.parse(localStorage.getItem(UNPOST_KEY));
-        if(url){
-            return data[url];
-        }else{
-            return data;
-        }
+        return (data && url ) ? data[url] : data;
     }
     /**
      * 移除未同步的数据
@@ -129,6 +125,7 @@ Jingle.Service = (function(J,$){
         for(var url in unPostData){
             syncPostData(url,success,error);
         }
+        removeUnPostData();
     }
 
     //copy from zepto
@@ -153,12 +150,21 @@ Jingle.Service = (function(J,$){
     }
 
     var getJSON = function(url, data, success){
-        var options = parseArguments.apply(null, arguments)
+        var options = parseArguments.apply(null, arguments);
         options.dataType = 'json'
         return ajax(options)
     }
     var clear = function(){
-        window.localStorage.clear();
+        var storage = window.localStorage;
+        var keys = [];
+        for(var i = 0; i< storage.length; i++){
+            var key = storage.key(i);
+            key.indexOf(GET_KEY_PREFIX) == 0 && keys.push(key);
+        }
+        for(var i = 0; i < keys.length; i++){
+            storage.removeItem(keys[i]);
+        }
+        storage.removeItem(UNPOST_KEY);
     }
     return {
         ajax : ajax,
@@ -169,6 +175,8 @@ Jingle.Service = (function(J,$){
         removeUnPostData : removeUnPostData,
         syncPostData : syncPostData,
         syncAllPostData : syncAllPostData,
+        getCacheData : _getCache,
+        saveCacheData : _saveData2local,
         clear : clear
     }
 })(Jingle,Zepto);

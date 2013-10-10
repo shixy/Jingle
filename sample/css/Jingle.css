@@ -14,11 +14,8 @@ body {
     -webkit-user-select: none;
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+    -webkit-text-size-adjust:none;
     background-color: #222;
-    /*font-family: STHeiti,"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;*/
-    /*font-weight: 400;*/
-    /*font-size: 16px;*/
-    /*line-height: 1.3em;*/
     font: 16px/1.25 "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: bold;
     letter-spacing: -0.05em;
@@ -133,25 +130,29 @@ sub,sup{
     background-color: #fff;
 }
 .selected{
-    background-color: #3498DB;
+    background-color: #3498DB !important;
     color: #fff;
 }
 @-webkit-keyframes slideLeftIn {
-	0% { -webkit-transform: translate3d(100%,0,0);}
+	0% { -webkit-transform: translate3d(100%,0,0)}
 	100% { -webkit-transform: translate3d(0,0,0)}
 
 }
 @-webkit-keyframes slideLeftOut {
-	0% { -webkit-transform: translate3d(0,0,0)}
-	100% { -webkit-transform: translate3d(-100%,0,0);opacity:.3}
+	/*0% { -webkit-transform: translate3d(0,0,0)}
+	100% { -webkit-transform: translate3d(-100%,0,0)}*/
+	0% { -webkit-transform: scale(1)}
+	100% { -webkit-transform:scale(.7);opacity:.5}
 }
 @-webkit-keyframes slideRightIn {
 	0% { -webkit-transform: translate3d(-100%,0,0)}
 	100% { -webkit-transform: translate3d(0%,0,0) }
 }
 @-webkit-keyframes slideRightOut {
-	0% { -webkit-transform: translate3d(0,0,0)}
-	100% { -webkit-transform: translate3d(100%,0,0);opacity:.3}
+	/*0% { -webkit-transform: translate3d(0%,0,0)}
+	100% { -webkit-transform: translate3d(100%,0,0)}*/
+	0% { -webkit-transform: scale(1)}
+	100% { -webkit-transform:scale(.7);opacity:.5}
 }
 @-webkit-keyframes scaleIn {
 	0% {opacity: 0;-webkit-transform: scale(.3)}
@@ -177,11 +178,43 @@ sub,sup{
 	0% {-webkit-transform: translate3d(0,100%,0)}
 	100% {-webkit-transform: translate3d(0,0,0)}
 }
-@-webkit-keyframes bigScaleIn {
-	0% {opacity: .7;-webkit-transform: scale(1.3)}
-	100% {opacity: 1;}
+
+section{
+    -webkit-animation-duration: 300ms;
+    -webkit-animation-fill-mode: both;
+    -webkit-animation-timing-function: ease-in-out;
 }
 
+.slideLeftOut{
+    -webkit-animation-name: slideLeftOut;
+}
+.slideLeftIn{
+    -webkit-animation-name: slideLeftIn;
+}
+.slideRightIn{
+    -webkit-animation-name: slideRightIn;
+}
+.slideRightOut{
+    -webkit-animation-name: slideRightOut;
+}
+.scaleIn{
+    -webkit-animation-name: scaleIn;
+}
+.scaleOut{
+    -webkit-animation-name: scaleOut;
+}
+.slideDownIn{
+    -webkit-animation-name: slideDownIn;
+}
+.slideDownOut{
+    -webkit-animation-name: slideDownOut;
+}
+.slideUpIn{
+    -webkit-animation-name: slideUpIn;
+}
+.slideUpOut{
+    -webkit-animation-name: slideUpOut;
+}
 aside[data-position="left"]{
     left:0;
     -webkit-transform:translateX(-100%);
@@ -635,12 +668,12 @@ select {
     box-flex:1
 }
 .two-part{
-    -webkit-box-flex:1;
-    box-flex:1
+    -webkit-box-flex:2;
+    box-flex:2
 }
 .three-part{
-    -webkit-box-flex:1;
-    box-flex:1
+    -webkit-box-flex:3;
+    box-flex:3
 }
 header {
     top: 0;
@@ -1338,15 +1371,14 @@ section{
     left: 0;
     display: none;
     background-color: #fff;
-    z-index: 2;
-    -webkit-backface-visibility: hidden;
+    z-index: 4;
 }
 section.active{
-    z-index: 4;
+    z-index: 6 ;
     display: block;
 }
 section.activing{
-    z-index: 3;
+    z-index: 5 ;
     display: block;
 }
 article{
@@ -1385,14 +1417,8 @@ footer{
     bottom: 0;
     height: 51px;
 }
-footer.hide{
-    display: none;
-}
 footer ~ article {
     bottom: 51px;
-}
-footer.hide ~ article{
-    bottom:0;
 }
 header ~ article{
     top:44px;
@@ -1416,6 +1442,9 @@ ul.list {
     padding: 15px 20px 15px 10px;;
     border-bottom: 1px solid rgba(0, 0, 0, .1);
 }
+.list>li.active{
+    background-color: #BDC3C7 !important;
+}
 
 .list>li:first-child {
     border-top: 1px solid rgba(0, 0, 0, .1);
@@ -1430,7 +1459,6 @@ ul.list {
 }
 .list>li strong{
     color: #333;
-    font-weight: 600;
     font-size: 1.2em;
 }
 .list>li p{
@@ -1445,6 +1473,9 @@ ul.list {
     font-size: 18px;
     margin-top: -9px;
     color: #BDC3C7;
+}
+.list>li.active>.icon{
+    color: #3498DB;
 }
 .list>li .tag{
     position: absolute;
@@ -1692,55 +1723,35 @@ input[type="range"]::-webkit-slider-thumb{
 .refresh-label{
     font-size: 1em;
 }
-#jingle_toast_mask{
-    display: none;
-    position: absolute;
-    z-index: 91;
-    left: 0;
-    right:0;
-    top:0;
-    bottom: 0;
-    background-color: #222;
-    opacity: .1;
-}
 #jingle_toast{
     display: none;
     position: absolute;
     z-index: 99;
     color: #fff;
 }
-#jingle_toast.toast{
+#jingle_toast{
     top: 70%;
     font-size: 1em;
     text-align: center;
     width: 100%;;left: 0;
 }
-#jingle_toast.toast>a{
+#jingle_toast>a{
     padding: 10px 15px;
     background: #222;
 }
-#jingle_toast.success,#jingle_toast.error,#jingle_toast.info{
-    top:0;
-    left:0;
-    width:100%;
-    padding-left: 10px;
-    height: 44px;
-    line-height: 44px;
-    font-size: 1.2em;
-}
-#jingle_toast.success{background-color: #27AE60;}
-#jingle_toast.error{background-color: #E74C3C;}
-#jingle_toast.info{background-color: #F1C40F;}
+#jingle_toast.success>a{background-color: #27AE60;!important}
+#jingle_toast.error>a{background-color: #E74C3C;!important}
+#jingle_toast.info>a{background-color: #F1C40F;!important}
 
 #jingle_toast i.icon{
     margin-right: 10px;
 }
 .toggle {
     position: relative;
-    width: 100px;
+    width: 80px;
     height: 28px;
     background-color: #CBD2D8;
-    border-radius: 5px;
+    border-radius: 6px;
     box-shadow: inset 0 0 4px rgba(0, 0, 0, .1);
 }
 /** 自定义文本 **/
@@ -1773,15 +1784,12 @@ input[type="range"]::-webkit-slider-thumb{
     top: 0;
     left: 0;
     z-index: 2;
-    width: 40px;
+    width: 30px;
     height: 28px;
     background-color: #95a5a6;
-    border: 1px solid rgba(0, 0, 0, .2);
-    border-radius: 6px;
-    -webkit-border-top-right-radius: 0;
-    -webkit-border-bottom-right-radius: 0;
     -webkit-transition: -webkit-transform 0.1s ease-in-out, border 0.1s ease-in-out;
     transition: transform 0.1s ease-in-out, border 0.1s ease-in-out;
+    border-radius: 6px 0 0 6px;
 }
 
 /* Active state for toggle */
@@ -1792,11 +1800,9 @@ input[type="range"]::-webkit-slider-thumb{
 
 .toggle.active .toggle-handle {
     background-color: #1ABC9C;
-    border-radius: 6px;
-    -webkit-border-bottom-left-radius:0;
-    -webkit-border-top-left-radius: 0;
-    -webkit-transform: translate3d(60px, 0, 0);
-    transform: translate3d(60px, 0, 0);
+    -webkit-transform: translate3d(50px, 0, 0);
+    transform: translate3d(50px, 0, 0);
+    border-radius:0 6px 6px 0;
 }
 
 .toggle.active:before {

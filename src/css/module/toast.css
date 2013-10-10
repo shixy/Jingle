@@ -1,42 +1,22 @@
-#jingle_toast_mask{
-    display: none;
-    position: absolute;
-    z-index: 91;
-    left: 0;
-    right:0;
-    top:0;
-    bottom: 0;
-    background-color: #222;
-    opacity: .1;
-}
 #jingle_toast{
     display: none;
     position: absolute;
     z-index: 99;
     color: #fff;
 }
-#jingle_toast.toast{
+#jingle_toast{
     top: 70%;
     font-size: 1em;
     text-align: center;
     width: 100%;;left: 0;
 }
-#jingle_toast.toast>a{
+#jingle_toast>a{
     padding: 10px 15px;
     background: #222;
 }
-#jingle_toast.success,#jingle_toast.error,#jingle_toast.info{
-    top:0;
-    left:0;
-    width:100%;
-    padding-left: 10px;
-    height: 44px;
-    line-height: 44px;
-    font-size: 1.2em;
-}
-#jingle_toast.success{background-color: #27AE60;}
-#jingle_toast.error{background-color: #E74C3C;}
-#jingle_toast.info{background-color: #F1C40F;}
+#jingle_toast.success>a{background-color: #27AE60;!important}
+#jingle_toast.error>a{background-color: #E74C3C;!important}
+#jingle_toast.info>a{background-color: #F1C40F;!important}
 
 #jingle_toast i.icon{
     margin-right: 10px;

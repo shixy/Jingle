@@ -8,17 +8,24 @@ App.page('login',function(){
     var exports = {};
     exports.init = function(){
         _initUserName();
-        $('#login_form').submit(_login);
+        $('#btn_login').tap(_login);
         if(!J.isWebApp){
             var networkState = navigator.connection.type;
             if(networkState == Connection.NONE){
-                J.showToast('无可用网络连接！程序将采用离线模式访问！')
-                J.offline = true;
+                if(localStorage.getItem('auto-offline-mode')){
+                    J.showToast('无可用网络连接！程序将采用离线模式访问！');
+                    J.offline = true;
+                }else{
+                    J.showToast('无可用网络连接！');
+                }
             }else{
                 J.showToast('当前网络环境: '+ networkState);
             }
         }
-        setTimeout(_autoLogin,1);
+        if(J.offline || localStorage.getItem('auto-login')){
+            setTimeout(_autoLogin,1);
+        }
+
     }
     var _login = function(){
         var username = $('#username').val();
@@ -63,38 +70,16 @@ App.page('login',function(){
     }
     return exports;
 });
-App.page('setting',function(){
-    var exports={};
-    exports.init = function(){
-        $('#setting_section input[type="range"]').on('change',function(){
-            localStorage.setItem($(this).attr("name"),$(this).val());
-        })
-    }
-    var _renderCheckbox = function(ids){
-        $.each(ids,function(i,id){
-            var value = localStorage.getItem(id);
-            if(value == 1){
-                $('#'+id).val(value).addClass('active');
-            }else{
-                $('#'+id).val(value).removeClass('active');
-            }
-        })
-
-    }
-    exports.load = function(){
-        _renderCheckbox(['network-2g','auto-save','auto-login','auto-update']);
-    }
-    return exports;
-})
 
 App.page('index',function(){
     var exports = {};
-    var serverType = 'PC';
+    var serverType = '';
     exports.init = function(){
         var h = AHelper.getArticleOffset().height - 90;
         $('#bizSysContainer').height(h);
         _subscribeEvents();
         _render();
+        _checkUnPostData();
     }
 
     exports.show = function(){
@@ -107,6 +92,13 @@ App.page('index',function(){
             }
         });
     }
+
+    var _checkUnPostData = function(){
+        if(J.Service.getUnPostData()){
+            J.showToast('正在同步离线数据...');
+            J.Service.syncAllPostData();
+        }
+    }
     var _subscribeEvents = function(){
         var $box = $('#index_section .box li');
         var $container = $('#bizSysContainer');
@@ -115,7 +107,7 @@ App.page('index',function(){
         var _beforeSlide = function(i,deltaX){
             if(i === 0 && deltaX >0) {//swipeRight
                 if(!J.isMenuOpen){
-                    J.Menu.show();
+                    J.Menu.show('#index_aside');
                 }
                 return false;
             }else if( i === 0 && deltaX<0){//swipeLeft
@@ -234,7 +226,6 @@ App.page('index',function(){
 
 App.page('res_period',function(){
     var exports = {};
-    var searchDate = new Date();
     var serverType = 'PC';
     exports.init = function(){
         new J.Slider('#res_period_article');
@@ -245,36 +236,36 @@ App.page('res_period',function(){
             serverType = $(this).data('type');
             _renderChart();
         })
-        $('#btn_begin_date').tap(function(){
-            $(this).next().trigger('tap');
+        $('#btn_begin_date,#btn_end_date').tap(function(){
+            var $this = $(this);
+            J.popup({
+                html : '<div id="popup_calendar"></div>',
+                pos : 'center',
+                backgroundOpacity : 0.4,
+                showCloseBtn : false,
+                onShow : function(){
+                    new J.Calendar('#popup_calendar',{
+                        callback:function(date){
+                            $this.data('value',date).find('span').text(date);
+                            J.closePopup();
+                        }
+                    });
+                }
+            });
         });
 
-        //_renderBar();
+        $('#btn_res_search').tap(_renderChart);
+
+        _renderBar(new Date());
         _renderChart();
     }
-    /**
-     * render quick search bar
-     */
-    var _renderBar = function(){
-        var today = new Date();
-        searchDate.setDate(today.getDate()-1);
-        var dateStr = AHelper.formatDate(searchDate,'yyyy-MM-dd');
-        var $bar = $('#per_qs_bar a');
-        $bar.eq(1).text(dateStr);
-        $bar.eq(0).on('tap',function(){
-            searchDate.setDate(searchDate.getDate()-1);
-            $bar.eq(1).text(AHelper.formatDate(searchDate,'yyyy-MM-dd'));
-            _renderChart();
-        });
-        $bar.eq(-1).on('tap',function(){
-            searchDate.setDate(searchDate.getDate()+1);
-            $bar.eq(1).text(AHelper.formatDate(searchDate,'yyyy-MM-dd'));
-            _renderChart();
-        });
+    var _renderBar = function(date){
+        var d = AHelper.formatDate(date,'yyyy-MM-dd');
+        $('#btn_begin_date').data('value',d).find('span').text(d);
+        $('#btn_end_date').data('value',d).find('span').text(d);
     }
     var _renderChart = function(){
-        var beginDate,endDate
-        RsAPI.res.getBizResUsage(AHelper.formatDate(searchDate,'yyyy-MM-dd'),serverType,function(data){
+        RsAPI.res.getBizResUsage($('#btn_begin_date').data('value'),$('#btn_end_date').data('value'),serverType,function(data){
             var cpuWorkingData = {name : '工作时间',color:'#4572a7',value:[]};
             var cpuFreedomData = {name : '非工作时间',color:'#aa4643',value:[]};
             var mmWorkingData = {name : '工作时间',color:'#4572a7',value:[]};
@@ -282,10 +273,10 @@ App.page('res_period',function(){
             var labels = [];
             for(var i=0;i<data.length;i++){
                 var obj = data[i];
-                cpuWorkingData.value.push(obj.workingAvgCpuRate);
-                cpuFreedomData.value.push(obj.freedomAvgCpuRate);
-                mmWorkingData.value.push(obj.workingAvgMemoryRate);
-                mmFreedomData.value.push(obj.freedomAvgMemoryRate);
+                cpuWorkingData.value.push(obj.workingAvgCpuRate/100);
+                cpuFreedomData.value.push(obj.freedomAvgCpuRate/100);
+                mmWorkingData.value.push(obj.workingAvgMemoryRate/100);
+                mmFreedomData.value.push(obj.freedomAvgMemoryRate/100);
                 labels.push(obj.businessName);
             }
             _drawChart('cpu',[cpuWorkingData,cpuFreedomData],labels);
@@ -522,9 +513,11 @@ App.page('biz_health_list',function(){
     return exports;
 });
 App.page('vm_apply_list',function(){
-    var exports = {};
-    var pageNo = 0 ;
+    var exports = {},pageNo = 1,$btnGetMore,$underwayList,$finishedList;
     exports.init = function(){
+        $btnGetMore = $('#btn_get_more_finished_apply');
+        $underwayList = $('#underway_apply_list_article ul.list');
+        $finishedList = $('#finished_apply_list_article ul.list');
         $('#vm_apply_list_section header .control-group li').on('tap',function(){
             var $this = $(this);
             if($this.hasClass('active'))return;
@@ -537,7 +530,7 @@ App.page('vm_apply_list',function(){
             }else{
                 $('#underway_apply_list_article').removeClass('active');
                 $('#finished_apply_list_article').addClass('active');
-                pageNo = 0 ;
+                pageNo = 1 ;
                 _renderFinishedList();
             }
         });
@@ -547,37 +540,42 @@ App.page('vm_apply_list',function(){
             J.Router.turnTo('#vm_apply_section');
         });
         J.Refresh('#underway_apply_list_article','pullDown',function(){
-            this.refresh();
+            _renderUnderwayList(this);
         });
-        J.Refresh('#finished_apply_list_article','pullUp',function(){
-            this.refresh();
+        $btnGetMore.tap(function(){
+            pageNo++;
+            $(this).text('加载中...');
+            _renderFinishedList();
         });
     }
     exports.load = function(){
         _renderUnderwayList();
     }
-    var _renderUnderwayList = function(){
-        J.showMask();
+    var _renderUnderwayList = function(scroll){
         RsAPI.vmApply.getUnderwayList(function(data){
-            J.tmpl('#underway_apply_list_article ul.list','underway_list_tmpl',data);
-            J.hideMask();
+            J.tmpl($underwayList,'underway_list_tmpl',data);
+            scroll && scroll.refresh();
         });
     }
     var _renderFinishedList = function(){
-        J.showMask();
         RsAPI.vmApply.getFinishedList(pageNo, function(data){
-            if(pageNo == 0 && data.length == 0){
-                $('#finished_apply_list_article .refresh-container').hide();
+            if(data.length == 0){
+                if(pageNo == 1){//一条记录都么有
+                    J.Template.no_result($finishedList);
+                }else{
+                    $btnGetMore.show().text('没有了...');
+                    pageNo--;//点击加载没有记录,还原页数
+                }
+            }else{
+                J.tmpl($finishedList,'finished_list_tmpl',data,pageNo == 1 ? 'replace' : 'add');
+                $btnGetMore.text('点击加载更多...');
             }
-            J.tmpl('#finished_apply_list_article ul.list','finished_list_tmpl',data);
-            J.hideMask();
         });
     }
     return exports;
 })
 App.page('vm_apply',function(){
-    var exports = {};
-    var data;
+    var exports = {},data,cache_key;
     exports.setData = function(d){data = d; }
     exports.init = function(){
         $('#btn_process_agree').on('tap',function(){
@@ -587,6 +585,13 @@ App.page('vm_apply',function(){
                 items : _getFinalParam()
             };
             RsAPI.vmApply.agree(param,function(){
+                if(J.offline){//处理离线缓存
+                    //将缓存中的数据置为审批通过，防止用户在离线模式下重复操作
+                    var data = J.Service.getCacheData(cache_key);
+                    data.status.name = 'APPROVED';
+                    data.status.label = '审批通过';
+                    J.Service.saveCacheData(cache_key,data);
+                }
                 J.showToast('审批通过','success');
                 exports.load();
             });
@@ -597,6 +602,13 @@ App.page('vm_apply',function(){
                 approvalOpinion : $('#approvalOpinion').val()
             };
             RsAPI.vmApply.refuse(param,function(){
+                if(J.offline){//处理离线缓存
+                    //将缓存中的数据置为审批拒绝，防止用户在离线模式下重复操作
+                    var data = J.Service.getCacheData(cache_key);
+                    data.status.name = 'REFUSED';
+                    data.status.label = '审批拒绝';
+                    J.Service.saveCacheData(cache_key,data);
+                }
                 J.showToast('申请已退回','success');
                 exports.load();
             });
@@ -607,6 +619,13 @@ App.page('vm_apply',function(){
                 items : _getRevertInfos()
             };
             RsAPI.vmApply.confirm(param,function(){
+                if(J.offline){//处理离线缓存
+                    //将缓存中的数据置为审批确认，防止用户在离线模式下重复操作
+                    var data = J.Service.getCacheData(cache_key);
+                    data.status.name = 'CREATED';
+                    data.status.label = '已创建虚拟机';
+                    J.Service.saveCacheData(cache_key,data);
+                }
                 J.showToast('确认成功','success');
                 exports.load();
             });
@@ -626,20 +645,23 @@ App.page('vm_apply',function(){
         var $footer = $('#vm_apply_section footer').addClass('hide');
         var $approve_btn_container = $('#approve_btn_container');
         var $created_btn_container = $('#created_btn_container');
-        RsAPI.vmApply.getApply(data.id,function(result){
+        RsAPI.vmApply.getApply(data.id,function(result,key){
+            cache_key = key;
             var status = result.status.name;
+            J.tmpl('#vm_apply_article>div.scrollWrapper','vm_apply_article_tmpl',result);
+            new J.Slider('#vmConfigList',true);
+            $footer.hide();
             if(status == 'WAIT_APPROVAL'){
                 $approve_btn_container.css('display','-webkit-box');
                 $created_btn_container.css('display','none');
-                $footer.removeClass('hide');
+                $footer.show();
             }
             if(status == 'APPROVED'){
                 $approve_btn_container.css('display','none');
                 $created_btn_container.css('display','-webkit-box');
-                $footer.removeClass('hide');
+                $footer.show();
             }
-            J.tmpl('#vm_apply_article>div','vm_apply_article_tmpl',result);
-            new J.Slider('#vmConfigList',true);
+            J.Scroll('#vm_apply_article');
         })
     }
 
@@ -690,6 +712,344 @@ App.page('user',function(){
             J.tmpl('#user_article ul.list','user_tmpl',data);
             J.Scroll('#user_article');
         })
+    }
+    return exports;
+});
+App.page('setting',function(){
+   var exports = {},$autoLogin,$cache,$offline;
+    exports.init = function(){
+        $autoLogin = $('#toggle_auto_login');
+        $cache = $('#toggle_offline_data');
+        $offline = $('#toggle_offline_mode');
+        $autoLogin.tap(function(){
+            localStorage.setItem('auto-login',$(this).hasClass('active'));
+        });
+        $cache.tap(function(){
+            localStorage.setItem('auto-cache-data',$(this).hasClass('active'));
+        });
+        $offline.tap(function(){
+            localStorage.setItem('auto-offline-mode',$(this).hasClass('active'));
+        });
+        $('#btn_show_welcome').tap(J.showWelcome);
+        $('#btn_check_version').tap(function(){
+            //window.plugins.updateApp.check(UPDATE_APP_PATH);
+            J.showToast('已经是最新版本');
+        });
+        $('#btn_clear_cache').tap(function(){
+            J.Service.clear();
+            J.showToast('清空完毕');
+
+        });
+        $('#btn_exit_user').tap(function(){
+            J.Service.clear();
+            window.localStorage.removeItem('sessionId');
+            J.Router.turnTo('#login_section');
+        });
+    }
+
+    exports.load = function(){
+        localStorage.getItem('auto-login') == 'true'?$autoLogin.addClass('active'):$autoLogin.removeClass('active');
+        localStorage.getItem('auto-cache-data') == 'true'?$cache.addClass('active'):$cache.removeClass('active');
+        localStorage.getItem('auto-offline-mode') == 'true'?$offline.addClass('active'):$offline.removeClass('active');
+    }
+    return exports;
+});
+App.page('log_analy',function(){
+    var exports = {},log,$progress;
+    exports.init = function(){
+        $progress = $('#file_upload_progress');
+        $('#btn_log_upload').on('change',_handler);
+        $('#btn_analy').on('tap',function(){
+            J.showMask('分析数据中...');
+            setTimeout(function(){
+                var beginDate = new Date();
+                var resultStr = exports.anlaysis(log);
+                console.log(resultStr);
+                var result = JSON.parse(resultStr);
+                $('#log_analy_time').show().find('span').text(new Date()-beginDate);
+                _showDistributedChart(result);
+                _showTrendChart(result);
+                J.Scroll('#log_analy_article',{onBeforeScrollStart:function(){}});
+                J.hideMask();
+            },1000);
+
+        });
+        var cfg = {
+            funcPath : "App.page('log_analy').anlaysis",
+            thisAttrs : []
+        }
+      Migrator.migrateToServer(cfg);
+    }
+    var _handler = function(e){
+        var reader = new FileReader();
+        reader.onprogress = _onProgress;
+        reader.onloadstart = _onStart;
+        reader.onload = _onLoad;
+        reader.readAsText(e.target.files[0]);
+    }
+    var _onStart = function(){
+        $progress.show().find('.bar').width('0%').text('0%');
+    }
+
+    var _onProgress = function(e){
+        if(e.lengthComputable){
+            var percentLoaded = Math.round((e.loaded / e.total) * 100)+'%';
+            $progress.find('.bar').width(percentLoaded).text(percentLoaded);
+        }
+    }
+    var _onLoad = function(e){
+        $progress.find('.bar').width('100%').text('100%');
+        log = e.target.result;
+        setTimeout(function(){
+            $progress.hide();
+        },2000);
+    }
+
+    var _showDistributedChart = function(result){
+        var data = [
+            {name : '信息',value : result.total[0],color:'#1ABC9C'},
+            {name : '告警',value : result.total[1],color:'#F1C40F'},
+            {name : '错误',value : result.total[2],color:'#C0392B'}
+        ];
+
+        new iChart.Pie2D({
+            animation : true,
+            render : 'log_distributed_chart',
+            data: data,
+            title : result.month+'月日志指标分布',
+            showpercent:true,
+            decimalsnum:2,
+            border : false,
+            width : $('#analy_result').width(),
+//            height : 400,
+            offset_angle:-90,
+            sub_option : {
+                mini_label:true,
+                mini_label_threshold_angle:30,
+                mini_label:{color:'#ffffff'}
+            }
+        }).draw();
+    }
+    var _showTrendChart = function(result){
+        var data = [{
+                name : '信息',
+                value:result.info,
+                color:'#1ABC9C',
+                line_width:2
+            },{
+                name : '告警',
+                value:result.warn,
+                color:'#F1C40F',
+                line_width:2
+            },{
+                name : '异常',
+                value:result.error,
+                color:'#C0392B',
+                line_width:2
+            }
+        ];
+        var labels = [];
+        for(var i = 0;i<result.info.length;i++){
+            labels.push(i+1);
+        }
+        //labels = [1,5,10,15,20,25,30];
+        var line = new iChart.LineBasic2D({
+            render : 'log_trend_chart',
+            data: data,
+            align:'center',
+            title : result.month+'月日志指标趋势',
+            width : $('#analy_result').width(),
+            height : 400,
+            padding:0,
+            border : false,
+            tip:{
+                enable:true,
+                shadow:true,
+                border:{
+                    enable:true,
+                    radius : 5,
+                    width:2,
+                    color:'#3f8695'
+                },
+                listeners:{
+                    parseText:function(tip,name,value,text,i){
+                        return name+":"+value;
+                    }
+                }
+            },
+            tipMocker:function(tips,i){
+                return "<div style='font-weight:600'>"+
+                    result.month + "-"+(i+1)+
+                    "</div>"+tips.join("<br/>");
+            },
+            legend : {
+                enable : true,
+                row:1,//设置在一行上显示，与column配合使用
+                column : 'max',
+                valign:'top',
+                sign:'bar',
+                background_color:null,//设置透明背景
+                offsetx:-80,//设置x轴偏移，满足位置需要
+                border : true
+            },
+            crosshair:{
+                enable:true,
+                line_color:'#62bce9'
+            },
+            sub_option : {
+                label:false,
+                point_hollow : false
+            },
+            label:{
+              fontsize:6,
+              font:'arial'
+            },
+            labels : labels
+        });
+
+        //开始画图
+        line.draw();
+    }
+
+    exports.anlaysis = function(str){
+        var arr = str.split('\n'),iter = 5,year,month,dateStr,days,result;
+        dateStr  = arr[0].split('|')[3].split(' ')[0].split('-');
+        year = dateStr[0];
+        month = dateStr[1];
+        if(month.indexOf('0') == 0){
+            month = month.substr(1);
+        }
+        //当前月份的天数
+        days = new Date(year,month,0).getDate();
+        for(var k = 0;k<iter;k++){
+            result = {
+                month : '',
+                total : [0,0,0],
+                info : [],
+                warn : [],
+                error : []
+            }
+            //当前月份
+            result.month = year+'-'+month;
+            for(var d = 0;d < days; d++){
+                //init data
+                result.info.push(0);
+                result.warn.push(0);
+                result.error.push(0);
+                //组装数据
+                for(var i = 0;i<arr.length;i++){
+                    var obj = arr[i].split('|');
+                    var type = obj[0];
+                    var day = obj[3].split(' ')[0].split('-')[2];
+                    if(day.indexOf('0') == 0){
+                        day = parseInt(day.substr(1));
+                    }
+                    if(day-1 === d ){
+                        if(type == 'INFO'){
+                            result.info[d]++;
+                            result.total[0]++;
+                        }else if(type == 'WARN'){
+                            result.warn[d]++;
+                            result.total[1]++;
+                        }else{
+                            result.error[d]++;
+                            result.total[2]++;
+                        }
+                    }
+                }
+            }
+        }
+        return JSON.stringify(result);
+    }
+
+    return exports;
+});
+App.page('utils',function(){
+    var exports = {};
+    exports.init = function(){
+        $('#service_list li>div').tap(function(){
+            var data;
+            var $this = $(this);
+            var service = $this.data('service');
+            var apps = window.localStorage.getItem('_SERVICE_APP_');
+            if(service){
+                data = {
+                    name : service,
+                    title :  $this.text()
+                };
+                if(apps && apps.indexOf(service+'|')>-1){
+                    data.url = 'file:///mnt/sdcard/hnyc/'+service+'/index.html'
+                }else{
+                    data.url = 'http://migrator.duapp.com/static/'+service+'/index.html',
+                    data.installUrl = 'http://migrator.duapp.com/static/'+service+'/'+service+'.zip'
+                }
+            }else{
+                data = {
+                    url : $this.data('url'),
+                    title :  $this.text()
+                }
+            }
+            App.page('service_container').setData(data);
+            J.Router.turnTo('#service_container_section');
+        });
+        $('#service_list li>button').tap(function(){
+            var service = $(this).prev().data('service');
+            var name = $(this).prev().children('strong').text();
+            var installedApps = window.localStorage.getItem('_SERVICE_APP_');
+            window.localStorage.setItem('_SERVICE_APP_',installedApps.replace(service+'|',''));
+            navigator.app.clearCache();
+            exports.show();
+            J.showToast(name+'缓存清除成功！','success');
+        });
+    }
+    exports.show = function(){
+        $('#service_list li>div[data-service]').each(function(){
+            var service = $(this).data('service');
+            var apps = window.localStorage.getItem('_SERVICE_APP_');
+            if(apps && apps.indexOf(service+'|')>-1){
+                $(this).children('div').text('离线访问');
+                $(this).next().show();
+            }else{
+                $(this).children('div').text('云端访问');
+                $(this).next().hide();
+            }
+        })
+    }
+    return exports;
+});
+App.page('service_container',function(){
+    var exports = {},data;
+    exports.setData = function(d){
+        data = d;
+    }
+    exports.init = function(){
+        $('#service_container_section').on('pagehide',function(){
+            $(this).find('iframe').attr('src','about:blank');
+        });
+    }
+    exports.show = function(){
+        if(data.installUrl){
+            $('#btn_install_service').show();
+            _install();
+        }else{
+            $('#btn_install_service').hide();
+        }
+        $('#service_container_section header h1.title').text(data.title);
+        $('#frame_service').attr('src',data.url);
+    }
+    var _install = function(){
+        $('#btn_install_service').show();
+        window.plugins.component.install(data.installUrl,data.name,
+            function(){
+                $('#btn_install_service').hide();
+                var apps = window.localStorage.getItem('_SERVICE_APP_');
+                apps += data.name+'|';
+                window.localStorage.setItem('_SERVICE_APP_',apps);
+                J.showToast('缓存成功','success');
+            },
+            function(){
+                J.showToast('缓存失败','error')
+            });
     }
     return exports;
 })
