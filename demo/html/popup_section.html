@@ -9,8 +9,7 @@
         <div class="demo-btn-group">
             <a href="#" class="button block" id="btn_alert">alert</a>
             <a href="#" class="button block" id="btn_confirm">confirm</a>
-            <a href="#" class="button block" id="btn_loading">loading</a>
-            <a href="#" class="button block" id="btn_center">center</a>
+            <a href="#" class="button block" id="btn_p_default">default/center</a>
             <a href="#" class="button block nephritis" id="btn_t_top">top</a>
             <a href="#" class="button block pomegranate" id="btn_t_ts">top-second</a>
             <a href="#" class="button block sun-flower" id="btn_t_bottom">bottom</a>
@@ -25,45 +24,23 @@
         $('#btn_confirm').tap(function(){
             J.confirm('提示','这是一个Confirm！',function(){J.showToast('你选择了“确定”')},function(){J.showToast('你选择了“取消”')});
         })
-        $('#btn_loading').tap(function(){
-            J.showMask();
-        })
-        $('#btn_center').tap(function(){
-            J.popup({
-                html: '这是一个弹出框，内容请自行定义',
-                pos : 'center'
-            })
+        $('#btn_p_default').tap(function(){
+            J.popup('提示','这是一个弹出框，内容请自行定义','center',true);
         })
         $('#btn_t_top').tap(function(){
-            J.popup({
-                html: '这是一个来自顶部的弹出框',
-                pos : 'top',
-                showCloseBtn : false
-            })
+            J.popup('这是一个来自顶部的弹出框','top',false);
         })
         $('#btn_t_ts').tap(function(){
-            J.popup({
-                html: '这是一个在header之下的弹出框',
-                pos : 'top-second',
-                showCloseBtn : false
-            })
+            J.popup('这是一个在header之下的弹出框','top-second',false);
         })
         $('#btn_t_bottom').tap(function(){
-            J.popup({
-                html: '这是一个来自底部弹出框',
-                pos : 'bottom',
-                showCloseBtn : false
-            })
+            J.popup('这是一个来自底部弹出框','bottom',false);
         })
         $('#btn_t_bs').tap(function(){
-            J.popup({
-                html: '这是一个在footer之上的弹出框',
-                pos : 'bottom-second',
-                showCloseBtn : false
-            })
+            J.popup('这是一个在footer之上的弹出框','bottom-second',false);
         })
         $('#btn_popover').tap(function(){
-            J.popover('<ul class="list"><li style="color:#000;">Hello Jingle</li><li style="color:#000;">你好，Jingle</li></ul>',{top:'50px',left:'10%',right:'10%'},'top');
+            J.Popup.popover('<ul class="list"><li>Hello</li><li>Hello2</li></ul>',{top:'50px',left:'10%',right:'10%'},'top');
         })
     </script>
 </section>

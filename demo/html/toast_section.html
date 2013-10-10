@@ -11,6 +11,7 @@
             <a href="#" class="button block nephritis" id="btn_t_success">success</a>
             <a href="#" class="button block pomegranate" id="btn_t_error">error</a>
             <a href="#" class="button block sun-flower" id="btn_t_info">info</a>
+            <a href="#" class="button block asbestos" id="btn_t_loading">loading</a>
         </div>
     </article>
     <script type="text/javascript">
@@ -25,6 +26,9 @@
         })
         $('#btn_t_info').tap(function(){
             J.showToast('提示，info','info');
+        })
+        $('#btn_t_loading').tap(function(){
+            J.showMask();
         })
     </script>
 </section>
