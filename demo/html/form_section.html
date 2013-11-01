@@ -6,14 +6,14 @@
         <h1 class="title">Form</h1>
     </header>
     <footer>
-        <a  href="#form_article" data-target="article" data-icon="list" class="active">表单</a>
-        <a  href="#form_module_article" data-target="article" data-icon="stack">组件</a>
+        <a  href="#form_module_article" class="active" data-target="article" data-icon="stack">组件</a>
+        <a  href="#form_article" data-target="article" data-icon="list" >表单</a>
     </footer>
-    <article class="active indented" data-scroll="true" id="form_article" >
+    <article class="indented" data-scroll="true" id="form_article" >
         <div>
             <!-- Input -->
             <form>
-                <input type="date" >
+                <input type="date">
                 <input type="time">
                 <input type="month">
                 <input type="week">
@@ -44,8 +44,13 @@
             </form>
         </div>
     </article>
-    <article data-scroll="true" id="form_module_article" >
+    <article data-scroll="true" class="active " id="form_module_article" >
         <ul class="list">
+            <li class="divider">checkbox</li>
+            <li>
+                <div data-checkbox="unchecked">爱我你就勾勾我</div>
+                <div data-checkbox="checked">爱我你就勾勾我</div>
+            </li>
             <li class="divider">toggle</li>
             <li>
                 <div class="demo-btn-group">
