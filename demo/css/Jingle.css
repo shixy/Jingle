@@ -1,4 +1,4 @@
-a, abbr, address, article, aside, audio, b, blockquote, body, caption, cite, code, dd, del, dfn, dialog, div, dl, dt, em, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, p, pre, q, samp, section, small, span, strong, sub, sup, table, tbody, td, tfoot, th, thead, time, tr, ul, var, video {
+a, abbr, address, article, aside, audio, b, blockquote, body, caption, cite, code, dd, del, dfn, dialog, div, dl, dt, em, fieldset, figure, footer, form, h1, h2, h3, h4, h5, h6, header, hgroup, hr, html, i, iframe, img, ins, kbd, label, legend, li, mark, menu, nav, object, ol, p, pre, q, samp, section, small, span, strong, sub, sup, tfoot, th, thead, time, tr, ul, var, video {
     border: 0;
     margin: 0;
     outline: 0;
@@ -30,7 +30,8 @@ body * {
     margin: 0;
     padding: 0;
     -webkit-user-select: none;
-    -webkit-tap-highlight-color: rgba(255, 255, 255, 0)
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-font-smoothing: antialiased;
 }
 
 a {
@@ -296,7 +297,7 @@ aside ul.menu li.anchor{
     width: 200px;margin:60px auto;text-align: center;color: #7F8C8D
 }
 .back-mask .icon{
-    font-size: 60px;line-height: 60px;
+    font-size: 80px;line-height: 80px;display: block;margin-bottom: 10px;
 }
 .button, button {
     display: inline-block;
@@ -336,7 +337,7 @@ aside ul.menu li.anchor{
     box-shadow: inset 0 0 128px rgba(0,0,0,0.25);
     border-color: none;
 }
-.button.block{
+.button.block,button.block{
     width:100%;
 }
 .button .icon, button .icon{
@@ -442,6 +443,9 @@ aside ul.menu li.anchor{
     font-size: 1.2em;
 }
 
+[data-count]{
+    position: relative;
+}
 .count{
     position:absolute;
     background-color: #E74C3C;
@@ -454,10 +458,12 @@ aside ul.menu li.anchor{
     min-width: 8px;
     text-align: center;
     right: 7px;
+    left: auto;
     top:0;
 }
 .count.left{
     left:7px;
+    right:auto;
 }
 .dots{
     width:100%;height: 20px;position:absolute;left: 0;bottom: 50px;z-index: 999;
@@ -506,7 +512,7 @@ footer > a{
     display: block;
     text-align: center;
     color: #fff;
-    font-size: 0.9em;
+    font-size: 0.85em;
 }
 footer > a.active{
     box-shadow: inset 0 10px 30px rgba(0, 0, 0, .8);
@@ -517,7 +523,7 @@ footer > a > .icon{
     height: 25px;
     line-height: 25px;
     padding-top: 5px;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     font-size: 1.5em;
 }
 footer .active .icon{
@@ -1491,6 +1497,7 @@ ul.list {
     right: 30px !important;
 }
 
+
 /* Inset list
 -------------------------------------------------- */
 
@@ -1666,6 +1673,20 @@ ul.list {
 #jingle_popup.loading p{
     color: #BDC3C7;
 }
+.actionsheet{
+    display: -webkit-box;
+    display: box;
+    -webkit-box-orient:vertical;
+    box-orient:vertical;
+    padding: 20px;
+}
+.actionsheet > button{
+   -webkit-box-flex:1;
+    box-flex:1;
+    margin : 10px 0;
+    display: block;
+    width:100%;
+}
 [data-progress]{
     background: #4c4d4c;
     border-radius: 10px;
@@ -1738,6 +1759,10 @@ input[type="range"]::-webkit-slider-thumb{
 #jingle_toast>a{
     padding: 10px 15px;
     background: #222;
+    display: inline-block;
+    max-width: 80%;
+    margin: 0 auto;
+    text-align: left;
 }
 #jingle_toast.success>a{background-color: #27AE60;!important}
 #jingle_toast.error>a{background-color: #E74C3C;!important}

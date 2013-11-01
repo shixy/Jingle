@@ -16,6 +16,7 @@
             <a href="#" class="button block sun-flower" id="btn_t_bottom">bottom</a>
             <a href="#" class="button block asbestos" id="btn_t_bs">botton-second</a>
             <a href="#" class="button block asbestos" id="btn_popover">popover</a>
+            <a href="#" class="button block asbestos" id="btn_actionsheet">actionsheet</a>
         </div>
     </article>
     <script type="text/javascript">
@@ -64,6 +65,20 @@
         })
         $('#btn_popover').tap(function(){
             J.popover('<ul class="list"><li style="color:#000;">Hello Jingle</li><li style="color:#000;">你好，Jingle</li></ul>',{top:'50px',left:'10%',right:'10%'},'top');
-        })
+        });
+        $('#btn_actionsheet').tap(function(){
+            J.Popup.actionsheet([{
+                    text : '告诉QQ好友',
+                    handler : function(){
+                        J.showToast('告诉QQ好友！');
+                    }
+                },{
+                    text : '告诉MSN好友',
+                    handler : function(){
+                        J.showToast('告诉MSN好友！');
+                    }
+                }
+            ]);
+        });
     </script>
 </section>

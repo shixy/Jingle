@@ -13,6 +13,10 @@
 #jingle_toast>a{
     padding: 10px 15px;
     background: #222;
+    display: inline-block;
+    max-width: 80%;
+    margin: 0 auto;
+    text-align: left;
 }
 #jingle_toast.success>a{background-color: #27AE60;!important}
 #jingle_toast.error>a{background-color: #E74C3C;!important}

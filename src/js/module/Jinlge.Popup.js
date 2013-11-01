@@ -53,7 +53,7 @@ Jingle.Popup = (function(J,$){
         var settings = {
             height : undefined,
             width : undefined,
-            backgroundOpacity : 0,
+            opacity : 0.3,
             url : null,//远程加载内容
             tplId : null,//加载模板
             tplData : null,//配合tpl使用
@@ -67,7 +67,7 @@ Jingle.Popup = (function(J,$){
         }
         $.extend(settings,options);
         clickMask2close = settings.clickMask2Close;
-        _mask.css('opacity',settings.backgroundOpacity);
+        _mask.css('opacity',settings.opacity);
         //rest position and class
         _popup.attr({'style':'','class':''});
         settings.width && _popup.width(settings.width);
@@ -115,7 +115,7 @@ Jingle.Popup = (function(J,$){
         _popup.html(html).show();
 
         //执行onShow事件，可以动态添加内容
-        settings.onShow && settings.onShow.call(this);
+        settings.onShow && settings.onShow.call(_popup);
 
         //显示获取容器高度，调整至垂直居中
         if(settings.pos == 'center'){
@@ -130,10 +130,16 @@ Jingle.Popup = (function(J,$){
     }
     var hide = function(){
         _mask.hide();
-        J.anim(_popup,transition[1],function(){
+        if(transition){
+            J.anim(_popup,transition[1],function(){
+                _popup.hide();
+                J.hasPopupOpen = false;
+            });
+        }else{
             _popup.hide();
             J.hasPopupOpen = false;
-        });
+        }
+
     }
     var _subscribeEvents = function(){
         _mask.on('tap',function(){
@@ -186,8 +192,37 @@ Jingle.Popup = (function(J,$){
         show({
             html : markup,
             pos : 'loading',
+            opacity : 0,
             animation : false,
             clickMask2Close : false
+        });
+    }
+
+    /**
+     * buttons : [{color:'red',text:'btn',handler:function(){}},{color:'red',text:'btn',handler:function(){}}]
+     * @param buttons
+     */
+    var actionsheet = function(buttons){
+        var markup = '<div class="actionsheet">';
+        $.each(buttons,function(i,n){
+            markup += '<button style="background-color: '+ n.backgroudColor +' !important;">'+ n.text +'</button>';
+        });
+        markup += '<button class="alizarin">取消</button>';
+        markup += '</div>';
+        show({
+            html : markup,
+            pos : 'bottom',
+            showCloseBtn : false,
+            onShow : function(){
+                $(this).find('button').each(function(i,button){
+                    $(button).on('tap',function(){
+                        if(buttons[i] && buttons[i].handler){
+                            buttons[i].handler.call(button);
+                        }
+                        hide();
+                    });
+                });
+            }
         });
     }
 
@@ -199,6 +234,7 @@ Jingle.Popup = (function(J,$){
         alert : alert,
         confirm : confirm,
         popover : popover,
-        loading : loading
+        loading : loading,
+        actionsheet : actionsheet
     }
 })(Jingle,Zepto);

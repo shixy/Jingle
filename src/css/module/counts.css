@@ -1,3 +1,6 @@
+[data-count]{
+    position: relative;
+}
 .count{
     position:absolute;
     background-color: #E74C3C;
@@ -10,8 +13,10 @@
     min-width: 8px;
     text-align: center;
     right: 7px;
+    left: auto;
     top:0;
 }
 .count.left{
     left:7px;
+    right:auto;
 }

@@ -3064,39 +3064,39 @@ window.Zepto = Zepto
             $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
         },
         showMask : function(text){
-            this.Popup.loading(text);
+            J.Popup.loading(text);
         },
         hideMask : function(){
-            this.Popup.close();
+            J.Popup.close();
         },
         showToast : function(text,type,duration){
             type = type || 'toast';
-            this.Toast.show(type,text,duration);
+            J.Toast.show(type,text,duration);
         },
         hideToast : function(){
-            this.Toast.hide();
+            J.Toast.hide();
         },
         alert : function(title,content){
-            this.Popup.alert(title,content);
+            J.Popup.alert(title,content);
 
         },
         confirm : function(title,content,okCall,cancelCall){
-            this.Popup.confirm(title,content,okCall,cancelCall);
+            J.Popup.confirm(title,content,okCall,cancelCall);
         },
         popup : function(options){
-            this.Popup.show(options);
+            J.Popup.show(options);
         },
         closePopup : function(){
-            this.Popup.close();
+            J.Popup.close();
         },
         popover : function(html,pos,arrowDirection,onShow){
-            this.Popup.popover(html,pos,arrowDirection,onShow);
+            J.Popup.popover(html,pos,arrowDirection,onShow);
         },
         tmpl : function(containerSelector,templateId,data,type){
-            this.Template.render(containerSelector,templateId,data,type);
+            J.Template.render(containerSelector,templateId,data,type);
         },
         showWelcome : function(){
-            if(!this.settings.showWelcome)return;
+            if(!J.settings.showWelcome)return;
             $.ajax({
                 url : J.settings.sectionPath+'welcome.html',
                 timeout : 5000,
@@ -3109,7 +3109,7 @@ window.Zepto = Zepto
             })
         },
         hideWelcome : function(){
-            this.anim('#jingle_welcome','slideLeftOut',function(){
+            J.anim('#jingle_welcome','slideLeftOut',function(){
                 $(this).remove();
                 window.localStorage.setItem('hasShowWelcome',true);
             })
@@ -3836,62 +3836,6 @@ Jingle.Transition = (function(J,$){
 
 })(Jingle,$);
 /**
- * section之间的动画过渡
- */
-Jingle.Transition11 = (function(J,$){
-    var TRANSITION = {
-        //[back,in]
-        slide : [['slideRightOut','slideRightIn'],['slideLeftOut','slideLeftIn']],
-        scale : [['scaleOut','none'],['none','scaleIn']]
-        },
-        isBack = false;
-
-
-    var _doTransition = function(current, target, transitionName){
-        if(transitionName[0] == 'none'){
-            current.removeClass('active').addClass('activing');
-            target.addClass('active');
-            J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
-        }else if(transitionName[1] == 'none'){
-            target.addClass('activing');
-            J.anim(current,transitionName[0],function(){_finishTransition(current, target)});
-        }else{
-            current.removeClass('active').addClass('activing');
-            target.addClass('active');
-            J.anim(current,transitionName[0]);
-            J.anim(target,transitionName[1],function(){_finishTransition(current, target)});
-
-        }
-    }
-    var _finishTransition = function(current, target) {
-        current.removeClass('activing active');
-        target.removeClass('activing').addClass('active');
-        if(!target.data('init')){
-            target.trigger('pageinit');
-            target.data('init',true);
-            J.Element.initScroll(target)
-        }
-        current.trigger('pagehide',[isBack]);
-        target.trigger('pageshow',[isBack]);
-        current.find('article.active').trigger('articlehide');
-        target.find('article.active').trigger('articleshow');
-    }
-
-    var run = function(current,target,back){
-        isBack = back;
-        current = $(current);
-        target = $(target);
-        var type = isBack?current.attr('data-transition'):target.attr('data-transition');
-        type = type|| J.settings.transitionType;
-        var transitionName  = isBack ? TRANSITION[type][0] : TRANSITION[type][1];
-        _doTransition(current,target,transitionName);
-    }
-    return {
-        run : run
-    }
-
-})(Jingle,$);
-/**
  * 弹出框组件
  */
 Jingle.Popup = (function(J,$){
@@ -3946,7 +3890,7 @@ Jingle.Popup = (function(J,$){
         var settings = {
             height : undefined,
             width : undefined,
-            backgroundOpacity : 0,
+            opacity : 0.3,
             url : null,//远程加载内容
             tplId : null,//加载模板
             tplData : null,//配合tpl使用
@@ -3960,7 +3904,7 @@ Jingle.Popup = (function(J,$){
         }
         $.extend(settings,options);
         clickMask2close = settings.clickMask2Close;
-        _mask.css('opacity',settings.backgroundOpacity);
+        _mask.css('opacity',settings.opacity);
         //rest position and class
         _popup.attr({'style':'','class':''});
         settings.width && _popup.width(settings.width);
@@ -4008,7 +3952,7 @@ Jingle.Popup = (function(J,$){
         _popup.html(html).show();
 
         //执行onShow事件，可以动态添加内容
-        settings.onShow && settings.onShow.call(this);
+        settings.onShow && settings.onShow.call(_popup);
 
         //显示获取容器高度，调整至垂直居中
         if(settings.pos == 'center'){
@@ -4023,10 +3967,16 @@ Jingle.Popup = (function(J,$){
     }
     var hide = function(){
         _mask.hide();
-        J.anim(_popup,transition[1],function(){
+        if(transition){
+            J.anim(_popup,transition[1],function(){
+                _popup.hide();
+                J.hasPopupOpen = false;
+            });
+        }else{
             _popup.hide();
             J.hasPopupOpen = false;
-        });
+        }
+
     }
     var _subscribeEvents = function(){
         _mask.on('tap',function(){
@@ -4079,8 +4029,37 @@ Jingle.Popup = (function(J,$){
         show({
             html : markup,
             pos : 'loading',
+            opacity : 0,
             animation : false,
             clickMask2Close : false
+        });
+    }
+
+    /**
+     * buttons : [{color:'red',text:'btn',handler:function(){}},{color:'red',text:'btn',handler:function(){}}]
+     * @param buttons
+     */
+    var actionsheet = function(buttons){
+        var markup = '<div class="actionsheet">';
+        $.each(buttons,function(i,n){
+            markup += '<button style="background-color: '+ n.backgroudColor +' !important;">'+ n.text +'</button>';
+        });
+        markup += '<button class="alizarin">取消</button>';
+        markup += '</div>';
+        show({
+            html : markup,
+            pos : 'bottom',
+            showCloseBtn : false,
+            onShow : function(){
+                $(this).find('button').each(function(i,button){
+                    $(button).on('tap',function(){
+                        if(buttons[i] && buttons[i].handler){
+                            buttons[i].handler.call(button);
+                        }
+                        hide();
+                    });
+                });
+            }
         });
     }
 
@@ -4092,7 +4071,8 @@ Jingle.Popup = (function(J,$){
         alert : alert,
         confirm : confirm,
         popover : popover,
-        loading : loading
+        loading : loading,
+        actionsheet : actionsheet
     }
 })(Jingle,Zepto);
 /**
@@ -4342,13 +4322,16 @@ Jingle.Selected = (function(J,$){
             slides,
             slideNum,
             slideWidth,
-            deltaX;
+            deltaX,
+            autoPlay;
+        var _this = this;
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);
             noDots = selector.noDots;
             beforeSlide = selector.onBeforeSlide || beforeSlide;
             afterSlide = selector.onAfterSlide || afterSlide;
+            autoPlay = selector.autoPlay;
         }else{
             wrapper = $(selector);
         }
@@ -4371,7 +4354,21 @@ Jingle.Selected = (function(J,$){
             })
             if(!noDots)_initDots();
             _slide(0, 0);
+            if(autoPlay){
+                _autoPlay();
+            }
         };
+
+        var _autoPlay = function(){
+            setTimeout(function(){
+                if(index == slideNum - 1){
+                    _slide(0);
+                }else{
+                    _this.next();
+                }
+                _autoPlay();
+            },3000);
+        }
 
         var _initDots = function(){
             dots = wrapper.find('.dots');

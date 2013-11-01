@@ -36,7 +36,7 @@
     box-shadow: inset 0 0 128px rgba(0,0,0,0.25);
     border-color: none;
 }
-.button.block{
+.button.block,button.block{
     width:100%;
 }
 .button .icon, button .icon{

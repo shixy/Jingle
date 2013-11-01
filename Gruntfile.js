@@ -23,8 +23,6 @@ module.exports = function(grunt){
         copy : {
             target : {
                 files : [
-                    {expand: true,cwd: 'dist/',src: ['Jingle.debug.js'],dest: 'sample/js/lib/'},
-                    {expand: true,cwd: 'dist/',src: ['Jingle.css'],dest: 'sample/css/'},
                     {expand: true,cwd: 'dist/',src: ['Jingle.debug.js'],dest: 'demo/js/lib/'},
                     {expand: true,cwd: 'dist/',src: ['Jingle.css'],dest: 'demo/css/'}
                 ]

@@ -127,3 +127,17 @@
 #jingle_popup.loading p{
     color: #BDC3C7;
 }
+.actionsheet{
+    display: -webkit-box;
+    display: box;
+    -webkit-box-orient:vertical;
+    box-orient:vertical;
+    padding: 20px;
+}
+.actionsheet > button{
+   -webkit-box-flex:1;
+    box-flex:1;
+    margin : 10px 0;
+    display: block;
+    width:100%;
+}

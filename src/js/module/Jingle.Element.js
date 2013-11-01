@@ -49,6 +49,7 @@ Jingle.Element = (function(J,$){
         if(name){
             $el.append('<input style="display: none;" name="'+name+'" value="'+$el.hasClass('active')+'"/>');
         }
+        $el.append('<div class="toggle-handle"></div>');
         var $input = $el.find('input');
         $el.tap(function(){
             var value;
@@ -63,7 +64,7 @@ Jingle.Element = (function(J,$){
             $el.trigger('toggle');
         })
     }
-
+a
     var _init_range = function(el){
         var $input;
         var $el = $(el);

@@ -15,13 +15,16 @@
             slides,
             slideNum,
             slideWidth,
-            deltaX;
+            deltaX,
+            autoPlay;
+        var _this = this;
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);
             noDots = selector.noDots;
             beforeSlide = selector.onBeforeSlide || beforeSlide;
             afterSlide = selector.onAfterSlide || afterSlide;
+            autoPlay = selector.autoPlay;
         }else{
             wrapper = $(selector);
         }
@@ -44,7 +47,21 @@
             })
             if(!noDots)_initDots();
             _slide(0, 0);
+            if(autoPlay){
+                _autoPlay();
+            }
         };
+
+        var _autoPlay = function(){
+            setTimeout(function(){
+                if(index == slideNum - 1){
+                    _slide(0);
+                }else{
+                    _this.next();
+                }
+                _autoPlay();
+            },3000);
+        }
 
         var _initDots = function(){
             dots = wrapper.find('.dots');

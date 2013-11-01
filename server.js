@@ -54,7 +54,7 @@ app.use("/proxy", function (req, res) {
     });
 });
 
-app.use(connect.static(path.join(__dirname, "sample"), { maxAge: 0 }));
+app.use(connect.static(path.join(__dirname, "demo"), { maxAge: 0 }));
 
 
 app.listen(3000);

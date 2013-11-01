@@ -40,39 +40,39 @@
             $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
         },
         showMask : function(text){
-            this.Popup.loading(text);
+            J.Popup.loading(text);
         },
         hideMask : function(){
-            this.Popup.close();
+            J.Popup.close();
         },
         showToast : function(text,type,duration){
             type = type || 'toast';
-            this.Toast.show(type,text,duration);
+            J.Toast.show(type,text,duration);
         },
         hideToast : function(){
-            this.Toast.hide();
+            J.Toast.hide();
         },
         alert : function(title,content){
-            this.Popup.alert(title,content);
+            J.Popup.alert(title,content);
 
         },
         confirm : function(title,content,okCall,cancelCall){
-            this.Popup.confirm(title,content,okCall,cancelCall);
+            J.Popup.confirm(title,content,okCall,cancelCall);
         },
         popup : function(options){
-            this.Popup.show(options);
+            J.Popup.show(options);
         },
         closePopup : function(){
-            this.Popup.close();
+            J.Popup.close();
         },
         popover : function(html,pos,arrowDirection,onShow){
-            this.Popup.popover(html,pos,arrowDirection,onShow);
+            J.Popup.popover(html,pos,arrowDirection,onShow);
         },
         tmpl : function(containerSelector,templateId,data,type){
-            this.Template.render(containerSelector,templateId,data,type);
+            J.Template.render(containerSelector,templateId,data,type);
         },
         showWelcome : function(){
-            if(!this.settings.showWelcome)return;
+            if(!J.settings.showWelcome)return;
             $.ajax({
                 url : J.settings.sectionPath+'welcome.html',
                 timeout : 5000,
@@ -85,7 +85,7 @@
             })
         },
         hideWelcome : function(){
-            this.anim('#jingle_welcome','slideLeftOut',function(){
+            J.anim('#jingle_welcome','slideLeftOut',function(){
                 $(this).remove();
                 window.localStorage.setItem('hasShowWelcome',true);
             })
