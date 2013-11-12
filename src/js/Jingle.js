@@ -1,15 +1,19 @@
 /*
  * Jingle v0.1 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
  * Released under MIT license
+ * walker.shixy@gmail.com
  */
 ;(function(window){
     var Jingle = {
+        version : '0.1',
         settings : {
             transitionType : 'slide',
             transitionTime : 200,
             transitionTimingFunc : 'linear',
-            sectionPath : 'html/',
-            showWelcome : true
+            showWelcome : true,
+            showPageLoading : false,
+            basePagePath : 'html/',
+            remotePage:{}
         },
         mode : window.innerWidth < 800 ? "phone" : "tablet",
         hasTouch : 'ontouchstart' in window,
@@ -29,6 +33,7 @@
             this.Menu.init();
             this.Selected.init();
         },
+        //alias
         anim : function(el,animName,duration,ease,callback){
             var d, e,c;
             var len = arguments.length;
@@ -43,7 +48,7 @@
             J.Popup.loading(text);
         },
         hideMask : function(){
-            J.Popup.close();
+            J.Popup.close(true);
         },
         showToast : function(text,type,duration){
             type = type || 'toast';

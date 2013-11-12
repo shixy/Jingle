@@ -106,6 +106,7 @@ Jingle.Service = (function(J,$){
         var unPostData = getUnPostData(url).data;
         $.ajax({
             url : url,
+            contentType:'application/json',
             data : unPostData,
             type : 'post',
             success : function(){

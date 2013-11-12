@@ -128,9 +128,9 @@ Jingle.Popup = (function(J,$){
         }
         J.hasPopupOpen = true;
     }
-    var hide = function(){
+    var hide = function(noTransition){
         _mask.hide();
-        if(transition){
+        if(transition && !noTransition){
             J.anim(_popup,transition[1],function(){
                 _popup.hide();
                 J.hasPopupOpen = false;

@@ -6,7 +6,8 @@
             days : ["日", "一", "二", "三", "四", "五", "六"],
             swipeable : true,
             date : new Date(),
-            callback : undefined
+            onRenderDay : undefined,
+            onSelect : undefined
             },
             _this = this,
             $el = $(selector),
@@ -88,8 +89,11 @@
             var otherMonth = (date.getMonth() !== month);
             var dateStr = _this.format(date);
             var classname = (_this.format(_this.settings.date) == dateStr) ? 'active':'';
-
-            return otherMonth ? '<td>&nbsp;</td>' : '<td data-selected="selected" class="'+classname+ '" data-date= '+dateStr+'>'+date.getDate()+'</td>';
+            var dayStr = date.getDate();
+            if(_this.settings.onRenderDay){
+                dayStr = _this.settings.onRenderDay.call(null,dayStr,dateStr);
+            }
+            return otherMonth ? '<td>&nbsp;</td>' : '<td data-selected="selected" class="'+classname+ '" data-date= '+dateStr+'>'+dayStr+'</td>';
         }
 
         var _subscribeEvents = function(){
@@ -115,8 +119,8 @@
                 }
                 if($target.is('td')){
                     var dateStr = $target.data('date');
-                    if(dateStr && _this.settings.callback){
-                        _this.settings.callback.call(_this,dateStr)
+                    if(dateStr && _this.settings.onSelect){
+                        _this.settings.onSelect.call(_this,dateStr)
                     }
                 }
             });

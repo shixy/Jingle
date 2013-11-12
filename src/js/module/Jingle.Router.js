@@ -32,8 +32,9 @@ Jingle.Router = (function(J,$){
     }
 
     var _initIndex = function(){
-        var initSectionId = $('#section_container section.active').trigger('pageinit').trigger('pageshow').data('init',true).attr('id');
-        add2History('#'+initSectionId);
+        var $section = $('#section_container section.active');
+        add2History('#'+$section.attr('id'));
+        $section.trigger('pageinit').trigger('pageshow').data('init',true);
     }
 
     /**

@@ -3025,15 +3025,19 @@ window.Zepto = Zepto
 /*
  * Jingle v0.1 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
  * Released under MIT license
+ * walker.shixy@gmail.com
  */
 ;(function(window){
     var Jingle = {
+        version : '0.1',
         settings : {
             transitionType : 'slide',
             transitionTime : 200,
             transitionTimingFunc : 'linear',
-            sectionPath : 'html/',
-            showWelcome : true
+            showWelcome : true,
+            showPageLoading : false,
+            basePagePath : 'html/',
+            remotePage:{}
         },
         mode : window.innerWidth < 800 ? "phone" : "tablet",
         hasTouch : 'ontouchstart' in window,
@@ -3053,6 +3057,7 @@ window.Zepto = Zepto
             this.Menu.init();
             this.Selected.init();
         },
+        //alias
         anim : function(el,animName,duration,ease,callback){
             var d, e,c;
             var len = arguments.length;
@@ -3067,7 +3072,7 @@ window.Zepto = Zepto
             J.Popup.loading(text);
         },
         hideMask : function(){
-            J.Popup.close();
+            J.Popup.close(true);
         },
         showToast : function(text,type,duration){
             type = type || 'toast';
@@ -3168,6 +3173,7 @@ Jingle.Element = (function(J,$){
         if(name){
             $el.append('<input style="display: none;" name="'+name+'" value="'+$el.hasClass('active')+'"/>');
         }
+        $el.append('<div class="toggle-handle"></div>');
         var $input = $el.find('input');
         $el.tap(function(){
             var value;
@@ -3359,11 +3365,22 @@ Jingle.Page = (function(J,$){
      */
     var loadPage = function(hash){
         var id = _formatHash(hash);
+        var url = J.settings.remotePage[id]||J.settings.basePagePath+id+'.html'
+        if(!url){
+            console.error(404,'页面不存在！');
+            return;
+        }
+        if(J.settings.showPageLoading){
+            J.showMask('正在加载...');
+        }
         $.ajax({
-            url : J.settings.sectionPath+id+'.html',
+            url : url,
             timeout : 10000,
             async : false,
             success : function(html){
+                if(J.settings.showPageLoading){
+                    J.hideMask();
+                }
                 //添加到dom树中
                 $('#section_container').append(html);
                 //触发pageload事件
@@ -3419,8 +3436,9 @@ Jingle.Router = (function(J,$){
     }
 
     var _initIndex = function(){
-        var initSectionId = $('#section_container section.active').trigger('pageinit').trigger('pageshow').data('init',true).attr('id');
-        add2History('#'+initSectionId);
+        var $section = $('#section_container section.active');
+        add2History('#'+$section.attr('id'));
+        $section.trigger('pageinit').trigger('pageshow').data('init',true);
     }
 
     /**
@@ -3620,6 +3638,7 @@ Jingle.Service = (function(J,$){
         var unPostData = getUnPostData(url).data;
         $.ajax({
             url : url,
+            contentType:'application/json',
             data : unPostData,
             type : 'post',
             success : function(){
@@ -3965,9 +3984,9 @@ Jingle.Popup = (function(J,$){
         }
         J.hasPopupOpen = true;
     }
-    var hide = function(){
+    var hide = function(noTransition){
         _mask.hide();
-        if(transition){
+        if(transition && !noTransition){
             J.anim(_popup,transition[1],function(){
                 _popup.hide();
                 J.hasPopupOpen = false;
@@ -4111,7 +4130,8 @@ Jingle.Selected = (function(J,$){
             days : ["日", "一", "二", "三", "四", "五", "六"],
             swipeable : true,
             date : new Date(),
-            callback : undefined
+            onRenderDay : undefined,
+            onSelect : undefined
             },
             _this = this,
             $el = $(selector),
@@ -4193,8 +4213,11 @@ Jingle.Selected = (function(J,$){
             var otherMonth = (date.getMonth() !== month);
             var dateStr = _this.format(date);
             var classname = (_this.format(_this.settings.date) == dateStr) ? 'active':'';
-
-            return otherMonth ? '<td>&nbsp;</td>' : '<td data-selected="selected" class="'+classname+ '" data-date= '+dateStr+'>'+date.getDate()+'</td>';
+            var dayStr = date.getDate();
+            if(_this.settings.onRenderDay){
+                dayStr = _this.settings.onRenderDay.call(null,dayStr,dateStr);
+            }
+            return otherMonth ? '<td>&nbsp;</td>' : '<td data-selected="selected" class="'+classname+ '" data-date= '+dateStr+'>'+dayStr+'</td>';
         }
 
         var _subscribeEvents = function(){
@@ -4220,8 +4243,8 @@ Jingle.Selected = (function(J,$){
                 }
                 if($target.is('td')){
                     var dateStr = $target.data('date');
-                    if(dateStr && _this.settings.callback){
-                        _this.settings.callback.call(_this,dateStr)
+                    if(dateStr && _this.settings.onSelect){
+                        _this.settings.onSelect.call(_this,dateStr)
                     }
                 }
             });

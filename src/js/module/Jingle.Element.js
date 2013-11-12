@@ -64,7 +64,7 @@ Jingle.Element = (function(J,$){
             $el.trigger('toggle');
         })
     }
-a
+
     var _init_range = function(el){
         var $input;
         var $el = $(el);
