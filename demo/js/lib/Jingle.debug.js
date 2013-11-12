@@ -4261,18 +4261,16 @@ Jingle.Selected = (function(J,$){
         this.refresh = function(date){
             var oldDate = new Date(currentYear,currentMonth,1),
                 newDate = new Date(date.getFullYear(),date.getMonth(),1),
-                transition = undefined;
+                transition = undefined,$table;
 
             if(oldDate.getTime() == newDate.getTime())return;
-            transition = oldDate<newDate ? 'slideLeftIn' : 'slideRightIn';
+            transition = oldDate<newDate ? 'slideLeftRound' : 'slideRightRound';
 
             $yearText.text(date.getFullYear());
             $monthText.text(this.settings.months[date.getMonth()]);
-            $calendarBody.find('table').addClass('old');
-            $calendarBody.append(_renderBody(date));
-            var $newTable = $calendarBody.find('table:not(.old)');
-            J.anim($newTable,transition,function(){
-                $calendarBody.find('table.old').remove();
+            var newbody = _renderBody(date);
+            J.anim($calendarBody,transition,function(){
+                $calendarBody.html(newbody);
             });
 
         }

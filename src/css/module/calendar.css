@@ -1,5 +1,7 @@
 .jingle-calendar{
     width: 100%;
+    background-color: #eee;
+    overflow: hidden;
 }
 .jingle-calendar-nav{
     height: 50px;
@@ -17,16 +19,7 @@
     padding: 10px;
 }
 .jingle-calendar-body{
-    position: relative;
-    height: 300px;
     overflow-x: hidden;
-}
-.jingle-calendar-body table{
-    position: absolute;
-    z-index: 2;
-}
-.jingle-calendar-body table.old{
-    z-index: 1;
 }
 .jingle-calendar table{
     width: 100%;

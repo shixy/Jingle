@@ -137,7 +137,6 @@ sub,sup{
 @-webkit-keyframes slideLeftIn {
 	0% { -webkit-transform: translate3d(100%,0,0)}
 	100% { -webkit-transform: translate3d(0,0,0)}
-
 }
 @-webkit-keyframes slideLeftOut {
 	/*0% { -webkit-transform: translate3d(0,0,0)}
@@ -215,6 +214,18 @@ section{
 }
 .slideUpOut{
     -webkit-animation-name: slideUpOut;
+}
+@-webkit-keyframes slideLeftRound {
+	0% { -webkit-transform: translate3d(0%,0,0)}
+	40% { -webkit-transform: translate3d(-40%,0,0)}
+	41% { -webkit-transform: translate3d(60%,0,0)}
+	100% { -webkit-transform: translate3d(0%,0,0)}
+}
+@-webkit-keyframes slideRightRound {
+	0% { -webkit-transform: translate3d(0%,0,0)}
+	40% { -webkit-transform: translate3d(40%,0,0)}
+	41% { -webkit-transform: translate3d(-60%,0,0)}
+	100% { -webkit-transform: translate3d(0%,0,0)}
 }
 aside[data-position="left"]{
     left:0;
@@ -345,6 +356,8 @@ aside ul.menu li.anchor{
 }
 .jingle-calendar{
     width: 100%;
+    background-color: #eee;
+    overflow: hidden;
 }
 .jingle-calendar-nav{
     height: 50px;
@@ -362,16 +375,7 @@ aside ul.menu li.anchor{
     padding: 10px;
 }
 .jingle-calendar-body{
-    position: relative;
-    height: 300px;
     overflow-x: hidden;
-}
-.jingle-calendar-body table{
-    position: absolute;
-    z-index: 2;
-}
-.jingle-calendar-body table.old{
-    z-index: 1;
 }
 .jingle-calendar table{
     width: 100%;
