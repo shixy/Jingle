@@ -43,3 +43,6 @@ $('#section_container').on('pageload','#menu_section',function(){
     J.Menu.init($asides);
 
 });
+$(function () {
+    Jingle.launch();
+})

@@ -13,7 +13,13 @@
 </section>
 <script type="text/javascript">
    new J.Calendar('#calendar_demo',{
-       callback:function(date){
+       onRenderDay : function(day,date){
+           if(day == 5){
+               return '<div>'+day+'</div><div style="font-size: .8em;color: red">威武</div>'
+           }
+            return day;
+       },
+       onSelect:function(date){
            alert(date);
        }
    });
@@ -27,7 +33,7 @@
            onShow : function(){
                new J.Calendar('#popup_calendar',{
                    date : new Date(2013,7,1),
-                   callback:function(date){
+                   onSelect:function(date){
                        $('#btn_popup_calendar').text(date);
                        J.closePopup();
                    }

@@ -36,46 +36,49 @@
             </ul>
         </div>
     </aside>
-    </div>
+</div>
 
-    <div id="section_container">
-        <section id="index_section" class="active">
-            <header>
-                <nav class="left">
-                    <a data-target="menu" data-icon="menu" href="#index_aside"></a>
-                </nav>
-                <h1 class="title">Jingle</h1>
-                <nav class="right">
-                    <a href="#about_section" class="button" data-target="section" data-icon="question"></a>
-                </nav>
-            </header>
-            <article class="active" style="color: #666;padding: 15px;">
-                <div style="line-height: 2em;margin-bottom: 20px;">
-                    Jingle UI是一个基于html5、css3开发的webapp 框架(针对移动设备)，提供一些基本交互方式，常用的组件，可以更方便的开发移动应用。
-                </div>
-                <div class="grid">
-                    <a href="https://github.com/shixy/Jingle"
-                       data-target="link" class="button one-part" target="_system">
-                        在Github上查看源码
+<div id="section_container">
+    <section id="index_section" class="active">
+        <header>
+            <nav class="left">
+                <a data-target="menu" data-icon="menu" href="#index_aside"></a>
+            </nav>
+            <h1 class="title">Jingle</h1>
+        </header>
+        <article class="active" style="color: #666;padding: 15px;">
+            <div style="line-height: 2em;margin-bottom: 20px;">
+                Jingle UI是一个基于html5、css3开发的webapp 框架(针对移动设备)，提供一些基本交互方式，常用的组件(scroll,actionsheet,sidemenu,toggle,push2refresh......)，可以更方便的开发移动应用。
+            </div>
+            <div class="grid">
+                <a href="https://github.com/shixy/Jingle"
+                   data-target="link" class="button one-part" target="_system">
+                    在Github上查看源码
+                </a>
+                <a href="https://github.com/shixy/Jingle/zipball/master"
+                   target="_system" class="button one-part"  data-target="link">
+                    下载源码
+                </a>
+            </div>
+            <ul class="list inset" style="margin: 10px 0;">
+                <li data-icon="envelop">
+                    <a href="mailto:walker.shixy@gmail.com" data-target="link">
+                        walker.shixy # gmail.com
                     </a>
-                    <a href="https://github.com/shixy/Jingle/zipball/master"
-                       target="_system" class="button one-part"  data-target="link">
-                        下载源码
+                </li>
+                <li data-icon="sina-weibo">
+                    <a href="http://weibo.com/walkershixy" target="_blank" data-target="link">
+                        @问题石
                     </a>
-                </div>
-            </article>
-        </section>
-    </div>
-    <!-- lib -->
-    <script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
-    <script type="text/javascript" src="js/lib/zepto.touch2mouse.js"></script>
-    <!--- app --->
-    <script type="text/javascript" src="js/app/app.js"></script>
-    <!--<script src="http://192.168.1.107:8081/target/target-script-min.js#anonymous"></script>-->
-    <script type="text/javascript">
-    $(function () {
-        Jingle.launch();
-    })
-</script>
+                </li>
+            </ul>
+        </article>
+    </section>
+</div>
+<!-- lib -->
+<script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
+<script type="text/javascript" src="js/lib/zepto.touch2mouse.js"></script>
+<!--- app --->
+<script type="text/javascript" src="js/app/app.js"></script>
 </body>
 </html>
