@@ -7,7 +7,6 @@ Jingle.Menu = (function(J,$){
         $asideContainer = $('#aside_container>aside');
         $sectionContainer = $('#section_container');
         var $el = selector?$(selector):$asideContainer;
-        //初始化事件钩子
         $el.each(function(i,aside){
             var position = $(aside).data('position');//left  right
             var showClose = $(aside).data('show-close');

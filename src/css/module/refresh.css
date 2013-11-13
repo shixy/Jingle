@@ -4,7 +4,18 @@
 }
 .refresh-icon{
     font-size: 1.1em;
+    display: inline-block;
 }
 .refresh-label{
     font-size: 1em;
+    display: inline-block;
+}
+.refresh-tip{
+    display: block;
+    padding: 3px;
+    font-size: .9em;
+}
+.icon-reverse{
+    -webkit-transform:rotate(180deg);
+    -webkit-transition-duration:.5s;
 }

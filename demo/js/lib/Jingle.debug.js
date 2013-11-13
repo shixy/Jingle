@@ -3289,7 +3289,6 @@ Jingle.Menu = (function(J,$){
         $asideContainer = $('#aside_container>aside');
         $sectionContainer = $('#section_container');
         var $el = selector?$(selector):$asideContainer;
-        //初始化事件钩子
         $el.each(function(i,aside){
             var position = $(aside).data('position');//left  right
             var showClose = $(aside).data('show-close');
@@ -4519,11 +4518,13 @@ Jingle.Selected = (function(J,$){
             options = {
                 selector : undefined,
                 type : 'pullDown',//pullDown pullUp
-                onPull: "下拉刷新...",
-                onRelease: "松开立即刷新...",
-                onRefresh: "刷新中...",
+                minPullHeight : 10,
+                pullText: "下拉刷新...",
+                releaseText: "松开立即刷新...",
+                refreshText: "刷新中...",
+                refreshTip : false,
                 onPullIcon : 'arrow-down-2',
-                onReleaseIcon  : 'arrow-up-3',
+                onReleaseIcon  : 'icon-reverse',
                 onRefreshIcon : 'spinner',
                 callback : undefined
             };
@@ -4536,11 +4537,10 @@ Jingle.Selected = (function(J,$){
             options.callback = callback;
             if(type === 'pullUp'){
                 $.extend(options,{
-                    onPull: "上拉加载更多...",
-                    onRelease: "松开开立即加载...",
-                    onRefresh: "加载中...",
-                    onPullIcon : 'arrow-up-3',
-                    onReleaseIcon  : 'arrow-down-2'
+                    pullText: "上拉加载更多...",
+                    releaseText: "松开开立即加载...",
+                    refreshText: "加载中...",
+                    onPullIcon : 'arrow-up-3'
                 })
             }
         }
@@ -4553,7 +4553,10 @@ Jingle.Selected = (function(J,$){
          */
         var _init = function(opts){
             scroller = $(opts.selector).children()[0];
-            var refreshTpl = '<div class="refresh-container"><span class="refresh-icon icon '+opts.onPullIcon+'"></span><span class="refresh-label">'+opts.onPull+'</span></div>';
+            var refreshTpl = '<div class="refresh-container"><span class="refresh-icon icon '+opts.onPullIcon
+                +'"></span><span class="refresh-label">'
+                +opts.pullText+'</span>'
+                +(opts.refreshTip?'<div class="refresh-tip">'+opts.refreshTip+'</div>':'')+'</div>';
             if(isPullDown){
                 refreshEl = $(refreshTpl).prependTo(scroller);
             }else{
@@ -4574,28 +4577,28 @@ Jingle.Selected = (function(J,$){
                     topOffset:isPullDown?topOffset:0,
                     bounce : true,
                     onScrollMove : function(){
-                        if (this.y > 5 && isPullDown && !iconEl.hasClass(opts.onReleaseIcon)) {
-                            iconEl.removeClass(opts.onPullIcon).addClass(opts.onReleaseIcon);
-                            labelEl.html(opts.onRelease);
+                        if (this.y > opts.minPullHeight && isPullDown && !iconEl.hasClass(opts.onReleaseIcon)) {
+                            iconEl.addClass(opts.onReleaseIcon);
+                            labelEl.html(opts.releaseText);
                             this.minScrollY = 0;
-                        } else if (this.y < 5 && isPullDown && !iconEl.hasClass(opts.onPullIcon)) {
-                            iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onPullIcon);
-                            labelEl.html(opts.onPull);
+                        } else if (this.y < opts.minPullHeight && isPullDown && iconEl.hasClass(opts.onReleaseIcon)) {
+                            iconEl.removeClass(opts.onReleaseIcon);
+                            labelEl.html(opts.pullText);
                             this.minScrollY = -topOffset;
-                        }else if (this.y < (this.maxScrollY - 5) && !isPullDown && !iconEl.hasClass(opts.onReleaseIcon)) {
-                            iconEl.removeClass(opts.onPullIcon).addClass(opts.onReleaseIcon);
-                            labelEl.html(opts.onRelease);
+                        }else if (this.y < (this.maxScrollY - opts.minPullHeight) && !isPullDown && !iconEl.hasClass(opts.onReleaseIcon)) {
+                            iconEl.addClass(opts.onReleaseIcon);
+                            labelEl.html(opts.releaseText);
                             this.maxScrollY = this.maxScrollY;
-                        } else if (this.y > (this.maxScrollY + 5) && !isPullDown && !iconEl.hasClass(opts.onPullIcon)) {
-                            iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onPullIcon);
-                            labelEl.html(opts.onPull);
+                        } else if (this.y > (this.maxScrollY + opts.minPullHeight) && !isPullDown && iconEl.hasClass(opts.onReleaseIcon)) {
+                            iconEl.removeClass(opts.onReleaseIcon);
+                            labelEl.html(opts.pullText);
                             this.maxScrollY = topOffset;
                         }
                     },
                     onScrollEnd : function(){
                         if(iconEl.hasClass(opts.onReleaseIcon)){
-                            iconEl.removeClass(opts.onReleaseIcon).addClass(opts.onRefreshIcon);
-                            labelEl.html(opts.onRefresh);
+                            iconEl.removeClass(opts.onReleaseIcon).removeClass(opts.onPullIcon).addClass(opts.onRefreshIcon);
+                            labelEl.html(opts.refreshText);
                             var _this = this;
                             setTimeout(function(){//解决在chrome下onRefresh的时候文本无法更改的问题。奇怪的问题！
                                 opts.callback.call(_this);
@@ -4605,7 +4608,7 @@ Jingle.Selected = (function(J,$){
                     },
                     onRefresh: function () {
                         iconEl.removeClass(opts.onRefreshIcon).addClass(opts.onPullIcon);
-                        labelEl.html(opts.onPull);
+                        labelEl.html(opts.pullText);
                     }
                 });
         }
