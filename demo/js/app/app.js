@@ -22,20 +22,40 @@ function onDeviceReady(){
 }
 
 $('#btn_show_welcome').on('tap', J.showWelcome);
-$('#section_container').on('pageinit','#scroll_section',function(){
-    J.Refresh( '#scroll_article','pullDown', function(){
+$('#section_container').on('pageinit','#refresh_section',function(){
+    J.Refresh({
+        selector : '#down_refresh_article',
+        type : 'pullDown',
+        pullText : '你敢往下拉么...',
+        releaseText : '快松开的你的咸猪手！！',
+        refreshTip : '使劲往下拽吧，亲',
+        callback : function(){
             var scroll = this;
             setTimeout(function () {
-                var html = '';
-                for(var i=0;i<10;i++){
-                    html += '<li style="color:#E74C3C">自动生成的..</li>'
-                }
-                $('#scroll_article ul.list').append(html);
+                $('#down_refresh_article ul.list li').text('擦，我被更新了');
                 scroll.refresh();
-                J.showToast('加载成功','success');
-            }, 1000)
+                J.showToast('更新成功','success');
+            }, 2000);
+        }
+    });
+//    最简约的调用方式
+    J.Refresh( '#up_refresh_article','pullUp', function(){
+        var scroll = this;
+        setTimeout(function () {
+            var html = '';
+            for(var i=0;i<10;i++){
+                html += '<li style="color:#E74C3C">我是被拉出来的...</li>'
+            }
+            $('#up_refresh_article ul.list').append(html);
+            scroll.refresh();
+            J.showToast('加载成功','success');
+        }, 2000);
     })
+
 });
+$('#section_container').on('articleshow','#h_scroll_article',function(){
+    J.Scroll('#h_scroll_demo',{hScroll:true,hScrollbar : false});
+})
 $('#section_container').on('pageload','#menu_section',function(){
     var asides = J.Page.loadContent('html/custom_aside.html');
     var $asides = $(asides);
@@ -44,5 +64,7 @@ $('#section_container').on('pageload','#menu_section',function(){
 
 });
 $(function () {
-    Jingle.launch();
+    Jingle.launch({
+        showPageLoading : true
+    });
 })
