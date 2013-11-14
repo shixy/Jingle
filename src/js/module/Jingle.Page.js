@@ -12,6 +12,7 @@ Jingle.Page = (function(J,$){
      */
     var loadPage = function(hash){
         var id = _formatHash(hash);
+        //优先从remotePage中寻找是否有对应的url,没有则根据id自动从basePagePath中装载
         var url = J.settings.remotePage[id]||J.settings.basePagePath+id+'.html'
         if(!url){
             console.error(404,'页面不存在！');
@@ -37,6 +38,11 @@ Jingle.Page = (function(J,$){
             }
         })
     }
+    /**
+     * 同步加载文档片段
+     * @param url
+     * @return {*}
+     */
     var loadContent = function(url){
         return $.ajax({
                 url : url,

@@ -1,13 +1,18 @@
 ;(function(J,$){
+    /**
+     * 日历组件
+     * @param selector selector
+     * @param options 配置参数
+     */
     var calendar = function(selector,options){
         var defaults = {
-            months : ["01月", "02月", "03月", "04月", "05月", "06月",
-                "07月", "08月", "09月", "10月", "11月", "12月"],
-            days : ["日", "一", "二", "三", "四", "五", "六"],
-            swipeable : true,
-            date : new Date(),
-            onRenderDay : undefined,
-            onSelect : undefined
+                months : ["01月", "02月", "03月", "04月", "05月", "06月",
+                    "07月", "08月", "09月", "10月", "11月", "12月"],
+                days : ["日", "一", "二", "三", "四", "五", "六"],
+                swipeable : true,//是否可通过手指滑动
+                date : new Date(),//日历当前日期
+                onRenderDay : undefined,//渲染单元格时的事件
+                onSelect : undefined //选中日期时的事件
             },
             _this = this,
             $el = $(selector),
@@ -15,6 +20,7 @@
             $monthText,
             $calendarBody,
             currentDate,currentYear,currentMonth;
+
         var _init = function(){
             _this.settings = $.extend({},defaults,options);
             currentYear = _this.settings.date.getFullYear();
@@ -24,15 +30,23 @@
             _subscribeEvents();
         }
 
-        //获取月份第一天是星期几[0-6]
+        /**
+         * 获取月份第一天是星期几[0-6]
+         */
         var _fisrtDayOfMonth = function(date){
             return ( new Date(date.getFullYear(), date.getMonth(), 1) ).getDay();
         }
-        //获取月份总天数[1-31]
+        /**
+         * 获取月份总天数[1-31]
+         */
         var _daysInMonth = function(date){
             return ( new Date(date.getFullYear(),date.getMonth()+1,0) ).getDate();
         }
 
+        /**
+         * 渲染日历
+         * @private
+         */
         var _render = function(){
             var html = '';
             html += '<div class="jingle-calendar">';
@@ -134,6 +148,10 @@
             })
         }
 
+        /**
+         * 刷新日历为指定日期
+         * @param date 指定日期你
+         */
         this.refresh = function(date){
             var oldDate = new Date(currentYear,currentMonth,1),
                 newDate = new Date(date.getFullYear(),date.getMonth(),1),

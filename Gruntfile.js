@@ -3,7 +3,7 @@ module.exports = function(grunt){
         pkg : grunt.file.readJSON('package.json'),
 		concat : {
             'dist/Jingle.debug.js' :
-                ['src/js/lib/*.js','src/js/Jingle.js','src/js/module/*.js','src/js/plugin/*.js'],
+                ['src/js/Jingle.js','src/js/module/*.js','src/js/plugin/*.js'],
             'dist/Jingle.css' : ['src/css/base.css','src/css/module/*.css']
 		},
         uglify : {

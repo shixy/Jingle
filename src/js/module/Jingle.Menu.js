@@ -1,5 +1,5 @@
 /**
- * 侧边栏
+ * 侧边菜单
  */
 Jingle.Menu = (function(J,$){
     var $asideContainer,$sectionContainer;
@@ -7,7 +7,7 @@ Jingle.Menu = (function(J,$){
         $asideContainer = $('#aside_container>aside');
         $sectionContainer = $('#section_container');
         var $el = selector?$(selector):$asideContainer;
-        $el.each(function(i,aside){
+        $el.each(function(i,aside){//给菜单添加关闭按钮，划动事件
             var position = $(aside).data('position');//left  right
             var showClose = $(aside).data('show-close');
             if(showClose){
@@ -39,7 +39,7 @@ Jingle.Menu = (function(J,$){
             J.anim($aside,{translateX : '0%'});
             J.anim($sectionContainer,{translateX : translateX});
         }
-        J.isMenuOpen = true;
+        J.hasMenuOpen = true;
     }
     var hideMenu = function(duration,callback){
         var $aside = $('#aside_container aside.active'),
@@ -49,7 +49,7 @@ Jingle.Menu = (function(J,$){
 
         var _finishTransition = function(){
             $aside.removeClass('active');
-            J.isMenuOpen = false;
+            J.hasMenuOpen = false;
             callback && callback.call(this);
         };
 

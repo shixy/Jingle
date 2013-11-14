@@ -7,20 +7,20 @@
     var Jingle = {
         version : '0.1',
         settings : {
-            transitionType : 'slide',
-            transitionTime : 200,
-            transitionTimingFunc : 'linear',
-            showWelcome : true,
-            showPageLoading : false,
-            basePagePath : 'html/',
-            remotePage:{}
+            transitionType : 'slide',//page默认动画效果
+            transitionTime : 200,//自定义动画时的默认动画时间(非page转场动画时间)
+            transitionTimingFunc : 'linear',//自定义动画时的默认动画函数(非page转场动画函数)
+            showWelcome : true,//是否显示欢迎界面
+            showPageLoading : false,//加载page时，是否显示遮罩
+            basePagePath : 'html/',//page默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
+            remotePage:{}//page的远程路径
         },
         mode : window.innerWidth < 800 ? "phone" : "tablet",
         hasTouch : 'ontouchstart' in window,
         hasLaunched : false,
         launchCompleted : false,
-        isMenuOpen : false,
-        hasPopupOpen : false,
+        hasMenuOpen : false,//是否有打开的侧边菜单
+        hasPopupOpen : false,//是否有打开的弹出框
         isWebApp : location.protocol == 'http:',
         launch : function(opts){
             $.extend(this.settings,opts);
@@ -33,7 +33,10 @@
             this.Menu.init();
             this.Selected.init();
         },
-        //alias
+        /***************************** alias func ***********************************************************/
+        /**
+         * 完善zepto的动画函数
+         */
         anim : function(el,animName,duration,ease,callback){
             var d, e,c;
             var len = arguments.length;
@@ -44,16 +47,32 @@
             }
             $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
         },
+        /**
+         * 显示loading框
+         * @param text
+         */
         showMask : function(text){
             J.Popup.loading(text);
         },
+        /**
+         * 关闭loading框
+         */
         hideMask : function(){
             J.Popup.close(true);
         },
+        /**
+         *  显示消息
+         * @param text
+         * @param type toast|success|error|info
+         * @param duration 持续时间，为0则不自动关闭
+         */
         showToast : function(text,type,duration){
             type = type || 'toast';
             J.Toast.show(type,text,duration);
         },
+        /**
+         * 关闭消息提示
+         */
         hideToast : function(){
             J.Toast.hide();
         },

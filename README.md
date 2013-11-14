@@ -1,8 +1,9 @@
 ##Jingle UI##
-Jingle UI是一个基于html5、css3开发的webapp 框架(针对移动设备)，提供一些基本交互方式，组件，可以更方便的开发移动应用。
+Jingle UI是一个基于html5、css3开发的轻量级的webapp 框架(针对移动设备)，提供一些基本交互方式，组件，可以更方便的开发移动应用。
 
 - 基于webkit开发，目前只支持ios，android
 - 依赖zepto.js、iscroll4、artTemplate等开源类库和组件
+- 持续开发中，文档尚不完善，有需求的朋友可以直接看demo和源码
 
 ###页面结构###
 	<div id="aside_container"><!---侧边栏容器--->

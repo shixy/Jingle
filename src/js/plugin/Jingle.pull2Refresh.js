@@ -7,12 +7,12 @@
         var iscroll, scroller,refreshEl,iconEl,labelEl,topOffset,isPullDown,
             options = {
                 selector : undefined,
-                type : 'pullDown',//pullDown pullUp
-                minPullHeight : 10,
+                type : 'pullDown',//pullDown|pullUp 默认为pullDown
+                minPullHeight : 10,//拉动的像素相对值，超过才会翻转
                 pullText: "下拉刷新...",
                 releaseText: "松开立即刷新...",
                 refreshText: "刷新中...",
-                refreshTip : false,
+                refreshTip : false,//下拉时显示的文本，比如：最后更新时间:2013-....
                 onPullIcon : 'arrow-down-2',
                 onReleaseIcon  : 'icon-reverse',
                 onRefreshIcon : 'spinner',
@@ -109,6 +109,12 @@
         this.iscroll = iscroll;
     }
 
+    /**
+     * 刷新组件
+     * @param selector selector
+     * @param type 类型 pullDown(下拉) pullUp(上拉)
+     * @param callback 回调函数
+     */
     J.Refresh = function(selector,type,callback){
         var el,jRefreshId;
         if(typeof selector === 'object'){
@@ -117,6 +123,7 @@
             el = $(selector);
         }
         jRefreshId = el.data('_jrefresh_');
+        //因上拉下拉可能会使用的比较频繁，故缓存起来节省开销
         if(jRefreshId && refreshCache[jRefreshId]){
             return refreshCache[jRefreshId];
         }else{

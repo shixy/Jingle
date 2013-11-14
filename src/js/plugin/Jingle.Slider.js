@@ -1,6 +1,5 @@
 /**
  * 幻灯片组件
- * TODO  自动播放
  */
 ;(function(J,$){
     function slider(selector,noDots){

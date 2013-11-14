@@ -1,14 +1,14 @@
 /**
- * controller 控制页面的流转
+ * Router 控制页面的流转
  */
 Jingle.Router = (function(J,$){
         var _history = [];
-
     /**
      * 初始化events、state
      */
     var init = function(){
         $(window).on('popstate', _popstateHandler);
+        //点击时click事件和tap事件都会触发，在此阻止a标签的默认click行为
         $(document).on('click','a',function(e){
             var target = $(this).data('target');
             if(!target || target != 'link'){
@@ -40,6 +40,7 @@ Jingle.Router = (function(J,$){
     /**
      * 处理浏览器的后退事件
      * 前进事件不做处理
+     * //TODO 处理menu popup
      * @private
      */
     var _popstateHandler = function(e){
@@ -76,8 +77,13 @@ Jingle.Router = (function(J,$){
         }
     }
 
+    /**
+     * 页面转场
+     * @param hash 新page的'#id'
+     * @private
+     */
     var _showSection  = function(hash){
-        if(J.isMenuOpen){
+        if(J.hasMenuOpen){//关闭菜单后再转场
             J.Menu.hide(200,function(){
                 _showSection(hash);
             });
@@ -85,9 +91,10 @@ Jingle.Router = (function(J,$){
         }
         if(_history[0] === hash)return;
         add2History(hash);
-        if($(hash).length === 0){
+        if($(hash).length === 0){//当前dom树中不存在
             //同步加载模板
             J.Page.load(hash);
+            //TODO 为了性能要求，可根据配置只保留N个page
         }
         _changePage(_history[1],hash);
     }
@@ -115,7 +122,7 @@ Jingle.Router = (function(J,$){
     }
 
     var _toggleMenu = function(hash){
-        J.isMenuOpen?J.Menu.hide():J.Menu.show(hash);
+        J.hasMenuOpen?J.Menu.hide():J.Menu.show(hash);
     }
 
     return {

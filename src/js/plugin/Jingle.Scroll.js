@@ -14,6 +14,7 @@
                checkDOMChanges: false
             };
         scrollId = $el.data('_jscroll_');
+        //滚动组件使用频繁，缓存起来节省开销
         if(scrollId && scrollCache[scrollId]){
             scroll = scrollCache[scrollId];
             $.extend(scroll.options,opts)

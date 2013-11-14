@@ -14,9 +14,10 @@ Jingle.Element = (function(J,$){
 
     var init = function(selector){
         if(!selector){
+            //iscroll 必须在元素可见的情况下才能初始化
             $(document).on('articleshow','article',function(){
                 J.Element.initScroll(this);
-            })
+            });
         };
         var $el = $(selector || 'body');
         if($el.length == 0)return;
@@ -36,21 +37,30 @@ Jingle.Element = (function(J,$){
         $.map(_getMatchElements($(selector),SELECTOR.scroll),_init_scroll);
     }
     var _init_icon = function(el){
-        $(el).prepend('<i class="icon '+$(el).data('icon')+'"></i>');
+        var $el = $(el),$icon=$el.children('i.icon'),icon = $el.data('icon');
+        if($icon.length > 0){//已经初始化，就更新icon
+            $icon.attr('class','icon '+icon);
+        }else{
+            $el.prepend('<i class="icon '+icon+'"></i>');
+        }
+
     }
     var _init_scroll = function(el){
         J.Scroll(el);
     }
 
     var _init_toggle = function(el){
-        var $el = $(el);
+        var $el = $(el),$input;
+        if($el.has('div.toggle-handle')){//已经初始化
+            return;
+        }
         var name = $el.attr('name');
         //添加隐藏域，方便获取值
         if(name){
             $el.append('<input style="display: none;" name="'+name+'" value="'+$el.hasClass('active')+'"/>');
         }
         $el.append('<div class="toggle-handle"></div>');
-        var $input = $el.find('input');
+        $input = $el.find('input');
         $el.tap(function(){
             var value;
             if($el.hasClass('active')){
@@ -61,13 +71,13 @@ Jingle.Element = (function(J,$){
                 value = true;
             }
             $input.val(value);
+            //自定义事件：toggle
             $el.trigger('toggle');
         })
     }
 
     var _init_range = function(el){
-        var $input;
-        var $el = $(el);
+        var $el = $(el),$input;
         var $range = $('input[type="range"]',el);
         var align = $el.data('rangeinput');
         var input = $('<input type="text" name="test" value="'+$range.val()+'"/>');
@@ -91,11 +101,12 @@ Jingle.Element = (function(J,$){
 
     var _init_progress = function(el){
         var $el = $(el);
-        var progress = parseFloat($el.data('progress'));
+        var progress = parseFloat($el.data('progress'))+'%';
         var title = $el.data('title') || '';
-        var $bar = $('<div class="bar"></div>');
-        progress = progress+'%';
-        $bar.appendTo($el).width(progress).text(title+progress);
+        if(!$el.has('div.bar')){
+            $el.append('<div class="bar"></div>');
+        }
+        $el.find('div.bar').width(progress).text(title+progress);
         if(progress == '100%'){
             $bar.css('border-radius','10px');
         }
@@ -106,7 +117,11 @@ Jingle.Element = (function(J,$){
         var orient = $el.data('orient');
         var className = (orient == 'left')?'left':'';
         var markup = '<span class="count '+className+'">'+count+'</span>'
-        $el.append(markup);
+        if($el.has('span.count')){
+            $el.find('span.count').text(count);//更新数字
+        }else{
+            $el.append(markup);
+        }
         if(count == 0){
             $('.count',el).hide();
         }
@@ -115,11 +130,15 @@ Jingle.Element = (function(J,$){
     var _init_checkbox = function(el){
         var $el = $(el);
         var value = $el.data('checkbox');
+        if($el.has('i.icon')){
+            return;
+        }
         $el.prepend('<i class="icon checkbox-'+value+'"></i>');
         $el.on('tap',function(){
             var status = ($el.data('checkbox') == 'checked') ? 'unchecked':'checked';
             $el.find('i.icon').attr('class','icon checkbox-'+status);
             $el.data('checkbox',status);
+            //自定义change事件
             $el.trigger('change');
         });
 

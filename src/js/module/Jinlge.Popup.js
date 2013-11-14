@@ -16,8 +16,8 @@ Jingle.Popup = (function(J,$){
             },
             'center':{
                 top:'50%',
-                left:'10%',
-                right:'10%',
+                left:'5%',
+                right:'5%',
                 'border-radius' : '3px'
             },
             'bottom' : {
@@ -42,6 +42,10 @@ Jingle.Popup = (function(J,$){
             loading : '<i class="icon spinner"></i><p>{title}</p>'
         };
 
+    /**
+     * 全局只有一个popup实例
+     * @private
+     */
     var _init = function(){
         $('body').append('<div id="jingle_popup"></div><div id="jingle_popup_mask"></div>');
         _mask = $('#jingle_popup_mask');
@@ -51,19 +55,19 @@ Jingle.Popup = (function(J,$){
 
     var show = function(options){
         var settings = {
-            height : undefined,
-            width : undefined,
-            opacity : 0.3,
-            url : null,//远程加载内容
-            tplId : null,//加载模板
-            tplData : null,//配合tpl使用
-            html : '',//@String popup内容
-            pos : 'center',//位置 @String top|top-second|center|bottom|bottom-second   @object  css样式
-            clickMask2Close : true,//@boolean 是否点击外层遮罩关闭popup
-            showCloseBtn : true,//@boolean 是否显示关闭按钮
+            height : undefined,//高度
+            width : undefined,//宽度
+            opacity : 0.3,//透明度
+            url : null,//远程加载url
+            tplId : null,//加载模板ID
+            tplData : null,//模板数据，配合tplId使用
+            html : '',//popup内容
+            pos : 'center',//位置 {@String top|top-second|center|bottom|bottom-second}   {@object  css样式}
+            clickMask2Close : true,// 是否点击外层遮罩关闭popup
+            showCloseBtn : true,// 是否显示关闭按钮
             arrowDirection : undefined,//popover的箭头指向
-            animation : true,
-            onShow : undefined //@event 在popup动画开始前执行
+            animation : true,//是否显示动画
+            onShow : undefined //@event 在popup内容加载完毕，动画开始前触发
         }
         $.extend(settings,options);
         clickMask2close = settings.clickMask2Close;
@@ -128,6 +132,11 @@ Jingle.Popup = (function(J,$){
         }
         J.hasPopupOpen = true;
     }
+
+    /**
+     * 关闭弹出框
+     * @param noTransition 立即关闭，无动画
+     */
     var hide = function(noTransition){
         _mask.hide();
         if(transition && !noTransition){
@@ -150,6 +159,11 @@ Jingle.Popup = (function(J,$){
         _popup.on('tap','[data-target="closePopup"]',function(){hide();});
     }
 
+    /**
+     * alert组件
+     * @param title 标题
+     * @param content 内容
+     */
     var alert = function(title,content){
         var markup = TEMPLATE.alert.replace('{title}',title).replace('{content}',content).replace('{ok}','确定');
         show({
@@ -159,6 +173,14 @@ Jingle.Popup = (function(J,$){
             showCloseBtn : false
         });
     }
+
+    /**
+     * confirm 组件
+     * @param title 标题
+     * @param content 内容
+     * @param okCall 确定按钮handler
+     * @param cancelCall 取消按钮handler
+     */
     var confirm = function(title,content,okCall,cancelCall){
         var markup = TEMPLATE.confirm.replace('{title}',title).replace('{content}',content).replace('{cancel}','取消').replace('{ok}','确定');
         show({
@@ -177,6 +199,13 @@ Jingle.Popup = (function(J,$){
         });
     }
 
+    /**
+     * 带箭头的弹出框
+     * @param html 弹出框内容
+     * @param pos 位置
+     * @param arrow_direction 箭头方向
+     * @param onShow onShow事件
+     */
     var popover = function(html,pos,arrow_direction,onShow){
         show({
             html : html,
@@ -187,6 +216,10 @@ Jingle.Popup = (function(J,$){
         });
     }
 
+    /**
+     * loading组件
+     * @param text 文本，默认为“加载中...”
+     */
     var loading = function(text){
         var markup = TEMPLATE.loading.replace('{title}',text||'加载中...');
         show({
@@ -199,8 +232,9 @@ Jingle.Popup = (function(J,$){
     }
 
     /**
-     * buttons : [{color:'red',text:'btn',handler:function(){}},{color:'red',text:'btn',handler:function(){}}]
-     * @param buttons
+     * actionsheet组件
+     * @param buttons 按钮集合
+     * [{color:'red',text:'btn',handler:function(){}},{color:'red',text:'btn',handler:function(){}}]
      */
     var actionsheet = function(buttons){
         var markup = '<div class="actionsheet">';
