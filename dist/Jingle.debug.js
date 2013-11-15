@@ -123,7 +123,7 @@
 Jingle.Element = (function(J,$){
     var SELECTOR  = {
         'icon' : '[data-icon]',
-        'scroll' : '[data-scroll="true"]',//可多次init，todo 将其作为一个单独module处理
+        'scroll' : '[data-scroll="true"]',
         'toggle' : '.toggle',
         'range' : '[data-rangeinput]',
         'progress' : '[data-progress]',
@@ -170,7 +170,7 @@ Jingle.Element = (function(J,$){
 
     var _init_toggle = function(el){
         var $el = $(el),$input;
-        if($el.has('div.toggle-handle')){//已经初始化
+        if($el.find('div.toggle-handle').length>0){//已经初始化
             return;
         }
         var name = $el.attr('name');
@@ -219,37 +219,39 @@ Jingle.Element = (function(J,$){
     }
 
     var _init_progress = function(el){
-        var $el = $(el);
+        var $el = $(el),$bar;
         var progress = parseFloat($el.data('progress'))+'%';
         var title = $el.data('title') || '';
-        if(!$el.has('div.bar')){
-            $el.append('<div class="bar"></div>');
+        $bar = $el.find('div.bar');
+        if($bar.length == 0){
+            $bar = $('<div class="bar"></div>').appendTo($el);
         }
-        $el.find('div.bar').width(progress).text(title+progress);
+        $bar.width(progress).text(title+progress);
         if(progress == '100%'){
             $bar.css('border-radius','10px');
         }
     }
     var _init_count = function(el){
-        var $el = $(el);
+        var $el = $(el),$count;
         var count = parseInt($el.data('count'));
         var orient = $el.data('orient');
         var className = (orient == 'left')?'left':'';
-        var markup = '<span class="count '+className+'">'+count+'</span>'
-        if($el.has('span.count')){
-            $el.find('span.count').text(count);//更新数字
+        var markup = '<span class="count '+className+'">'+count+'</span>';
+        $count = $el.find('span.count');
+        if($count.length>0){
+            $count.text(count);//更新数字
         }else{
-            $el.append(markup);
+            $count = markup.appendTo($el);
         }
         if(count == 0){
-            $('.count',el).hide();
+            $count.hide();
         }
     }
 
     var _init_checkbox = function(el){
         var $el = $(el);
         var value = $el.data('checkbox');
-        if($el.has('i.icon')){
+        if($el.find('i.icon').length>0){
             return;
         }
         $el.prepend('<i class="icon checkbox-'+value+'"></i>');
@@ -298,31 +300,35 @@ Jingle.Element = (function(J,$){
  * 侧边菜单
  */
 Jingle.Menu = (function(J,$){
-    var $asideContainer,$sectionContainer;
-    var init = function(selector){
-        $asideContainer = $('#aside_container>aside');
+    var $asideContainer,$sectionContainer,$sectionMask;
+    var init = function(){
+        $asideContainer = $('#aside_container');
         $sectionContainer = $('#section_container');
-        var $el = selector?$(selector):$asideContainer;
-        $el.each(function(i,aside){//给菜单添加关闭按钮，划动事件
-            var position = $(aside).data('position');//left  right
-            var showClose = $(aside).data('show-close');
-            if(showClose){
-                $(aside).append('<div class="aside-close icon close"></div>');
+        $sectionMask = $('<div id="section_container_mask"></div>').appendTo('#section_container');
+        //添加各种关闭事件
+        $sectionMask.on('tap',hideMenu);
+        $asideContainer.on('swipeRight','aside',function(){
+            if($(this).data('position') == 'right'){
+                hideMenu();
             }
-            if(position == 'right'){
-                $(aside).on('swipeRight',hideMenu);
-            }else{
-                $(aside).on('swipeLeft',hideMenu);
+        });
+        $asideContainer.on('swipeLeft','aside',function(){
+            if($(this).data('position') != 'right'){
+                hideMenu();
             }
-            $('.aside-close').on('tap',hideMenu);
-        })
+        });
+        $asideContainer.on('tap','.aside-close',hideMenu);
     }
     var showMenu = function(selector){
         var $aside = $(selector).addClass('active'),
             transition = $aside.data('transition'),// push overlay  reveal
             position = $aside.data('position') || 'left',
+            showClose = $aside.data('show-close'),
             width = $aside.width(),
             translateX = position == 'left'?width+'px':'-'+width+'px';
+        if(showClose && $aside.find('div.aside-close').length == 0){
+            $aside.append('<div class="aside-close icon close"></div>');
+        }
 
         //aside中可能需要scroll组件
         J.Element.initScroll($aside);
@@ -335,6 +341,7 @@ Jingle.Menu = (function(J,$){
             J.anim($aside,{translateX : '0%'});
             J.anim($sectionContainer,{translateX : translateX});
         }
+        $('#section_container_mask').show();
         J.hasMenuOpen = true;
     }
     var hideMenu = function(duration,callback){
@@ -357,6 +364,8 @@ Jingle.Menu = (function(J,$){
             J.anim($aside,{translateX : translateX},duration);
             J.anim($sectionContainer,{translateX : '0'},duration,_finishTransition);
         }
+
+        $('#section_container_mask').hide();
     }
     return {
         init : init,
@@ -1303,8 +1312,9 @@ Jingle.Selected = (function(J,$){
             html += _renderBody(currentDate);
             html += '</div></div>'
             $el.html(html);
-            $yearText = $el.find('span:eq(0)');
-            $monthText = $el.find('span:eq(1)');
+            var $span = $el.find('span');
+            $yearText = $span.eq(0);
+            $monthText = $span.eq(1);
             $calendarBody = $el.find('.jingle-calendar-body');
         }
 
@@ -1448,7 +1458,13 @@ Jingle.Selected = (function(J,$){
                lockDirection : true,
                useTransform: true,
                useTransition: false,
-               checkDOMChanges: false
+               checkDOMChanges: false,
+               onBeforeScrollStart: function (e) {
+                    var target = e.target;
+                    while (target.nodeType != 1) target = target.parentNode;
+                    if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+                        e.preventDefault();
+                }
             };
         scrollId = $el.data('_jscroll_');
         //滚动组件使用频繁，缓存起来节省开销

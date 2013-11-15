@@ -1,16 +1,15 @@
 document.addEventListener('deviceready', onDeviceReady, false);
 function onDeviceReady(){
-    alert('ready');
     navigator.splashscreen.hide();
     //注册后退按钮
     document.addEventListener("backbutton", function (e) {
-        if(J.isMenuOpen){
+        if(J.hasMenuOpen){
             J.Menu.hide();
         }else if(J.hasPopupOpen){
             J.closePopup();
         }else{
             var sectionId = $('section.active').attr('id');
-            if(sectionId == 'login_section' || sectionId == 'index_section'){
+            if(sectionId == 'index_section'){
                 J.confirm('提示','是否退出程序？',function(){
                     navigator.app.exitApp();
                 });
@@ -60,9 +59,17 @@ $('#section_container').on('pageload','#menu_section',function(){
     var asides = J.Page.loadContent('html/custom_aside.html');
     var $asides = $(asides);
     $('#aside_container').append($asides);
-    J.Menu.init($asides);
-
 });
+$('#btn_scan_barcode').on('tap',function(){
+    window.plugins.barcodeScanner.scan('all',function(result) {
+            if(!result.cancelled){
+                J.alert('扫描结果：','结果：'+result.text+'<br>格式：'+result.format);
+            }
+        }, function(error) {
+            J.showToast("扫描失败: " + error,'error');
+        }
+    );
+})
 $(function () {
     Jingle.launch({
         showPageLoading : true

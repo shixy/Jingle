@@ -11,7 +11,13 @@
                lockDirection : true,
                useTransform: true,
                useTransition: false,
-               checkDOMChanges: false
+               checkDOMChanges: false,
+               onBeforeScrollStart: function (e) {
+                    var target = e.target;
+                    while (target.nodeType != 1) target = target.parentNode;
+                    if (target.tagName != 'SELECT' && target.tagName != 'INPUT' && target.tagName != 'TEXTAREA')
+                        e.preventDefault();
+                }
             };
         scrollId = $el.data('_jscroll_');
         //滚动组件使用频繁，缓存起来节省开销

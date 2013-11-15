@@ -2,31 +2,35 @@
  * 侧边菜单
  */
 Jingle.Menu = (function(J,$){
-    var $asideContainer,$sectionContainer;
-    var init = function(selector){
-        $asideContainer = $('#aside_container>aside');
+    var $asideContainer,$sectionContainer,$sectionMask;
+    var init = function(){
+        $asideContainer = $('#aside_container');
         $sectionContainer = $('#section_container');
-        var $el = selector?$(selector):$asideContainer;
-        $el.each(function(i,aside){//给菜单添加关闭按钮，划动事件
-            var position = $(aside).data('position');//left  right
-            var showClose = $(aside).data('show-close');
-            if(showClose){
-                $(aside).append('<div class="aside-close icon close"></div>');
+        $sectionMask = $('<div id="section_container_mask"></div>').appendTo('#section_container');
+        //添加各种关闭事件
+        $sectionMask.on('tap',hideMenu);
+        $asideContainer.on('swipeRight','aside',function(){
+            if($(this).data('position') == 'right'){
+                hideMenu();
             }
-            if(position == 'right'){
-                $(aside).on('swipeRight',hideMenu);
-            }else{
-                $(aside).on('swipeLeft',hideMenu);
+        });
+        $asideContainer.on('swipeLeft','aside',function(){
+            if($(this).data('position') != 'right'){
+                hideMenu();
             }
-            $('.aside-close').on('tap',hideMenu);
-        })
+        });
+        $asideContainer.on('tap','.aside-close',hideMenu);
     }
     var showMenu = function(selector){
         var $aside = $(selector).addClass('active'),
             transition = $aside.data('transition'),// push overlay  reveal
             position = $aside.data('position') || 'left',
+            showClose = $aside.data('show-close'),
             width = $aside.width(),
             translateX = position == 'left'?width+'px':'-'+width+'px';
+        if(showClose && $aside.find('div.aside-close').length == 0){
+            $aside.append('<div class="aside-close icon close"></div>');
+        }
 
         //aside中可能需要scroll组件
         J.Element.initScroll($aside);
@@ -39,6 +43,7 @@ Jingle.Menu = (function(J,$){
             J.anim($aside,{translateX : '0%'});
             J.anim($sectionContainer,{translateX : translateX});
         }
+        $('#section_container_mask').show();
         J.hasMenuOpen = true;
     }
     var hideMenu = function(duration,callback){
@@ -61,6 +66,8 @@ Jingle.Menu = (function(J,$){
             J.anim($aside,{translateX : translateX},duration);
             J.anim($sectionContainer,{translateX : '0'},duration,_finishTransition);
         }
+
+        $('#section_container_mask').hide();
     }
     return {
         init : init,

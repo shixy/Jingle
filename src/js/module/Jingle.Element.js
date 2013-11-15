@@ -4,7 +4,7 @@
 Jingle.Element = (function(J,$){
     var SELECTOR  = {
         'icon' : '[data-icon]',
-        'scroll' : '[data-scroll="true"]',//可多次init，todo 将其作为一个单独module处理
+        'scroll' : '[data-scroll="true"]',
         'toggle' : '.toggle',
         'range' : '[data-rangeinput]',
         'progress' : '[data-progress]',
@@ -51,7 +51,7 @@ Jingle.Element = (function(J,$){
 
     var _init_toggle = function(el){
         var $el = $(el),$input;
-        if($el.has('div.toggle-handle')){//已经初始化
+        if($el.find('div.toggle-handle').length>0){//已经初始化
             return;
         }
         var name = $el.attr('name');
@@ -100,37 +100,39 @@ Jingle.Element = (function(J,$){
     }
 
     var _init_progress = function(el){
-        var $el = $(el);
+        var $el = $(el),$bar;
         var progress = parseFloat($el.data('progress'))+'%';
         var title = $el.data('title') || '';
-        if(!$el.has('div.bar')){
-            $el.append('<div class="bar"></div>');
+        $bar = $el.find('div.bar');
+        if($bar.length == 0){
+            $bar = $('<div class="bar"></div>').appendTo($el);
         }
-        $el.find('div.bar').width(progress).text(title+progress);
+        $bar.width(progress).text(title+progress);
         if(progress == '100%'){
             $bar.css('border-radius','10px');
         }
     }
     var _init_count = function(el){
-        var $el = $(el);
+        var $el = $(el),$count;
         var count = parseInt($el.data('count'));
         var orient = $el.data('orient');
         var className = (orient == 'left')?'left':'';
-        var markup = '<span class="count '+className+'">'+count+'</span>'
-        if($el.has('span.count')){
-            $el.find('span.count').text(count);//更新数字
+        var markup = '<span class="count '+className+'">'+count+'</span>';
+        $count = $el.find('span.count');
+        if($count.length>0){
+            $count.text(count);//更新数字
         }else{
-            $el.append(markup);
+            $count = markup.appendTo($el);
         }
         if(count == 0){
-            $('.count',el).hide();
+            $count.hide();
         }
     }
 
     var _init_checkbox = function(el){
         var $el = $(el);
         var value = $el.data('checkbox');
-        if($el.has('i.icon')){
+        if($el.find('i.icon').length>0){
             return;
         }
         $el.prepend('<i class="icon checkbox-'+value+'"></i>');

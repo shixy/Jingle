@@ -56,8 +56,9 @@
             html += _renderBody(currentDate);
             html += '</div></div>'
             $el.html(html);
-            $yearText = $el.find('span:eq(0)');
-            $monthText = $el.find('span:eq(1)');
+            var $span = $el.find('span');
+            $yearText = $span.eq(0);
+            $monthText = $span.eq(1);
             $calendarBody = $el.find('.jingle-calendar-body');
         }
 
