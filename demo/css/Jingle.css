@@ -1352,7 +1352,6 @@ header .control-group{
      ******************************
 
 **/
-
 aside{
     position: absolute;
     width: 264px;
@@ -1371,6 +1370,16 @@ aside{
     bottom: 0;
     background-color: #000;
     z-index: 3;
+}
+#section_container_mask{
+    position: absolute;
+    overflow: hidden;
+    top:0;
+    left:0;
+    right:0;
+    bottom: 0;
+    z-index: 10;
+    display: none;
 }
 
 section{
