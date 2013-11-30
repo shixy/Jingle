@@ -47,7 +47,7 @@ Jingle.Service = (function(J,$){
      * @private
      */
     var _getCache = function(key){
-         return JSON.parse(localStorage.getItem(GET_KEY_PREFIX+key));
+         return JSON.parse(window.localStorage.getItem(GET_KEY_PREFIX+key));
     }
     /**
      * 缓存数据到本地
@@ -58,7 +58,7 @@ Jingle.Service = (function(J,$){
             data : result,
             cacheTime : new Date()
         }
-        localStorage.setItem(GET_KEY_PREFIX+key,JSON.stringify(data));
+        window.localStorage.setItem(GET_KEY_PREFIX+key,JSON.stringify(data));
     }
 
     /**
@@ -74,14 +74,14 @@ Jingle.Service = (function(J,$){
             data : result,
             createdTime : new Date()
         }
-        localStorage.setItem(UNPOST_KEY,JSON.stringify(data));
+        window.localStorage.setItem(UNPOST_KEY,JSON.stringify(data));
     }
     /**
      *  获取尚未同步的post数据
      * @param url  没有就返回所有未同步的数据
      */
     var getUnPostData = function(url){
-        var data = JSON.parse(localStorage.getItem(UNPOST_KEY));
+        var data = JSON.parse(window.localStorage.getItem(UNPOST_KEY));
         return (data && url ) ? data[url] : data;
     }
     /**
@@ -92,9 +92,9 @@ Jingle.Service = (function(J,$){
         if(url){
             var data = getUnPostData();
             delete data[url];
-            localStorage.setItem(UNPOST_KEY,JSON.stringify(data));
+            window.localStorage.setItem(UNPOST_KEY,JSON.stringify(data));
         }else{
-            localStorage.removeItem(UNPOST_KEY);
+            window.localStorage.removeItem(UNPOST_KEY);
         }
     }
 

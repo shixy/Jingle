@@ -23,16 +23,22 @@
         //滚动组件使用频繁，缓存起来节省开销
         if(scrollId && scrollCache[scrollId]){
             scroll = scrollCache[scrollId];
-            $.extend(scroll.options,opts)
-            scroll.refresh();
+            $.extend(scroll.scroller.options,opts)
+            scroll.scroller.refresh();
+            return scroll;
         }else{
             scrollId = '_jscroll_'+index++;
             $el.data('_jscroll_',scrollId);
             $.extend(options,opts);
-            scroll = new iScroll($el[0],options);
-            scrollCache[scrollId] = scroll;
-        }
-        return scroll;
+            scroller = new iScroll($el[0],options);
+            return scrollCache[scrollId] = {
+                scroller : scroller,
+                destroy : function(){
+                    scroller.destroy();
+                    delete scrollCache[scrollId];
+                }
+            };
+        };
     }
 })(Jingle,Zepto);
 

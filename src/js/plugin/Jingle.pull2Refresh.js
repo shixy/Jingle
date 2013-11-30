@@ -106,7 +106,8 @@
         //run
         _init(options);
         iscroll = _excuteScroll(options);
-        this.iscroll = iscroll;
+        return iscroll;
+
     }
 
     /**
@@ -117,19 +118,27 @@
      */
     J.Refresh = function(selector,type,callback){
         var el,jRefreshId;
-        if(typeof selector === 'object'){
+        if(selector.selector){
             el = $(selector.selector)
         }else{
             el = $(selector);
         }
         jRefreshId = el.data('_jrefresh_');
-        //因上拉下拉可能会使用的比较频繁，故缓存起来节省开销
+        //因上拉下拉可能会使用的比较频繁，故缓存起来节省开销,亦可防止重复绑定
         if(jRefreshId && refreshCache[jRefreshId]){
             return refreshCache[jRefreshId];
         }else{
             jRefreshId = '_jrefresh_'+index++;
             el.data('_jrefresh_',jRefreshId);
-            return refreshCache[jRefreshId] = new Refresh(selector,type,callback);
+            var refresh = new Refresh(selector,type,callback);
+            return refreshCache[jRefreshId] = {
+                scroller : refresh.scroller,
+                destroy : function(){
+                    delete refreshCache[jRefreshId];
+                    refresh.destroy();
+                    $('.refresh-container',selector).remove();
+                }
+            };
         }
     }
 })(Jingle,Zepto);

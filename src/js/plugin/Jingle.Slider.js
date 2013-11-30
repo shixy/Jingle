@@ -27,8 +27,6 @@
         }else{
             wrapper = $(selector);
         }
-
-
         /**
          * 初始化容器大小
          */
@@ -95,9 +93,11 @@
                 '-webkit-transition-duration':duration + 'ms',
                 '-webkit-transform':'translate3D(' + -(i * slideWidth) + 'px,0,0)'
             });
-            index = i;
-            if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
-            afterSlide(index);
+            if(index != i){
+                index = i;
+                if(dots) $(dots.find('li').get(index)).addClass('active').siblings().removeClass('active');
+                afterSlide(index);
+            }
         };
 
         /**

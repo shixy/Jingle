@@ -273,6 +273,7 @@ aside > *{
 }
 aside>.header{
     overflow: hidden;
+    height: 44px;
     line-height: 44px;
     border-bottom: 1px solid #000;
     background-color: #393939;
@@ -1391,6 +1392,8 @@ section{
     display: none;
     background-color: #fff;
     z-index: 4;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 section.active{
     z-index: 6 ;
@@ -1431,6 +1434,7 @@ header{
     top:44px;
     height: 30px;
     line-height: 30px;
+    font-size: .9em;
 }
 footer{
     bottom: 0;

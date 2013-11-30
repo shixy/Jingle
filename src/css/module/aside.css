@@ -44,6 +44,7 @@ aside > *{
 }
 aside>.header{
     overflow: hidden;
+    height: 44px;
     line-height: 44px;
     border-bottom: 1px solid #000;
     background-color: #393939;
