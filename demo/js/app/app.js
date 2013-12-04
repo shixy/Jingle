@@ -74,4 +74,5 @@ $(function () {
     Jingle.launch({
         showPageLoading : true
     });
+    J.Transition.add('flip','slideLeftOut','flipOut','slideRightOut','flipIn');
 })

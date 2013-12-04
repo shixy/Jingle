@@ -15,7 +15,7 @@ body {
     -webkit-touch-callout: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     -webkit-text-size-adjust:none;
-    background-color: #222;
+   /* background-color: #222;*/
     font: 16px/1.25 "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: bold;
     letter-spacing: -0.05em;
@@ -134,25 +134,26 @@ sub,sup{
     background-color: #3498DB !important;
     color: #fff;
 }
+/****  for page ***/
+@-webkit-keyframes emptyAnim{
+    0% { -webkit-transform: scale(1)}
+	100% { -webkit-transform:scale(1)}
+}
 @-webkit-keyframes slideLeftIn {
 	0% { -webkit-transform: translate3d(100%,0,0)}
 	100% { -webkit-transform: translate3d(0,0,0)}
 }
 @-webkit-keyframes slideLeftOut {
-	/*0% { -webkit-transform: translate3d(0,0,0)}
-	100% { -webkit-transform: translate3d(-100%,0,0)}*/
-	0% { -webkit-transform: scale(1)}
-	100% { -webkit-transform:scale(.7);opacity:.5}
+	0% { -webkit-transform: translate3d(0,0,0)}
+	100% { -webkit-transform: translate3d(-100%,0,0)}
 }
 @-webkit-keyframes slideRightIn {
 	0% { -webkit-transform: translate3d(-100%,0,0)}
 	100% { -webkit-transform: translate3d(0%,0,0) }
 }
 @-webkit-keyframes slideRightOut {
-	/*0% { -webkit-transform: translate3d(0%,0,0)}
-	100% { -webkit-transform: translate3d(100%,0,0)}*/
-	0% { -webkit-transform: scale(1)}
-	100% { -webkit-transform:scale(.7);opacity:.5}
+	0% { -webkit-transform: translate3d(0%,0,0)}
+	100% { -webkit-transform: translate3d(100%,0,0)}
 }
 @-webkit-keyframes scaleIn {
 	0% {opacity: 0;-webkit-transform: scale(.5)}
@@ -175,14 +176,18 @@ sub,sup{
 	100% {-webkit-transform: translate3d(0,100%,0)}
 }
 @-webkit-keyframes slideUpIn {
-	0% {-webkit-transform: translate3d(0,100%,0)}
+	0% {-webkit-transform: translate3d(0,90%,0)}
 	100% {-webkit-transform: translate3d(0,0,0)}
 }
 
-section{
-    -webkit-animation-duration: 300ms;
+section.anim{
+    -webkit-animation-duration: 250ms;
     -webkit-animation-fill-mode: both;
-    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out
+}
+.empty{
+    z-index: 4 !important;
+    -webkit-animation-name: emptyAnim;
 }
 
 .slideLeftOut{
@@ -210,11 +215,13 @@ section{
     -webkit-animation-name: slideDownOut;
 }
 .slideUpIn{
+    z-index: 10;
     -webkit-animation-name: slideUpIn;
 }
 .slideUpOut{
     -webkit-animation-name: slideUpOut;
 }
+/******** for calendar *******/
 @-webkit-keyframes slideLeftRound {
 	0% { -webkit-transform: translate3d(0%,0,0)}
 	40% { -webkit-transform: translate3d(-40%,0,0)}
@@ -226,6 +233,19 @@ section{
 	40% { -webkit-transform: translate3d(40%,0,0)}
 	41% { -webkit-transform: translate3d(-60%,0,0)}
 	100% { -webkit-transform: translate3d(0%,0,0)}
+}
+/********** for popup  toast **********/
+@-webkit-keyframes bounceIn {
+	0% {opacity: 0;-webkit-transform: scale(.3);}
+	50% {opacity: 1;-webkit-transform: scale(1.05);}
+	70% {-webkit-transform: scale(.9);}
+	100% {-webkit-transform: scale(1);}
+}
+@-webkit-keyframes bounceOut {
+	0% {-webkit-transform: scale(1);}
+	25% {-webkit-transform: scale(.95);}
+	50% {opacity: 1;-webkit-transform: scale(1.1);}
+	100% {opacity: 0;-webkit-transform: scale(.3);}
 }
 aside[data-position="left"]{
     left:0;
@@ -273,6 +293,7 @@ aside > *{
 }
 aside>.header{
     overflow: hidden;
+    height: 44px;
     line-height: 44px;
     border-bottom: 1px solid #000;
     background-color: #393939;
@@ -1388,15 +1409,25 @@ section{
     right: 0;
     bottom: 0;
     left: 0;
-    display: none;
     background-color: #fff;
     z-index: 4;
+    overflow:hidden;
+    display: none;
+}
+section.anim:after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0
 }
 section.active{
     z-index: 6 ;
     display: block;
 }
-section.activing{
+section.animating{
     z-index: 5 ;
     display: block;
 }
@@ -1431,6 +1462,7 @@ header{
     top:44px;
     height: 30px;
     line-height: 30px;
+    font-size: .9em;
 }
 footer{
     bottom: 0;
