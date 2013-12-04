@@ -1,22 +1,23 @@
+/****  for page ***/
+@-webkit-keyframes emptyAnim{
+    0% { -webkit-transform: scale(1)}
+	100% { -webkit-transform:scale(1)}
+}
 @-webkit-keyframes slideLeftIn {
 	0% { -webkit-transform: translate3d(100%,0,0)}
 	100% { -webkit-transform: translate3d(0,0,0)}
 }
 @-webkit-keyframes slideLeftOut {
-	/*0% { -webkit-transform: translate3d(0,0,0)}
-	100% { -webkit-transform: translate3d(-100%,0,0)}*/
-	0% { -webkit-transform: scale(1)}
-	100% { -webkit-transform:scale(.7);opacity:.5}
+	0% { -webkit-transform: translate3d(0,0,0)}
+	100% { -webkit-transform: translate3d(-100%,0,0)}
 }
 @-webkit-keyframes slideRightIn {
 	0% { -webkit-transform: translate3d(-100%,0,0)}
 	100% { -webkit-transform: translate3d(0%,0,0) }
 }
 @-webkit-keyframes slideRightOut {
-	/*0% { -webkit-transform: translate3d(0%,0,0)}
-	100% { -webkit-transform: translate3d(100%,0,0)}*/
-	0% { -webkit-transform: scale(1)}
-	100% { -webkit-transform:scale(.7);opacity:.5}
+	0% { -webkit-transform: translate3d(0%,0,0)}
+	100% { -webkit-transform: translate3d(100%,0,0)}
 }
 @-webkit-keyframes scaleIn {
 	0% {opacity: 0;-webkit-transform: scale(.5)}
@@ -39,14 +40,18 @@
 	100% {-webkit-transform: translate3d(0,100%,0)}
 }
 @-webkit-keyframes slideUpIn {
-	0% {-webkit-transform: translate3d(0,100%,0)}
+	0% {-webkit-transform: translate3d(0,90%,0)}
 	100% {-webkit-transform: translate3d(0,0,0)}
 }
 
-section{
-    -webkit-animation-duration: 300ms;
+section.anim{
+    -webkit-animation-duration: 250ms;
     -webkit-animation-fill-mode: both;
-    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-timing-function: ease-in-out
+}
+.empty{
+    z-index: 4 !important;
+    -webkit-animation-name: emptyAnim;
 }
 
 .slideLeftOut{
@@ -74,11 +79,13 @@ section{
     -webkit-animation-name: slideDownOut;
 }
 .slideUpIn{
+    z-index: 10;
     -webkit-animation-name: slideUpIn;
 }
 .slideUpOut{
     -webkit-animation-name: slideUpOut;
 }
+/******** for calendar *******/
 @-webkit-keyframes slideLeftRound {
 	0% { -webkit-transform: translate3d(0%,0,0)}
 	40% { -webkit-transform: translate3d(-40%,0,0)}
@@ -90,4 +97,17 @@ section{
 	40% { -webkit-transform: translate3d(40%,0,0)}
 	41% { -webkit-transform: translate3d(-60%,0,0)}
 	100% { -webkit-transform: translate3d(0%,0,0)}
+}
+/********** for popup  toast **********/
+@-webkit-keyframes bounceIn {
+	0% {opacity: 0;-webkit-transform: scale(.3);}
+	50% {opacity: 1;-webkit-transform: scale(1.05);}
+	70% {-webkit-transform: scale(.9);}
+	100% {-webkit-transform: scale(1);}
+}
+@-webkit-keyframes bounceOut {
+	0% {-webkit-transform: scale(1);}
+	25% {-webkit-transform: scale(.95);}
+	50% {opacity: 1;-webkit-transform: scale(1.1);}
+	100% {opacity: 0;-webkit-transform: scale(.3);}
 }

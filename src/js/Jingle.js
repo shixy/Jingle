@@ -8,8 +8,8 @@
         version : '0.1',
         settings : {
             transitionType : 'slide',//page默认动画效果
-            transitionTime : 200,//自定义动画时的默认动画时间(非page转场动画时间)
-            transitionTimingFunc : 'linear',//自定义动画时的默认动画函数(非page转场动画函数)
+            transitionTime : 250,//自定义动画时的默认动画时间(非page转场动画时间)
+            transitionTimingFunc : 'ease-in',//自定义动画时的默认动画函数(非page转场动画函数)
             showWelcome : true,//是否显示欢迎界面
             showPageLoading : false,//加载page时，是否显示遮罩
             basePagePath : 'html/',//page默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
@@ -28,8 +28,8 @@
             if(!hasShowWelcome){
                 this.showWelcome();
             }
-            this.Router.init();
             this.Element.init();
+            this.Router.init();
             this.Menu.init();
             this.Selected.init();
         },

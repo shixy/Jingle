@@ -48,17 +48,25 @@ section{
     right: 0;
     bottom: 0;
     left: 0;
-    display: none;
     background-color: #fff;
     z-index: 4;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
+    overflow:hidden;
+    display: none;
+}
+section.anim:after {
+    content: "";
+    position: absolute;
+    display: block;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0
 }
 section.active{
     z-index: 6 ;
     display: block;
 }
-section.activing{
+section.animating{
     z-index: 5 ;
     display: block;
 }

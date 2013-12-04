@@ -8,8 +8,8 @@
         version : '0.1',
         settings : {
             transitionType : 'slide',//page默认动画效果
-            transitionTime : 200,//自定义动画时的默认动画时间(非page转场动画时间)
-            transitionTimingFunc : 'linear',//自定义动画时的默认动画函数(非page转场动画函数)
+            transitionTime : 250,//自定义动画时的默认动画时间(非page转场动画时间)
+            transitionTimingFunc : 'ease-in',//自定义动画时的默认动画函数(非page转场动画函数)
             showWelcome : true,//是否显示欢迎界面
             showPageLoading : false,//加载page时，是否显示遮罩
             basePagePath : 'html/',//page默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
@@ -28,8 +28,8 @@
             if(!hasShowWelcome){
                 this.showWelcome();
             }
-            this.Router.init();
             this.Element.init();
+            this.Router.init();
             this.Menu.init();
             this.Selected.init();
         },
@@ -236,12 +236,12 @@ Jingle.Element = (function(J,$){
         var count = parseInt($el.data('count'));
         var orient = $el.data('orient');
         var className = (orient == 'left')?'left':'';
-        var markup = '<span class="count '+className+'">'+count+'</span>';
+        var $markup = $('<span class="count '+className+'">'+count+'</span>');
         $count = $el.find('span.count');
         if($count.length>0){
             $count.text(count);//更新数字
         }else{
-            $count = markup.appendTo($el);
+            $count = $markup.appendTo($el);
         }
         if(count == 0){
             $count.hide();
@@ -466,7 +466,7 @@ Jingle.Router = (function(J,$){
     var _initIndex = function(){
         var $section = $('#section_container section.active');
         add2History('#'+$section.attr('id'));
-        $section.trigger('pageinit').trigger('pageshow').data('init',true);
+        $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
     }
 
     /**
@@ -559,7 +559,7 @@ Jingle.Router = (function(J,$){
 
     return {
         init : init,
-        turnTo : _showSection,
+        goTo : _showSection,
         showArticle : _showArticle,
         back : back
     }
@@ -870,24 +870,17 @@ Jingle.Transition = (function(J,$){
         animationClass = {
         //[[currentOut,targetIn],[currentOut,targetIn]]
         slide : [['slideLeftOut','slideLeftIn'],['slideRightOut','slideRightIn']],
+        cover : [['','slideLeftIn'],['slideRightOut','']],
         slideUp : [['','slideUpIn'],['slideDownOut','']],
         slideDown : [['','slideDownIn'],['slideUpOut','']],
-        scale : [['','scaleIn'],['scaleOut','']]
+        popup : [['','scaleIn'],['scaleOut','']]
         };
 
     var _doTransition = function(){
-        var c_class = transitionName[0] ,t_class = transitionName[1],tmpSection = $target;
-        if(t_class == ''){
-            t_class = ' activing ' + t_class;
-            c_class = ' active ' + c_class;
-            tmpSection = $current;
-        }else{
-            t_class = ' active ' + t_class;
-            c_class = ' activing ' + c_class;
-        }
-        tmpSection.bind('webkitAnimationEnd.jingle', _finishTransition);
-        $current.attr('class',c_class);
-        $target.attr('class',t_class);
+        var c_class = transitionName[0]||'empty' ,t_class = transitionName[1]||'empty';
+        $current.bind('webkitAnimationEnd.jingle', _finishTransition);
+        $current.addClass('anim '+ c_class);
+        $target.addClass('anim animating '+ t_class);
     }
     var _finishTransition = function() {
         $current.off('webkitAnimationEnd.jingle');
@@ -919,6 +912,8 @@ Jingle.Transition = (function(J,$){
      * @param back  是否为后退
      */
     var run = function(current,target,back){
+        //关闭键盘
+        $(':focus').trigger('blur');
         isBack = back;
         $current = $(current);
         $target = $(target);
@@ -986,7 +981,7 @@ Jingle.Popup = (function(J,$){
         ANIM = {
             top : ['slideDownIn','slideUpOut'],
             bottom : ['slideUpIn','slideDownOut'],
-            defaultAnim : ['scaleIn','scaleOut']
+            defaultAnim : ['bounceIn','bounceOut']
         },
         TEMPLATE = {
             alert : '<div class="popup-title">{title}</div><div class="popup-content">{content}</div><div id="popup_btn_container"><a data-target="closePopup" data-icon="checkmark">{ok}</a></div>',
@@ -1080,7 +1075,7 @@ Jingle.Popup = (function(J,$){
         }
         J.Element.init(_popup);
         if(settings.animation){
-            J.anim(_popup,transition[0]);
+            J.anim(_popup,transition[0],500);
         }
         J.hasPopupOpen = true;
     }

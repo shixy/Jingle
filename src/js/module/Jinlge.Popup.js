@@ -34,7 +34,7 @@ Jingle.Popup = (function(J,$){
         ANIM = {
             top : ['slideDownIn','slideUpOut'],
             bottom : ['slideUpIn','slideDownOut'],
-            defaultAnim : ['scaleIn','scaleOut']
+            defaultAnim : ['bounceIn','bounceOut']
         },
         TEMPLATE = {
             alert : '<div class="popup-title">{title}</div><div class="popup-content">{content}</div><div id="popup_btn_container"><a data-target="closePopup" data-icon="checkmark">{ok}</a></div>',
@@ -128,7 +128,7 @@ Jingle.Popup = (function(J,$){
         }
         J.Element.init(_popup);
         if(settings.animation){
-            J.anim(_popup,transition[0]);
+            J.anim(_popup,transition[0],500);
         }
         J.hasPopupOpen = true;
     }

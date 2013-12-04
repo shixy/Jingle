@@ -34,7 +34,7 @@ Jingle.Router = (function(J,$){
     var _initIndex = function(){
         var $section = $('#section_container section.active');
         add2History('#'+$section.attr('id'));
-        $section.trigger('pageinit').trigger('pageshow').data('init',true);
+        $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
     }
 
     /**
@@ -127,7 +127,7 @@ Jingle.Router = (function(J,$){
 
     return {
         init : init,
-        turnTo : _showSection,
+        goTo : _showSection,
         showArticle : _showArticle,
         back : back
     }

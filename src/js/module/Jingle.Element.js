@@ -117,12 +117,12 @@ Jingle.Element = (function(J,$){
         var count = parseInt($el.data('count'));
         var orient = $el.data('orient');
         var className = (orient == 'left')?'left':'';
-        var markup = '<span class="count '+className+'">'+count+'</span>';
+        var $markup = $('<span class="count '+className+'">'+count+'</span>');
         $count = $el.find('span.count');
         if($count.length>0){
             $count.text(count);//更新数字
         }else{
-            $count = markup.appendTo($el);
+            $count = $markup.appendTo($el);
         }
         if(count == 0){
             $count.hide();

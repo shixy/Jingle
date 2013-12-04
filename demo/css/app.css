@@ -1,6 +1,18 @@
 .indented > * {
     margin: 5px 10px;
 }
+.demo-list li{
+    display: -webkit-box;
+}
+.demo-list span.icon{
+    position: inherit;
+    font-size: 40px;
+    color: #3498DB;
+    padding: 0 10px;
+}
+.demo-list a{
+    -webkit-box-flex:1;
+}
 .demo-btn-group{
     width: auto;
     height: auto;
@@ -34,4 +46,23 @@
     position: absolute;
     left: 0;
     top:15px;
+}
+
+@-webkit-keyframes flipIn {
+    0% { -webkit-transform: perspective(1000px) rotateY(90deg);opacity: 0;}
+    100% {-webkit-transform: perspective(1000px) rotateY(0deg); opacity: 1;}
+}
+.flipIn {
+    -webkit-backface-visibility: visible !important;
+    -webkit-animation-name: flipIn;
+    -webkit-transform-origin: top left;
+}
+@-webkit-keyframes flipOut {
+    0% { -webkit-transform: perspective(1000px) rotateY(90deg);opacity: 0;}
+    100% {-webkit-transform: perspective(1000px) rotateY(0deg); opacity: 1;}
+}
+.flipOut {
+    -webkit-animation-name: flipOut;
+    -webkit-backface-visibility: visible !important;
+    -webkit-transform-origin: top right;
 }
