@@ -98,7 +98,7 @@
         showWelcome : function(){
             if(!J.settings.showWelcome)return;
             $.ajax({
-                url : J.settings.sectionPath+'welcome.html',
+                url : J.settings.basePagePath+'welcome.html',
                 timeout : 5000,
                 async : false,
                 success : function(html){
