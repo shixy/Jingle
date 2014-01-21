@@ -113,6 +113,27 @@
                 $(this).remove();
                 window.localStorage.setItem('hasShowWelcome',true);
             })
+        },
+        parseHash : function(hash){
+            var tag,query,param;
+            var arr = hash.split('?');
+            tag = arr[0];
+            if(arr.length>1){
+                var seg,s;
+                query = arr[1];
+                seg = query.split('&');
+                for(var i=0;i<seg.lenth;i++){
+                    if(!seg[i])continue;
+                    s = seg[i].split('=');
+                    param[s[0]] = s[1];
+                }
+            }
+            return {
+                hash : hash,
+                tag : tag,
+                param : query,
+                param : param
+            }
         }
     };
     window.Jingle = window.J = Jingle;
@@ -386,6 +407,11 @@ Jingle.Page = (function(J,$){
      * ajax远程加载页面
      */
     var loadPage = function(hash){
+        var param = {};
+        if($.type(hash) == 'object'){
+            hash = hash.tag;
+            param = hash.param;
+        }
         var id = _formatHash(hash);
         //优先从remotePage中寻找是否有对应的url,没有则根据id自动从basePagePath中装载
         var url = J.settings.remotePage[id]||J.settings.basePagePath+id+'.html'
@@ -400,6 +426,7 @@ Jingle.Page = (function(J,$){
             url : url,
             timeout : 10000,
             async : false,
+            data : param,
             success : function(html){
                 if(J.settings.showPageLoading){
                     J.hideMask();
@@ -464,21 +491,24 @@ Jingle.Router = (function(J,$){
     }
 
     var _initIndex = function(){
+        var currentHash = location.hash;
         var $section = $('#section_container section.active');
         add2History('#'+$section.attr('id'));
         $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
+        _showSection(currentHash);//跳转到指定的页面
     }
 
     /**
      * 处理浏览器的后退事件
      * 前进事件不做处理
-     * //TODO 处理menu popup
      * @private
      */
     var _popstateHandler = function(e){
         if(e.state && e.state.hash){
             var hash = e.state.hash;
-            if(hash === _history[1]){//存在历史记录，证明是后退事件
+            if(_history[1] && hash === _history[1].hash){//存在历史记录，证明是后退事件
+                J.Menu.hide();//关闭当前页面的菜单
+                J.Popup.close();//关闭当前页面的弹出窗口
                 back();
             }else{//其他认为是非法后退或者前进
                 return;
@@ -521,18 +551,19 @@ Jingle.Router = (function(J,$){
             });
             return;
         }
-        if(_history[0] === hash)return;
+        var hashObj = J.parseHash(hash);
+        if(_history[0].tag === hashObj.tag)return;
         add2History(hash);
-        if($(hash).length === 0){//当前dom树中不存在
+        if($(hashObj.tag).length === 0){//当前dom树中不存在
             //同步加载模板
-            J.Page.load(hash);
+            J.Page.load(hashObj);
             //TODO 为了性能要求，可根据配置只保留N个page
         }
-        _changePage(_history[1],hash);
+        _changePage(_history[1].tag,hashObj.tag);
     }
     var back = function(){
-        _changePage(_history.shift(),_history[0],true);
-        window.history.replaceState({hash:_history[0]},'',_history[0]);
+        _changePage(_history.shift().tag,_history[0].tag,true)
+        //window.history.replaceState(_history[0],'',_history[0].hash);
     }
     var _changePage = function(current,target,isBack){
         J.Transition.run(current,target,isBack);
@@ -541,8 +572,9 @@ Jingle.Router = (function(J,$){
      * 缓存访问记录
      */
     var add2History = function(hash){
-        _history.unshift(hash);
-        window.history.pushState({hash:hash},'',hash);
+        var hashObj = J.parseHash(hash);
+        _history.unshift(hashObj);
+        window.history.pushState(hashObj,'',hash);
     }
     var _showArticle = function(href,el){
         var article = $(href);
