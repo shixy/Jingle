@@ -35,18 +35,20 @@ Jingle.Router = (function(J,$){
         var $section = $('#section_container section.active');
         add2History('#'+$section.attr('id'));
         $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
+        //_showSection(location.href);//跳转到指定的页面
     }
 
     /**
      * 处理浏览器的后退事件
      * 前进事件不做处理
-     * //TODO 处理menu popup
      * @private
      */
     var _popstateHandler = function(e){
         if(e.state && e.state.hash){
             var hash = e.state.hash;
             if(hash === _history[1]){//存在历史记录，证明是后退事件
+                J.Menu.hide();//关闭当前页面的菜单
+                J.Popup.close();//关闭当前页面的弹出窗口
                 back();
             }else{//其他认为是非法后退或者前进
                 return;
@@ -123,6 +125,29 @@ Jingle.Router = (function(J,$){
 
     var _toggleMenu = function(hash){
         J.hasMenuOpen?J.Menu.hide():J.Menu.show(hash);
+    }
+
+    var _parseHash = function(hash){
+        //#index_section?a=1&b=1
+        var hash,query,param;
+        var arr = hash.split('?');
+        var hash = arr[0];
+        if(arr.length>1){
+            var seg,s;
+            query = arr[1];
+            seg = query.split('&');
+            for(var i=0;i<seg.lenth;i++){
+                if(!seg[i])continue;
+                s = seg[i].split('=');
+                param[s[0]] = s[1];
+            }
+        }
+        return {
+            hash : hash,
+            param : query,
+            param : param
+
+        }
     }
 
     return {
