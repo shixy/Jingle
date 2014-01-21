@@ -11,6 +11,11 @@ Jingle.Page = (function(J,$){
      * ajax远程加载页面
      */
     var loadPage = function(hash){
+        var param = {};
+        if($.type(hash) == 'object'){
+            hash = hash.tag;
+            param = hash.param;
+        }
         var id = _formatHash(hash);
         //优先从remotePage中寻找是否有对应的url,没有则根据id自动从basePagePath中装载
         var url = J.settings.remotePage[id]||J.settings.basePagePath+id+'.html'
@@ -25,6 +30,7 @@ Jingle.Page = (function(J,$){
             url : url,
             timeout : 10000,
             async : false,
+            data : param,
             success : function(html){
                 if(J.settings.showPageLoading){
                     J.hideMask();
