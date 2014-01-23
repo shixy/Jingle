@@ -495,7 +495,10 @@ Jingle.Router = (function(J,$){
         var $section = $('#section_container section.active');
         add2History('#'+$section.attr('id'));
         $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
-        _showSection(currentHash);//跳转到指定的页面
+        if(currentHash != ''){
+            _showSection(currentHash);//跳转到指定的页面
+        }
+
     }
 
     /**
