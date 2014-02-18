@@ -1,7 +1,7 @@
 /**
  * 幻灯片组件
  */
-;(function(J,$){
+;(function($){
     function slider(selector,noDots){
         var afterSlide = function(){},
             beforeSlide = function(){return true},
@@ -179,4 +179,4 @@
         };
     }
     J.Slider = slider;
-})(Jingle,Zepto);
+})(J.$);

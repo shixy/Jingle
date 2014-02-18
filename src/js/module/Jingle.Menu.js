@@ -1,7 +1,7 @@
 /**
  * 侧边菜单
  */
-Jingle.Menu = (function(J,$){
+J.Menu = (function($){
     var $asideContainer,$sectionContainer,$sectionMask;
     var init = function(){
         $asideContainer = $('#aside_container');
@@ -21,6 +21,10 @@ Jingle.Menu = (function(J,$){
         });
         $asideContainer.on('tap','.aside-close',hideMenu);
     }
+    /**
+     * 打开侧边菜单
+     * @param selector css选择器或element实例
+     */
     var showMenu = function(selector){
         var $aside = $(selector).addClass('active'),
             transition = $aside.data('transition'),// push overlay  reveal
@@ -46,6 +50,11 @@ Jingle.Menu = (function(J,$){
         $('#section_container_mask').show();
         J.hasMenuOpen = true;
     }
+    /**
+     * 关闭侧边菜单
+     * @param duration {int} 动画持续时间
+     * @param callback 动画完毕回调函数
+     */
     var hideMenu = function(duration,callback){
         var $aside = $('#aside_container aside.active'),
             transition = $aside.data('transition'),// push overlay  reveal
@@ -74,4 +83,4 @@ Jingle.Menu = (function(J,$){
         show : showMenu,
         hide : hideMenu
     }
-})(Jingle,Zepto);
+})(J.$);

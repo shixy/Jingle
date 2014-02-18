@@ -1,14 +1,14 @@
 /**
  * section 页面远程加载
  */
-Jingle.Page = (function(J,$){
-
+J.Page = (function($){
     var _formatHash = function(hash){
         return hash.indexOf('#') == 0 ? hash.substr(1) : hash;
     }
-
     /**
      * ajax远程加载页面
+     * @param {string} sectionId或者#sectionId
+     * @param {string} url参数
      */
     var loadPage = function(hash){
         var param = {};
@@ -47,7 +47,6 @@ Jingle.Page = (function(J,$){
     /**
      * 同步加载文档片段
      * @param url
-     * @return {*}
      */
     var loadContent = function(url){
         return $.ajax({
@@ -60,4 +59,4 @@ Jingle.Page = (function(J,$){
         load : loadPage,
         loadContent : loadContent
     }
-})(Jingle,Zepto);
+})(J.$);

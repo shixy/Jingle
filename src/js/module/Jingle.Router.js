@@ -1,7 +1,7 @@
 /**
- * Router 控制页面的流转
+ * 路由控制器
  */
-Jingle.Router = (function(J,$){
+J.Router = (function($){
         var _history = [];
     /**
      * 初始化events、state
@@ -32,10 +32,11 @@ Jingle.Router = (function(J,$){
     }
 
     var _initIndex = function(){
+        var currentHash = location.hash;
         var $section = $('#section_container section.active');
-        add2History('#'+$section.attr('id'));
+        _add2History('#'+$section.attr('id'));
         $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
-        _showSection(location.hash);//跳转到指定的页面
+        _showSection(currentHash);//跳转到指定的页面
     }
 
     /**
@@ -80,9 +81,8 @@ Jingle.Router = (function(J,$){
     }
 
     /**
-     * 页面转场
+     * 跳转到新页面
      * @param hash 新page的'#id'
-     * @private
      */
     var _showSection  = function(hash){
         if(J.hasMenuOpen){//关闭菜单后再转场
@@ -91,9 +91,9 @@ Jingle.Router = (function(J,$){
             });
             return;
         }
-        var hashObj = _parseHash(hash);
+        var hashObj = J.Util.parseHash(hash);
         if(_history[0].tag === hashObj.tag)return;
-        add2History(hash);
+        _add2History(hash);
         if($(hashObj.tag).length === 0){//当前dom树中不存在
             //同步加载模板
             J.Page.load(hashObj);
@@ -101,6 +101,9 @@ Jingle.Router = (function(J,$){
         }
         _changePage(_history[1].tag,hashObj.tag);
     }
+    /**
+     * 后退
+     */
     var back = function(){
         _changePage(_history.shift().tag,_history[0].tag,true)
         //window.history.replaceState(_history[0],'',_history[0].hash);
@@ -111,11 +114,17 @@ Jingle.Router = (function(J,$){
     /**
      * 缓存访问记录
      */
-    var add2History = function(hash){
-        var hashObj = _parseHash(hash);
+    var _add2History = function(hash){
+        var hashObj = J.Util.parseHash(hash);
         _history.unshift(hashObj);
         window.history.pushState(hashObj,'',hash);
     }
+
+    /**
+     * 激活href对应的article
+     * @param href #id
+     * @param el 当前锚点
+     */
     var _showArticle = function(href,el){
         var article = $(href);
         if(article.hasClass('active'))return;
@@ -129,29 +138,6 @@ Jingle.Router = (function(J,$){
         J.hasMenuOpen?J.Menu.hide():J.Menu.show(hash);
     }
 
-    var _parseHash = function(hash){
-        //#index_section?a=1&b=1
-        var tag,query,param;
-        var arr = hash.split('?');
-        tag = arr[0];
-        if(arr.length>1){
-            var seg,s;
-            query = arr[1];
-            seg = query.split('&');
-            for(var i=0;i<seg.lenth;i++){
-                if(!seg[i])continue;
-                s = seg[i].split('=');
-                param[s[0]] = s[1];
-            }
-        }
-        return {
-            hash : hash,
-            tag : tag,
-            param : query,
-            param : param
-        }
-    }
-
     return {
         init : init,
         goTo : _showSection,
@@ -159,4 +145,4 @@ Jingle.Router = (function(J,$){
         back : back
     }
 
-})(Jingle,Zepto);
+})(J.$);

@@ -1,7 +1,7 @@
 /**
  *  哥屋恩动组件(iscroll)
  */
-;(function(J,$){
+;(function($){
     var scrollCache = {},index = 1;
     J.Scroll = function(selector,opts){
         var scroll,scrollId,$el = $(selector),
@@ -40,5 +40,5 @@
             };
         };
     }
-})(Jingle,Zepto);
+})(J.$);
 

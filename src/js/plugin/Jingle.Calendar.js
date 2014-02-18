@@ -1,4 +1,4 @@
-;(function(J,$){
+;(function($){
     /**
      * 日历组件
      * @param selector selector
@@ -188,4 +188,4 @@
         return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
     }
     J.Calendar = calendar;
-})(Jingle,Zepto);
+})(J.$);

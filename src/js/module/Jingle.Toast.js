@@ -1,7 +1,7 @@
 /**
  *  消息组件
  */
-Jingle.Toast = (function(J,$){
+J.Toast = (function($){
     var TOAST_DURATION = 5000;
     //定义模板
     var TEMPLATE = {
@@ -51,4 +51,4 @@ Jingle.Toast = (function(J,$){
         show : show,
         hide : hide
     }
-})(Jingle,Zepto);
+})(J.$);

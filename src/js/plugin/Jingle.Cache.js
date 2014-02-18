@@ -2,7 +2,7 @@
  * 数据缓存
  * todo  对数据进行加密
  */
-Jingle.Cache = (function(J,$){
+J.Cache = (function($){
     var UNPOST_KEY = '_J_P_',
         GET_KEY_PREFIX = '_J_';
 
@@ -121,4 +121,4 @@ Jingle.Cache = (function(J,$){
         clear : clear
     }
 
-})(Jingle,Zepto);
+})(J.$);

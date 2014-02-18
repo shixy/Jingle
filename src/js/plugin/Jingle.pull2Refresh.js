@@ -1,7 +1,7 @@
 /**
  * 上拉/下拉组件
  */
-;(function(J,$){
+;(function($){
     var refreshCache = {},index = 1;
     function Refresh(selector,type,callback){
         var iscroll, scroller,refreshEl,iconEl,labelEl,topOffset,isPullDown,
@@ -141,4 +141,4 @@
             };
         }
     }
-})(Jingle,Zepto);
+})(J.$);

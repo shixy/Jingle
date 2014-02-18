@@ -2,7 +2,7 @@
  * page转场动画
  * 可自定义css动画
  */
-Jingle.Transition = (function(J,$){
+J.Transition = (function($){
     var isBack,$current,$target,transitionName,
         animationClass = {
         //[[currentOut,targetIn],[currentOut,targetIn]]
@@ -81,4 +81,4 @@ Jingle.Transition = (function(J,$){
         add : addAnimation
     }
 
-})(Jingle,$);
+})(J.$);

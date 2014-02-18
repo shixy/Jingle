@@ -3,7 +3,7 @@
  * 最开始是通过css3伪类 :active来实现触摸高亮，但当手指滑动时会出高亮的地方与手指触摸的地方脱节,故通过js来实现
  * data-selected="selected" 值为高亮的样式
  */
-Jingle.Selected = (function(J,$){
+J.Selected = (function($){
     var SELECTOR = '[data-selected]',
         activeEl,timer;
     var init = function(){
@@ -27,4 +27,4 @@ Jingle.Selected = (function(J,$){
     return {
         init : init
     }
-})(Jingle,Zepto)
+})(J.$)

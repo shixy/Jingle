@@ -1,7 +1,7 @@
 /**
- * 初始化一些页面组件元素
+ * 初始化页面组件元素
  */
-Jingle.Element = (function(J,$){
+J.Element = (function($){
     var SELECTOR  = {
         'icon' : '[data-icon]',
         'scroll' : '[data-scroll="true"]',
@@ -11,7 +11,11 @@ Jingle.Element = (function(J,$){
         'count' : '[data-count]',
         'checkbox' : '[data-checkbox]'
     }
-
+    /**
+     * 初始化容器内组件
+     * @param {String} 父元素的css选择器
+     * @param {Object} 父元素或者父元素的zepto实例
+     */
     var init = function(selector){
         if(!selector){
             //iscroll 必须在元素可见的情况下才能初始化
@@ -26,16 +30,24 @@ Jingle.Element = (function(J,$){
         $.map(_getMatchElements($el,SELECTOR.toggle),_init_toggle);
         $.map(_getMatchElements($el,SELECTOR.range),_init_range);
         $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
-        $.map(_getMatchElements($el,SELECTOR.count),_init_count);
+        $.map(_getMatchElements($el,SELECTOR.count),_init_badge);
         $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
     }
-    //自身与子集相结合
+    /**
+     * 自身与子集相结合
+     */
     var _getMatchElements = function($el,selector){
         return $el.find(selector).add($el.filter(selector));
     }
+    /**
+     * 初始化iscroll组件或容器内iscroll组件
+     */
     var initScroll = function(selector){
         $.map(_getMatchElements($(selector),SELECTOR.scroll),_init_scroll);
     }
+    /**
+     * 构造icon组件
+     */
     var _init_icon = function(el){
         var $el = $(el),$icon=$el.children('i.icon'),icon = $el.data('icon');
         if($icon.length > 0){//已经初始化，就更新icon
@@ -45,10 +57,9 @@ Jingle.Element = (function(J,$){
         }
 
     }
-    var _init_scroll = function(el){
-        J.Scroll(el);
-    }
-
+    /**
+     * 构造toggle切换组件
+     */
     var _init_toggle = function(el){
         var $el = $(el),$input;
         if($el.find('div.toggle-handle').length>0){//已经初始化
@@ -75,7 +86,9 @@ Jingle.Element = (function(J,$){
             $el.trigger('toggle');
         })
     }
-
+    /**
+     * 构造range滑块组件
+     */
     var _init_range = function(el){
         var $el = $(el),$input;
         var $range = $('input[type="range"]',el);
@@ -98,7 +111,9 @@ Jingle.Element = (function(J,$){
             $input.val(value);
         })
     }
-
+    /**
+     * 构造progress组件
+     */
     var _init_progress = function(el){
         var $el = $(el),$bar;
         var progress = parseFloat($el.data('progress'))+'%';
@@ -112,7 +127,10 @@ Jingle.Element = (function(J,$){
             $bar.css('border-radius','10px');
         }
     }
-    var _init_count = function(el){
+    /**
+     * 构造count组件
+     */
+    var _init_badge = function(el){
         var $el = $(el),$count;
         var count = parseInt($el.data('count'));
         var orient = $el.data('orient');
@@ -147,33 +165,12 @@ Jingle.Element = (function(J,$){
     }
 
     return {
-        /**
-         * 初始化容器内组件
-         */
         init : init,
-        /**
-         * 构造icon组件
-         */
         initIcon : _init_icon,
-        /**
-         * 构造toggle组件
-         */
         initToggle : _init_toggle,
-        /**
-         * 构造progress组件
-         */
         initProgress : _init_progress,
-        /**
-         * 构造range组件
-         */
         initRange : _init_range,
-        /**
-         * 构造count组件
-         */
-        initCount : _init_count,
-        /**
-         * 初始化iscroll组件或容器内iscroll组件
-         */
+        initBadge : _init_badge,
         initScroll : initScroll
     }
-})(Jingle,Zepto);
+})(J.$);

@@ -1,7 +1,7 @@
 /**
  * 提供一些简单的模板，及artTemplate的渲染
  */
-Jingle.Template = (function(J,$){
+J.Template = (function($){
     /**
      * 背景模板
      * @param el  selector
@@ -56,4 +56,4 @@ Jingle.Template = (function(J,$){
         loading : loading,
         no_result : no_result
     }
-})(Jingle,Zepto);
+})(J.$);

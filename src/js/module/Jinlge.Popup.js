@@ -1,7 +1,7 @@
 /**
  * 弹出框组件
  */
-Jingle.Popup = (function(J,$){
+J.Popup = (function($){
     var _popup,_mask,transition,clickMask2close,
         POSITION = {
             'top':{
@@ -67,6 +67,7 @@ Jingle.Popup = (function(J,$){
             showCloseBtn : true,// 是否显示关闭按钮
             arrowDirection : undefined,//popover的箭头指向
             animation : true,//是否显示动画
+            duration : 200,//动画执行时间
             onShow : undefined //@event 在popup内容加载完毕，动画开始前触发
         }
         $.extend(settings,options);
@@ -128,7 +129,7 @@ Jingle.Popup = (function(J,$){
         }
         J.Element.init(_popup);
         if(settings.animation){
-            J.anim(_popup,transition[0],500);
+            J.anim(_popup,transition[0],settings.duration);
         }
         J.hasPopupOpen = true;
     }
@@ -271,4 +272,4 @@ Jingle.Popup = (function(J,$){
         loading : loading,
         actionsheet : actionsheet
     }
-})(Jingle,Zepto);
+})(J.$);
