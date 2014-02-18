@@ -18,6 +18,7 @@ section *页面*
 
 	data-transition:页面转场动画，默认为“slide”,
 	目前框架已内置“slideUp”，“slideDown”,"scale"，亲们可以自己编写css3动画...
+	data-remote : 远程加载页面路径，hash中附带的参数会一并解析到remoteurl中
 
 aside *侧边菜单*
 
