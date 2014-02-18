@@ -22,11 +22,9 @@ J.Transition = (function($){
     var _finishTransition = function() {
         $current.off('webkitAnimationEnd.jingle');
         $target.off('webkitAnimationEnd.jingle');
-
         //reset class
         $current.attr('class','');
         $target.attr('class','active');
-
         //add custom events
         if(!$target.data('init')){
             //触发pageinit事件
@@ -35,6 +33,11 @@ J.Transition = (function($){
         }
         //触发pagehide事件
         $current.trigger('pagehide',[isBack]);
+
+        var url = $target.data('remote');
+        if(!isBack && url){
+            J.page.loadSection(url,$target);
+        }
         //触发pageshow事件
         $target.trigger('pageshow',[isBack]);
 
