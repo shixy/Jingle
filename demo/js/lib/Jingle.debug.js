@@ -3,124 +3,57 @@
  * Released under MIT license
  * walker.shixy@gmail.com
  */
-;(function(window){
-    var Jingle = {
-        version : '0.1',
-        settings : {
-            transitionType : 'slide',//page默认动画效果
-            transitionTime : 250,//自定义动画时的默认动画时间(非page转场动画时间)
-            transitionTimingFunc : 'ease-in',//自定义动画时的默认动画函数(非page转场动画函数)
-            showWelcome : true,//是否显示欢迎界面
-            showPageLoading : false,//加载page时，是否显示遮罩
-            basePagePath : 'html/',//page默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
-            remotePage:{}//page的远程路径
-        },
-        mode : window.innerWidth < 800 ? "phone" : "tablet",
-        hasTouch : 'ontouchstart' in window,
-        hasLaunched : false,
-        launchCompleted : false,
-        hasMenuOpen : false,//是否有打开的侧边菜单
-        hasPopupOpen : false,//是否有打开的弹出框
-        isWebApp : location.protocol == 'http:',
-        launch : function(opts){
-            $.extend(this.settings,opts);
-            var hasShowWelcome = window.localStorage.getItem('hasShowWelcome');
-            if(!hasShowWelcome){
-                this.showWelcome();
-            }
-            this.Element.init();
-            this.Router.init();
-            this.Menu.init();
-            this.Selected.init();
-        },
-        /***************************** alias func ***********************************************************/
-        /**
-         * 完善zepto的动画函数
-         */
-        anim : function(el,animName,duration,ease,callback){
-            var d, e,c;
-            var len = arguments.length;
-            for(var i = 2;i<len;i++){
-                var a = arguments[i];
-                var t = $.type(a);
-                t == 'number'?(d=a):(t=='string'?(e=a):(t=='function')?(c=a):null);
-            }
-            $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
-        },
-        /**
-         * 显示loading框
-         * @param text
-         */
-        showMask : function(text){
-            J.Popup.loading(text);
-        },
-        /**
-         * 关闭loading框
-         */
-        hideMask : function(){
-            J.Popup.close(true);
-        },
-        /**
-         *  显示消息
-         * @param text
-         * @param type toast|success|error|info
-         * @param duration 持续时间，为0则不自动关闭
-         */
-        showToast : function(text,type,duration){
-            type = type || 'toast';
-            J.Toast.show(type,text,duration);
-        },
-        /**
-         * 关闭消息提示
-         */
-        hideToast : function(){
-            J.Toast.hide();
-        },
-        alert : function(title,content){
-            J.Popup.alert(title,content);
-
-        },
-        confirm : function(title,content,okCall,cancelCall){
-            J.Popup.confirm(title,content,okCall,cancelCall);
-        },
-        popup : function(options){
-            J.Popup.show(options);
-        },
-        closePopup : function(){
-            J.Popup.close();
-        },
-        popover : function(html,pos,arrowDirection,onShow){
-            J.Popup.popover(html,pos,arrowDirection,onShow);
-        },
-        tmpl : function(containerSelector,templateId,data,type){
-            J.Template.render(containerSelector,templateId,data,type);
-        },
-        showWelcome : function(){
-            if(!J.settings.showWelcome)return;
-            $.ajax({
-                url : J.settings.basePagePath+'welcome.html',
-                timeout : 5000,
-                async : false,
-                success : function(html){
-                    //添加到dom树中
-                    $('body').append(html);
-                    new J.Slider('#jingle_welcome');
-                }
-            })
-        },
-        hideWelcome : function(){
-            J.anim('#jingle_welcome','slideLeftOut',function(){
-                $(this).remove();
-                window.localStorage.setItem('hasShowWelcome',true);
-            })
+var Jingle = J = {
+    version : '0.1',
+    $ : window.Zepto,
+    //参数设置
+    settings : {
+        //page默认动画效果
+        transitionType : 'slide',
+        //自定义动画时的默认动画时间(非page转场动画时间)
+        transitionTime : 250,
+        //自定义动画时的默认动画函数(非page转场动画函数)
+        transitionTimingFunc : 'ease-in',
+        //是否显示欢迎界面
+        showWelcome : false,
+        //加载page模板时，是否显示遮罩
+        showPageLoading : false,
+        //page模板默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
+        basePagePath : 'html/',
+        //page模板的远程路径
+        remotePage:{}
+    },
+    //手机或者平板
+    mode : window.innerWidth < 800 ? "phone" : "tablet",
+    hasTouch : 'ontouchstart' in window,
+    //是否启动完成
+    launchCompleted : false,
+    //是否有打开的侧边菜单
+    hasMenuOpen : false,
+    //是否有打开的弹出框
+    hasPopupOpen : false,
+    isWebApp : location.protocol == 'http:',
+    /**
+     * 启动Jingle
+     * @param opts {object}
+     */
+    launch : function(opts){
+        $.extend(this.settings,opts);
+        var hasShowWelcome = window.localStorage.getItem('hasShowWelcome');
+        if(!hasShowWelcome && this.settings.showWelcome){
+            this.Welcome.show();
         }
-    };
-    window.Jingle = window.J = Jingle;
-})(window);
+        this.Element.init();
+        this.Router.init();
+        this.Menu.init();
+        this.Selected.init();
+    }
+};
+
 /**
- * 初始化一些页面组件元素
+ * 初始化页面组件元素
  */
-Jingle.Element = (function(J,$){
+J.Element = (function($){
     var SELECTOR  = {
         'icon' : '[data-icon]',
         'scroll' : '[data-scroll="true"]',
@@ -130,7 +63,11 @@ Jingle.Element = (function(J,$){
         'count' : '[data-count]',
         'checkbox' : '[data-checkbox]'
     }
-
+    /**
+     * 初始化容器内组件
+     * @param {String} 父元素的css选择器
+     * @param {Object} 父元素或者父元素的zepto实例
+     */
     var init = function(selector){
         if(!selector){
             //iscroll 必须在元素可见的情况下才能初始化
@@ -145,16 +82,24 @@ Jingle.Element = (function(J,$){
         $.map(_getMatchElements($el,SELECTOR.toggle),_init_toggle);
         $.map(_getMatchElements($el,SELECTOR.range),_init_range);
         $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
-        $.map(_getMatchElements($el,SELECTOR.count),_init_count);
+        $.map(_getMatchElements($el,SELECTOR.count),_init_badge);
         $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
     }
-    //自身与子集相结合
+    /**
+     * 自身与子集相结合
+     */
     var _getMatchElements = function($el,selector){
         return $el.find(selector).add($el.filter(selector));
     }
+    /**
+     * 初始化iscroll组件或容器内iscroll组件
+     */
     var initScroll = function(selector){
-        $.map(_getMatchElements($(selector),SELECTOR.scroll),_init_scroll);
+        $.map(_getMatchElements($(selector),SELECTOR.scroll),function(el){J.Scroll(el);});
     }
+    /**
+     * 构造icon组件
+     */
     var _init_icon = function(el){
         var $el = $(el),$icon=$el.children('i.icon'),icon = $el.data('icon');
         if($icon.length > 0){//已经初始化，就更新icon
@@ -164,10 +109,9 @@ Jingle.Element = (function(J,$){
         }
 
     }
-    var _init_scroll = function(el){
-        J.Scroll(el);
-    }
-
+    /**
+     * 构造toggle切换组件
+     */
     var _init_toggle = function(el){
         var $el = $(el),$input;
         if($el.find('div.toggle-handle').length>0){//已经初始化
@@ -194,7 +138,9 @@ Jingle.Element = (function(J,$){
             $el.trigger('toggle');
         })
     }
-
+    /**
+     * 构造range滑块组件
+     */
     var _init_range = function(el){
         var $el = $(el),$input;
         var $range = $('input[type="range"]',el);
@@ -217,7 +163,9 @@ Jingle.Element = (function(J,$){
             $input.val(value);
         })
     }
-
+    /**
+     * 构造progress组件
+     */
     var _init_progress = function(el){
         var $el = $(el),$bar;
         var progress = parseFloat($el.data('progress'))+'%';
@@ -231,7 +179,10 @@ Jingle.Element = (function(J,$){
             $bar.css('border-radius','10px');
         }
     }
-    var _init_count = function(el){
+    /**
+     * 构造count组件
+     */
+    var _init_badge = function(el){
         var $el = $(el),$count;
         var count = parseInt($el.data('count'));
         var orient = $el.data('orient');
@@ -266,40 +217,19 @@ Jingle.Element = (function(J,$){
     }
 
     return {
-        /**
-         * 初始化容器内组件
-         */
         init : init,
-        /**
-         * 构造icon组件
-         */
         initIcon : _init_icon,
-        /**
-         * 构造toggle组件
-         */
         initToggle : _init_toggle,
-        /**
-         * 构造progress组件
-         */
         initProgress : _init_progress,
-        /**
-         * 构造range组件
-         */
         initRange : _init_range,
-        /**
-         * 构造count组件
-         */
-        initCount : _init_count,
-        /**
-         * 初始化iscroll组件或容器内iscroll组件
-         */
+        initBadge : _init_badge,
         initScroll : initScroll
     }
-})(Jingle,Zepto);
+})(J.$);
 /**
  * 侧边菜单
  */
-Jingle.Menu = (function(J,$){
+J.Menu = (function($){
     var $asideContainer,$sectionContainer,$sectionMask;
     var init = function(){
         $asideContainer = $('#aside_container');
@@ -319,6 +249,10 @@ Jingle.Menu = (function(J,$){
         });
         $asideContainer.on('tap','.aside-close',hideMenu);
     }
+    /**
+     * 打开侧边菜单
+     * @param selector css选择器或element实例
+     */
     var showMenu = function(selector){
         var $aside = $(selector).addClass('active'),
             transition = $aside.data('transition'),// push overlay  reveal
@@ -344,6 +278,11 @@ Jingle.Menu = (function(J,$){
         $('#section_container_mask').show();
         J.hasMenuOpen = true;
     }
+    /**
+     * 关闭侧边菜单
+     * @param duration {int} 动画持续时间
+     * @param callback 动画完毕回调函数
+     */
     var hideMenu = function(duration,callback){
         var $aside = $('#aside_container aside.active'),
             transition = $aside.data('transition'),// push overlay  reveal
@@ -372,68 +311,75 @@ Jingle.Menu = (function(J,$){
         show : showMenu,
         hide : hideMenu
     }
-})(Jingle,Zepto);
+})(J.$);
 /**
  * section 页面远程加载
  */
-Jingle.Page = (function(J,$){
-
+J.Page = (function($){
     var _formatHash = function(hash){
         return hash.indexOf('#') == 0 ? hash.substr(1) : hash;
     }
-
     /**
      * ajax远程加载页面
+     * @param {string} sectionId或者#sectionId
+     * @param {string} url参数
      */
-    var loadPage = function(hash){
+    var loadSectionTpl = function(hash){
+        var param = {};
+        if($.type(hash) == 'object'){
+            hash = hash.tag;
+            param = hash.param;
+        }
         var id = _formatHash(hash);
-        //优先从remotePage中寻找是否有对应的url,没有则根据id自动从basePagePath中装载
-        var url = J.settings.remotePage[id]||J.settings.basePagePath+id+'.html'
+        //根据id自动从basePagePath中装载模板
+        var url = J.settings.basePagePath+id+'.html'
         if(!url){
             console.error(404,'页面不存在！');
             return;
         }
         if(J.settings.showPageLoading){
-            J.showMask('正在加载...');
+            J.showMask();
         }
-        $.ajax({
-            url : url,
-            timeout : 10000,
-            async : false,
-            success : function(html){
-                if(J.settings.showPageLoading){
-                    J.hideMask();
-                }
-                //添加到dom树中
-                $('#section_container').append(html);
-                //触发pageload事件
-                $('#'+id).trigger('pageload');
-                //构造组件
-                J.Element.init(hash);
-            }
-        })
+        var html = loadContent(url,param);
+        if(J.settings.showPageLoading){
+            J.hideMask();
+        }
+        //添加到dom树中
+        $('#section_container').append(html);
+        //触发pageload事件
+        $('#'+id).trigger('pageload');
+        //构造组件
+        J.Element.init(hash);
+    }
+    var loadSectionRemote = function(url,section){
+        var param = J.Util.parseHash(window.location.hash).param;
+        var html = loadContent(url,param);
+        $(section).html(html);
+        J.Element.init(section);
+
     }
     /**
      * 同步加载文档片段
      * @param url
-     * @return {*}
      */
-    var loadContent = function(url){
+    var loadContent = function(url,param){
         return $.ajax({
                 url : url,
                 timeout : 10000,
+                data : param,
                 async : false
             }).responseText;
     }
     return {
-        load : loadPage,
+        load : loadSectionTpl,
+        loadSection : loadSectionRemote,
         loadContent : loadContent
     }
-})(Jingle,Zepto);
+})(J.$);
 /**
- * Router 控制页面的流转
+ * 路由控制器
  */
-Jingle.Router = (function(J,$){
+J.Router = (function($){
         var _history = [];
     /**
      * 初始化events、state
@@ -464,21 +410,26 @@ Jingle.Router = (function(J,$){
     }
 
     var _initIndex = function(){
+        var currentHash = location.hash;
         var $section = $('#section_container section.active');
-        add2History('#'+$section.attr('id'));
+        _add2History('#'+$section.attr('id'));
         $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
+        if(currentHash != ''){
+            _showSection(currentHash);//跳转到指定的页面
+        }
     }
 
     /**
      * 处理浏览器的后退事件
      * 前进事件不做处理
-     * //TODO 处理menu popup
      * @private
      */
     var _popstateHandler = function(e){
         if(e.state && e.state.hash){
             var hash = e.state.hash;
-            if(hash === _history[1]){//存在历史记录，证明是后退事件
+            if(_history[1] && hash === _history[1].hash){//存在历史记录，证明是后退事件
+                J.Menu.hide();//关闭当前页面的菜单
+                J.Popup.close();//关闭当前页面的弹出窗口
                 back();
             }else{//其他认为是非法后退或者前进
                 return;
@@ -510,9 +461,8 @@ Jingle.Router = (function(J,$){
     }
 
     /**
-     * 页面转场
+     * 跳转到新页面
      * @param hash 新page的'#id'
-     * @private
      */
     var _showSection  = function(hash){
         if(J.hasMenuOpen){//关闭菜单后再转场
@@ -521,18 +471,22 @@ Jingle.Router = (function(J,$){
             });
             return;
         }
-        if(_history[0] === hash)return;
-        add2History(hash);
-        if($(hash).length === 0){//当前dom树中不存在
+        var hashObj = J.Util.parseHash(hash);
+        if(_history[0].tag === hashObj.tag)return;
+        _add2History(hash);
+        if($(hashObj.tag).length === 0){//当前dom树中不存在
             //同步加载模板
-            J.Page.load(hash);
+            J.Page.load(hashObj);
             //TODO 为了性能要求，可根据配置只保留N个page
         }
-        _changePage(_history[1],hash);
+        _changePage(_history[1].tag,hashObj.tag);
     }
+    /**
+     * 后退
+     */
     var back = function(){
-        _changePage(_history.shift(),_history[0],true);
-        window.history.replaceState({hash:_history[0]},'',_history[0]);
+        _changePage(_history.shift().tag,_history[0].tag,true)
+        window.history.replaceState(_history[0],'',_history[0].hash);
     }
     var _changePage = function(current,target,isBack){
         J.Transition.run(current,target,isBack);
@@ -540,10 +494,17 @@ Jingle.Router = (function(J,$){
     /**
      * 缓存访问记录
      */
-    var add2History = function(hash){
-        _history.unshift(hash);
-        window.history.pushState({hash:hash},'',hash);
+    var _add2History = function(hash){
+        var hashObj = J.Util.parseHash(hash);
+        _history.unshift(hashObj);
+        window.history.pushState(hashObj,'',hash);
     }
+
+    /**
+     * 激活href对应的article
+     * @param href #id
+     * @param el 当前锚点
+     */
     var _showArticle = function(href,el){
         var article = $(href);
         if(article.hasClass('active'))return;
@@ -564,16 +525,14 @@ Jingle.Router = (function(J,$){
         back : back
     }
 
-})(Jingle,Zepto);
+})(J.$);
 /**
  * 对zeptojs的ajax进行封装，实现离线访问
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
  */
-Jingle.Service = (function(J,$){
+J.Service = (function($){
     var UNPOST_KEY = 'JINGLE_POST_DATA',
         GET_KEY_PREFIX = 'JINGLE_GET_';
-
-
     var ajax = function(options){
         if(options.type == 'post'){
             _doPost(options);
@@ -747,11 +706,11 @@ Jingle.Service = (function(J,$){
         saveCacheData : _saveData2local,
         clear : clear
     }
-})(Jingle,Zepto);
+})(J.$);
 /**
  * 提供一些简单的模板，及artTemplate的渲染
  */
-Jingle.Template = (function(J,$){
+J.Template = (function($){
     /**
      * 背景模板
      * @param el  selector
@@ -806,11 +765,11 @@ Jingle.Template = (function(J,$){
         loading : loading,
         no_result : no_result
     }
-})(Jingle,Zepto);
+})(J.$);
 /**
  *  消息组件
  */
-Jingle.Toast = (function(J,$){
+J.Toast = (function($){
     var TOAST_DURATION = 5000;
     //定义模板
     var TEMPLATE = {
@@ -860,12 +819,12 @@ Jingle.Toast = (function(J,$){
         show : show,
         hide : hide
     }
-})(Jingle,Zepto);
+})(J.$);
 /**
  * page转场动画
  * 可自定义css动画
  */
-Jingle.Transition = (function(J,$){
+J.Transition = (function($){
     var isBack,$current,$target,transitionName,
         animationClass = {
         //[[currentOut,targetIn],[currentOut,targetIn]]
@@ -885,11 +844,9 @@ Jingle.Transition = (function(J,$){
     var _finishTransition = function() {
         $current.off('webkitAnimationEnd.jingle');
         $target.off('webkitAnimationEnd.jingle');
-
         //reset class
         $current.attr('class','');
         $target.attr('class','active');
-
         //add custom events
         if(!$target.data('init')){
             //触发pageinit事件
@@ -898,6 +855,11 @@ Jingle.Transition = (function(J,$){
         }
         //触发pagehide事件
         $current.trigger('pagehide',[isBack]);
+
+        var url = $target.data('remote');
+        if(!isBack && url){
+            J.Page.loadSection(url,$target);
+        }
         //触发pageshow事件
         $target.trigger('pageshow',[isBack]);
 
@@ -944,11 +906,187 @@ Jingle.Transition = (function(J,$){
         add : addAnimation
     }
 
-})(Jingle,$);
+})(J.$);
+/**
+ * 常用工具类
+ */
+J.Util = (function($){
+    var parseHash = function(hash){
+        var tag,query,param;
+        var arr = hash.split('?');
+        tag = arr[0];
+        if(arr.length>1){
+            var seg,s;
+            query = arr[1];
+            seg = query.split('&');
+            for(var i=0;i<seg.lenth;i++){
+                if(!seg[i])continue;
+                s = seg[i].split('=');
+                param[s[0]] = s[1];
+            }
+        }
+        return {
+            hash : hash,
+            tag : tag,
+            param : query,
+            param : param
+        }
+    }
+
+    /**
+     * 格式化date
+     * @param date
+     * @param format
+     */
+    var formatDate = function(date,format){
+        var o =
+        {
+            "M+" : date.getMonth()+1, //month
+            "d+" : date.getDate(),    //day
+            "h+" : date.getHours(),   //hour
+            "m+" : date.getMinutes(), //minute
+            "s+" : date.getSeconds(), //second
+            "q+" : Math.floor((date.getMonth()+3)/3),  //quarter
+            "S" : date.getMilliseconds() //millisecond
+        }
+        if(/(y+)/.test(format))
+            format=format.replace(RegExp.$1,(date.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(format))
+                format = format.replace(RegExp.$1,RegExp.$1.length==1 ? o[k] : ("00"+ o[k]).substr((""+ o[k]).length));
+        return format;
+    }
+
+    return {
+        parseHash : parseHash,
+        formatDate : formatDate
+    }
+
+})(J.$);
+/**
+ * 欢迎界面，可以制作酷炫吊炸天的欢迎界面哦
+ * @module Welcome
+ */
+J.Welcome = (function($){
+    /**
+     * 显示欢迎界面
+     */
+    var showWelcome = function(){
+        $.ajax({
+            url : J.settings.basePagePath+'welcome.html',
+            timeout : 5000,
+            async : false,
+            success : function(html){
+                //添加到dom树中
+                $('body').append(html);
+                new J.Slider('#jingle_welcome');
+            }
+        })
+    }
+    /**
+     * 关闭欢迎界面
+     */
+    var hideWelcome = function(){
+        J.anim('#jingle_welcome','slideLeftOut',function(){
+            $(this).remove();
+            window.localStorage.setItem('hasShowWelcome',true);
+        })
+    }
+
+    return {
+        show : showWelcome,
+        hide : hideWelcome
+    }
+})(J.$);
+/*
+ * alias func
+ * 简化一些常用方法的写法
+ ** /
+/**
+ * 完善zepto的动画函数,让参数变为可选
+ */
+J.anim  =  function(el,animName,duration,ease,callback){
+    var d, e,c;
+    var len = arguments.length;
+    for(var i = 2;i<len;i++){
+        var a = arguments[i];
+        var t = $.type(a);
+        t == 'number'?(d=a):(t=='string'?(e=a):(t=='function')?(c=a):null);
+    }
+    $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
+}
+/**
+ * 显示loading框
+ * @param text
+ */
+J.showMask = function(text){
+    J.Popup.loading(text);
+}
+/**
+ * 关闭loading框
+ */
+J.hideMask = function(){
+    J.Popup.close(true);
+}
+/**
+ *  显示消息
+ * @param text
+ * @param type toast|success|error|info
+ * @param duration 持续时间，为0则不自动关闭
+ */
+J.showToast = function(text,type,duration){
+    type = type || 'toast';
+    J.Toast.show(type,text,duration);
+}
+/**
+ * 关闭消息提示
+ */
+J.hideToast = function(){
+    J.Toast.hide();
+}
+J.alert = function(title,content){
+    J.Popup.alert(title,content);
+}
+J.confirm = function(title,content,okCall,cancelCall){
+    J.Popup.confirm(title,content,okCall,cancelCall);
+}
+/**
+ * 弹出窗口
+ * @param options
+ */
+J.popup = function(options){
+    J.Popup.show(options);
+}
+/**
+ * 关闭窗口
+ */
+J.closePopup = function(){
+    J.Popup.close();
+}
+/**
+ * 带箭头的弹出框
+ * @param html [可选]
+ * @param pos [可选]  位置
+ * @param arrowDirection [可选] 箭头方向
+ * @param onShow [可选] 显示之前执行
+ */
+J.popover = function(html,pos,arrowDirection,onShow){
+    J.Popup.popover(html,pos,arrowDirection,onShow);
+}
+/**
+ * 自动渲染模板并填充到页面
+ * @param containerSelector 欲填充的容器
+ * @param templateId 模板ID
+ * @param data 数据源
+ * @param type [可选] add|replace
+ */
+J.tmpl = function(containerSelector,templateId,data,type){
+    J.Template.render(containerSelector,templateId,data,type);
+}
 /**
  * 弹出框组件
  */
-Jingle.Popup = (function(J,$){
+J.Popup = (function($){
     var _popup,_mask,transition,clickMask2close,
         POSITION = {
             'top':{
@@ -1014,6 +1152,7 @@ Jingle.Popup = (function(J,$){
             showCloseBtn : true,// 是否显示关闭按钮
             arrowDirection : undefined,//popover的箭头指向
             animation : true,//是否显示动画
+            duration : 200,//动画执行时间
             onShow : undefined //@event 在popup内容加载完毕，动画开始前触发
         }
         $.extend(settings,options);
@@ -1075,7 +1214,7 @@ Jingle.Popup = (function(J,$){
         }
         J.Element.init(_popup);
         if(settings.animation){
-            J.anim(_popup,transition[0],500);
+            J.anim(_popup,transition[0],settings.duration);
         }
         J.hasPopupOpen = true;
     }
@@ -1218,13 +1357,13 @@ Jingle.Popup = (function(J,$){
         loading : loading,
         actionsheet : actionsheet
     }
-})(Jingle,Zepto);
+})(J.$);
 /**
  * 高亮组件
  * 最开始是通过css3伪类 :active来实现触摸高亮，但当手指滑动时会出高亮的地方与手指触摸的地方脱节,故通过js来实现
  * data-selected="selected" 值为高亮的样式
  */
-Jingle.Selected = (function(J,$){
+J.Selected = (function($){
     var SELECTOR = '[data-selected]',
         activeEl,timer;
     var init = function(){
@@ -1248,12 +1387,12 @@ Jingle.Selected = (function(J,$){
     return {
         init : init
     }
-})(Jingle,Zepto)
+})(J.$)
 /**
  * 数据缓存
  * todo  对数据进行加密
  */
-Jingle.Cache = (function(J,$){
+J.Cache = (function($){
     var UNPOST_KEY = '_J_P_',
         GET_KEY_PREFIX = '_J_';
 
@@ -1372,8 +1511,8 @@ Jingle.Cache = (function(J,$){
         clear : clear
     }
 
-})(Jingle,Zepto);
-;(function(J,$){
+})(J.$);
+;(function($){
     /**
      * 日历组件
      * @param selector selector
@@ -1563,11 +1702,11 @@ Jingle.Cache = (function(J,$){
         return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
     }
     J.Calendar = calendar;
-})(Jingle,Zepto);
+})(J.$);
 /**
  *  哥屋恩动组件(iscroll)
  */
-;(function(J,$){
+;(function($){
     var scrollCache = {},index = 1;
     J.Scroll = function(selector,opts){
         var scroll,scrollId,$el = $(selector),
@@ -1606,13 +1745,13 @@ Jingle.Cache = (function(J,$){
             };
         };
     }
-})(Jingle,Zepto);
+})(J.$);
 
 
 /**
  * 幻灯片组件
  */
-;(function(J,$){
+;(function($){
     function slider(selector,noDots){
         var afterSlide = function(){},
             beforeSlide = function(){return true},
@@ -1790,11 +1929,11 @@ Jingle.Cache = (function(J,$){
         };
     }
     J.Slider = slider;
-})(Jingle,Zepto);
+})(J.$);
 /**
  * 上拉/下拉组件
  */
-;(function(J,$){
+;(function($){
     var refreshCache = {},index = 1;
     function Refresh(selector,type,callback){
         var iscroll, scroller,refreshEl,iconEl,labelEl,topOffset,isPullDown,
@@ -1934,4 +2073,4 @@ Jingle.Cache = (function(J,$){
             };
         }
     }
-})(Jingle,Zepto);
+})(J.$);
