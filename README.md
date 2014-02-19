@@ -5,6 +5,8 @@ Jingle UI是一个基于html5、css3开发轻量级的移动webapp 框架，提�
 - 依赖zepto.js、iscroll4、artTemplate等开源类库和组件
 
 > 持续开发中，文档尚不完善，有需求的朋友可以直接看demo和源码
+> 
+> [wiki中有部分文档](https://github.com/shixy/Jingle/wiki/_pages "wiki")
 
 ###页面结构###
 	<div id="aside_container"><!---侧边栏容器--->

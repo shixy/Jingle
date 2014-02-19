@@ -146,5 +146,4 @@ J.Router = (function($){
         showArticle : _showArticle,
         back : back
     }
-
 })(J.$);

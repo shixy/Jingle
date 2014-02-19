@@ -143,7 +143,7 @@ scroll 滚动组件(下拉刷新)
  	自动装载模式：data-scroll=true
 javascript
 
-	var slider = new J.Scroll("#scrollId");
+	var scroll = new J.Scroll("#scrollId");
 html
 
 	<div id="scrollId">
