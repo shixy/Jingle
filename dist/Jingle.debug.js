@@ -486,7 +486,7 @@ J.Router = (function($){
      */
     var back = function(){
         _changePage(_history.shift().tag,_history[0].tag,true)
-        //window.history.replaceState(_history[0],'',_history[0].hash);
+        window.history.replaceState(_history[0],'',_history[0].hash);
     }
     var _changePage = function(current,target,isBack){
         J.Transition.run(current,target,isBack);
