@@ -26,7 +26,7 @@ J.Page = (function($){
         if(J.settings.showPageLoading){
             J.showMask();
         }
-        loadContent(url,param);
+        var html = loadContent(url,param);
         if(J.settings.showPageLoading){
             J.hideMask();
         }

@@ -43,7 +43,7 @@ J.Element = (function($){
      * 初始化iscroll组件或容器内iscroll组件
      */
     var initScroll = function(selector){
-        $.map(_getMatchElements($(selector),SELECTOR.scroll),_init_scroll);
+        $.map(_getMatchElements($(selector),SELECTOR.scroll),function(el){J.Scroll(el);});
     }
     /**
      * 构造icon组件

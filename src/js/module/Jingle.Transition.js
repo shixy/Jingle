@@ -36,7 +36,7 @@ J.Transition = (function($){
 
         var url = $target.data('remote');
         if(!isBack && url){
-            J.page.loadSection(url,$target);
+            J.Page.loadSection(url,$target);
         }
         //触发pageshow事件
         $target.trigger('pageshow',[isBack]);
