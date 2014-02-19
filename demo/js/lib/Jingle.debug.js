@@ -95,7 +95,7 @@ J.Element = (function($){
      * 初始化iscroll组件或容器内iscroll组件
      */
     var initScroll = function(selector){
-        $.map(_getMatchElements($(selector),SELECTOR.scroll),_init_scroll);
+        $.map(_getMatchElements($(selector),SELECTOR.scroll),function(el){J.Scroll(el);});
     }
     /**
      * 构造icon组件
@@ -324,53 +324,55 @@ J.Page = (function($){
      * @param {string} sectionId或者#sectionId
      * @param {string} url参数
      */
-    var loadPage = function(hash){
+    var loadSectionTpl = function(hash){
         var param = {};
         if($.type(hash) == 'object'){
             hash = hash.tag;
             param = hash.param;
         }
         var id = _formatHash(hash);
-        //优先从remotePage中寻找是否有对应的url,没有则根据id自动从basePagePath中装载
-        var url = J.settings.remotePage[id]||J.settings.basePagePath+id+'.html'
+        //根据id自动从basePagePath中装载模板
+        var url = J.settings.basePagePath+id+'.html'
         if(!url){
             console.error(404,'页面不存在！');
             return;
         }
         if(J.settings.showPageLoading){
-            J.showMask('正在加载...');
+            J.showMask();
         }
-        $.ajax({
-            url : url,
-            timeout : 10000,
-            async : false,
-            data : param,
-            success : function(html){
-                if(J.settings.showPageLoading){
-                    J.hideMask();
-                }
-                //添加到dom树中
-                $('#section_container').append(html);
-                //触发pageload事件
-                $('#'+id).trigger('pageload');
-                //构造组件
-                J.Element.init(hash);
-            }
-        })
+        var html = loadContent(url,param);
+        if(J.settings.showPageLoading){
+            J.hideMask();
+        }
+        //添加到dom树中
+        $('#section_container').append(html);
+        //触发pageload事件
+        $('#'+id).trigger('pageload');
+        //构造组件
+        J.Element.init(hash);
+    }
+    var loadSectionRemote = function(url,section){
+        var param = J.Util.parseHash(window.location.hash).param;
+        var html = loadContent(url,param);
+        $(section).html(html);
+        J.Element.init(section);
+
     }
     /**
      * 同步加载文档片段
      * @param url
      */
-    var loadContent = function(url){
+    var loadContent = function(url,param){
         return $.ajax({
                 url : url,
                 timeout : 10000,
+                data : param,
                 async : false
             }).responseText;
     }
     return {
-        load : loadPage,
+        load : loadSectionTpl,
+        loadSection : loadSectionRemote,
         loadContent : loadContent
     }
 })(J.$);
@@ -840,11 +842,9 @@ J.Transition = (function($){
     var _finishTransition = function() {
         $current.off('webkitAnimationEnd.jingle');
         $target.off('webkitAnimationEnd.jingle');
-
         //reset class
         $current.attr('class','');
         $target.attr('class','active');
-
         //add custom events
         if(!$target.data('init')){
             //触发pageinit事件
@@ -853,6 +853,11 @@ J.Transition = (function($){
         }
         //触发pagehide事件
         $current.trigger('pagehide',[isBack]);
+
+        var url = $target.data('remote');
+        if(!isBack && url){
+            J.Page.loadSection(url,$target);
+        }
         //触发pageshow事件
         $target.trigger('pageshow',[isBack]);
 
