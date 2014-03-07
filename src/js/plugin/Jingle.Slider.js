@@ -68,7 +68,11 @@
                 var dotsWidth = slideNum*30+20+2;
                 var html = '<div class="dots"><ul>';
                 for(var i=0;i<slideNum;i++){
-                    html +='<li index="'+i+'"><a href="#"></a></li>'
+                    html +='<li index="'+i+'"';
+                    if(i == 0){
+                        html += 'class="active"';
+                    }
+                    html += '><a href="#"></a></li>';
                 }
                 html += '</ul></div>';
                 wrapper.append(html);
