@@ -14,6 +14,10 @@ J.Transition = (function($){
         };
 
     var _doTransition = function(){
+        //触发 beforepagehide 事件
+        $current.trigger('beforepagehide',[isBack]);
+        //触发 beforepageshow 事件
+        $target.trigger('beforepageshow',[isBack]);
         var c_class = transitionName[0]||'empty' ,t_class = transitionName[1]||'empty';
         $current.bind('webkitAnimationEnd.jingle', _finishTransition);
         $current.addClass('anim '+ c_class);
