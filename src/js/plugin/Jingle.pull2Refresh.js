@@ -135,7 +135,7 @@
                 scroller : refresh.scroller,
                 destroy : function(){
                     delete refreshCache[jRefreshId];
-                    refresh.destroy();
+                    refresh.scroller.destroy();
                     $('.refresh-container',selector).remove();
                 }
             };
