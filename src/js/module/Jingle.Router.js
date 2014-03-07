@@ -97,11 +97,14 @@ J.Router = (function($){
         if(_history[0].tag === hashObj.tag)return;
         _add2History(hash);
         if($(hashObj.tag).length === 0){//当前dom树中不存在
-            //同步加载模板
-            J.Page.load(hashObj);
-            //TODO 为了性能要求，可根据配置只保留N个page
+            //加载模板
+            J.Page.load(hashObj,function(){
+                _changePage(_history[1].tag,hashObj.tag);
+            });
+        }else{
+            _changePage(_history[1].tag,hashObj.tag);
         }
-        _changePage(_history[1].tag,hashObj.tag);
+
     }
     /**
      * 后退

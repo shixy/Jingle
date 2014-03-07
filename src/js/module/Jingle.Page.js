@@ -10,7 +10,7 @@ J.Page = (function($){
      * @param {string} sectionId或者#sectionId
      * @param {string} url参数
      */
-    var loadSectionTpl = function(hash){
+    var loadSectionTpl = function(hash,callback){
         var param = {};
         if($.type(hash) == 'object'){
             hash = hash.tag;
@@ -26,35 +26,39 @@ J.Page = (function($){
         if(J.settings.showPageLoading){
             J.showMask();
         }
-        var html = loadContent(url,param);
-        if(J.settings.showPageLoading){
-            J.hideMask();
-        }
-        //添加到dom树中
-        $('#section_container').append(html);
-        //触发pageload事件
-        $('#'+id).trigger('pageload');
-        //构造组件
-        J.Element.init(hash);
+        loadContent(url,param,function(html){
+            if(J.settings.showPageLoading){
+                J.hideMask();
+            }
+            //添加到dom树中
+            $('#section_container').append(html);
+            //触发pageload事件
+            $('#'+id).trigger('pageload');
+            //构造组件
+            J.Element.init(hash);
+            callback();
+        });
     }
     var loadSectionRemote = function(url,section){
         var param = J.Util.parseHash(window.location.hash).param;
-        var html = loadContent(url,param);
-        $(section).html(html);
-        J.Element.init(section);
-
+        loadContent(url,param,function(html){
+            $(section).html(html);
+            J.Element.init(section);
+        });
     }
     /**
-     * 同步加载文档片段
+     * 加载文档片段
      * @param url
      */
-    var loadContent = function(url,param){
+    var loadContent = function(url,param,callback){
         return $.ajax({
                 url : url,
-                timeout : 10000,
+                timeout : 20000,
                 data : param,
-                async : false
-            }).responseText;
+                success : function(html){
+                    callback(html);
+                }
+            });
     }
     return {
         load : loadSectionTpl,
