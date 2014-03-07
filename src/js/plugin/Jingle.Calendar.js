@@ -112,7 +112,7 @@
         }
 
         var _subscribeEvents = function(){
-            var $target;
+            var $target,$ctarget;
             $el.on('tap',function(e){
                 $target = $(e.target);
                 if($target.is('[data-year].next')){
@@ -132,12 +132,17 @@
                     currentDate.setMonth(currentDate.getMonth()-1);
                     _this.refresh(currentDate);
                 }
+                $ctarget = $target.closest('td');
+                if(!$target.is('td') && $ctarget.length > 0){
+                    $target = $ctarget;
+                }
                 if($target.is('td')){
                     var dateStr = $target.data('date');
                     if(dateStr && _this.settings.onSelect){
                         _this.settings.onSelect.call(_this,dateStr)
                     }
                 }
+
             });
             $el.on('swipeLeft',function(){
                 currentDate.setMonth(currentDate.getMonth()+1);
