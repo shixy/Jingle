@@ -56,9 +56,9 @@ $('#section_container').on('articleshow','#h_scroll_article',function(){
     J.Scroll('#h_scroll_demo',{hScroll:true,hScrollbar : false});
 })
 $('#section_container').on('pageload','#menu_section',function(){
-    var asides = J.Page.loadContent('html/custom_aside.html');
-    var $asides = $(asides);
-    $('#aside_container').append($asides);
+    $.get('html/custom_aside.html',function(aside){
+        $('#aside_container').append(aside);
+    })
 });
 $('#btn_scan_barcode').on('tap',function(){
     window.plugins.barcodeScanner.scan('all',function(result) {

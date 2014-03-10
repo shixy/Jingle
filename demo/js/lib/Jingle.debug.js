@@ -324,7 +324,7 @@ J.Page = (function($){
      * @param {string} sectionId或者#sectionId
      * @param {string} url参数
      */
-    var loadSectionTpl = function(hash){
+    var loadSectionTpl = function(hash,callback){
         var param = {};
         if($.type(hash) == 'object'){
             hash = hash.tag;
@@ -340,35 +340,39 @@ J.Page = (function($){
         if(J.settings.showPageLoading){
             J.showMask();
         }
-        var html = loadContent(url,param);
-        if(J.settings.showPageLoading){
-            J.hideMask();
-        }
-        //添加到dom树中
-        $('#section_container').append(html);
-        //触发pageload事件
-        $('#'+id).trigger('pageload');
-        //构造组件
-        J.Element.init(hash);
+        loadContent(url,param,function(html){
+            if(J.settings.showPageLoading){
+                J.hideMask();
+            }
+            //添加到dom树中
+            $('#section_container').append(html);
+            //触发pageload事件
+            $('#'+id).trigger('pageload');
+            //构造组件
+            J.Element.init(hash);
+            callback();
+        });
     }
     var loadSectionRemote = function(url,section){
         var param = J.Util.parseHash(window.location.hash).param;
-        var html = loadContent(url,param);
-        $(section).html(html);
-        J.Element.init(section);
-
+        loadContent(url,param,function(html){
+            $(section).html(html);
+            J.Element.init(section);
+        });
     }
     /**
-     * 同步加载文档片段
+     * 加载文档片段
      * @param url
      */
-    var loadContent = function(url,param){
+    var loadContent = function(url,param,callback){
         return $.ajax({
                 url : url,
-                timeout : 10000,
+                timeout : 20000,
                 data : param,
-                async : false
-            }).responseText;
+                success : function(html){
+                    callback && callback(html);
+                }
+            });
     }
     return {
         load : loadSectionTpl,
@@ -475,11 +479,14 @@ J.Router = (function($){
         if(_history[0].tag === hashObj.tag)return;
         _add2History(hash);
         if($(hashObj.tag).length === 0){//当前dom树中不存在
-            //同步加载模板
-            J.Page.load(hashObj);
-            //TODO 为了性能要求，可根据配置只保留N个page
+            //加载模板
+            J.Page.load(hashObj,function(){
+                _changePage(_history[1].tag,hashObj.tag);
+            });
+        }else{
+            _changePage(_history[1].tag,hashObj.tag);
         }
-        _changePage(_history[1].tag,hashObj.tag);
+
     }
     /**
      * 后退
@@ -524,7 +531,6 @@ J.Router = (function($){
         showArticle : _showArticle,
         back : back
     }
-
 })(J.$);
 /**
  * 对zeptojs的ajax进行封装，实现离线访问
@@ -792,6 +798,7 @@ J.Toast = (function($){
     var hide = function(){
         J.anim(_toast,'scaleOut',function(){
             _toast.hide();
+           _toast.emtpy();
         });
     }
     /**
@@ -836,6 +843,10 @@ J.Transition = (function($){
         };
 
     var _doTransition = function(){
+        //触发 beforepagehide 事件
+        $current.trigger('beforepagehide',[isBack]);
+        //触发 beforepageshow 事件
+        $target.trigger('beforepageshow',[isBack]);
         var c_class = transitionName[0]||'empty' ,t_class = transitionName[1]||'empty';
         $current.bind('webkitAnimationEnd.jingle', _finishTransition);
         $current.addClass('anim '+ c_class);
@@ -1152,7 +1163,8 @@ J.Popup = (function($){
             showCloseBtn : true,// 是否显示关闭按钮
             arrowDirection : undefined,//popover的箭头指向
             animation : true,//是否显示动画
-            duration : 200,//动画执行时间
+            timingFunc : 'ease-in',
+            duration : 300,//动画执行时间
             onShow : undefined //@event 在popup内容加载完毕，动画开始前触发
         }
         $.extend(settings,options);
@@ -1214,7 +1226,7 @@ J.Popup = (function($){
         }
         J.Element.init(_popup);
         if(settings.animation){
-            J.anim(_popup,transition[0],settings.duration);
+            J.anim(_popup,transition[0],settings.duration,settings.timingFunc);
         }
         J.hasPopupOpen = true;
     }
@@ -1226,12 +1238,12 @@ J.Popup = (function($){
     var hide = function(noTransition){
         _mask.hide();
         if(transition && !noTransition){
-            J.anim(_popup,transition[1],function(){
-                _popup.hide();
+            J.anim(_popup,transition[1],200,function(){
+                _popup.hide().empty();
                 J.hasPopupOpen = false;
             });
         }else{
-            _popup.hide();
+            _popup.hide().empty();
             J.hasPopupOpen = false;
         }
 
@@ -1626,7 +1638,7 @@ J.Cache = (function($){
         }
 
         var _subscribeEvents = function(){
-            var $target;
+            var $target,$ctarget;
             $el.on('tap',function(e){
                 $target = $(e.target);
                 if($target.is('[data-year].next')){
@@ -1646,12 +1658,17 @@ J.Cache = (function($){
                     currentDate.setMonth(currentDate.getMonth()-1);
                     _this.refresh(currentDate);
                 }
+                $ctarget = $target.closest('td');
+                if(!$target.is('td') && $ctarget.length > 0){
+                    $target = $ctarget;
+                }
                 if($target.is('td')){
                     var dateStr = $target.data('date');
                     if(dateStr && _this.settings.onSelect){
                         _this.settings.onSelect.call(_this,dateStr)
                     }
                 }
+
             });
             $el.on('swipeLeft',function(){
                 currentDate.setMonth(currentDate.getMonth()+1);
@@ -1818,7 +1835,11 @@ J.Cache = (function($){
                 var dotsWidth = slideNum*30+20+2;
                 var html = '<div class="dots"><ul>';
                 for(var i=0;i<slideNum;i++){
-                    html +='<li index="'+i+'"><a href="#"></a></li>'
+                    html +='<li index="'+i+'"';
+                    if(i == 0){
+                        html += 'class="active"';
+                    }
+                    html += '><a href="#"></a></li>';
                 }
                 html += '</ul></div>';
                 wrapper.append(html);
@@ -2067,7 +2088,7 @@ J.Cache = (function($){
                 scroller : refresh.scroller,
                 destroy : function(){
                     delete refreshCache[jRefreshId];
-                    refresh.destroy();
+                    refresh.scroller.destroy();
                     $('.refresh-container',selector).remove();
                 }
             };
