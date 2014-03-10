@@ -28,8 +28,12 @@ aside{
     left:0;
     right:0;
     bottom: 0;
-    background-color: #000;
     z-index: 3;
+    background: #64A4E1;
+    background-image: -webkit-linear-gradient(top left, #64A4E1, #2CCD8A);
+    background-image: -moz-linear-gradient(top left, #64A4E1, #2CCD8A);
+    background-image: -o-linear-gradient(top left, #64A4E1, #2CCD8A);
+    background-image: linear-gradient(to bottom right, #64A4E1, #2CCD8A);
 }
 #section_container_mask{
     position: absolute;

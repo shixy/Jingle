@@ -1,19 +1,14 @@
 [data-progress]{
-    background: #4c4d4c;
     border-radius: 10px;
     height: 25px;
     line-height: 25px;
-    color: #000;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
     text-align: center;
     font-size: 0.9em;
 }
 [data-progress] .bar{
     float: left;
     width:0;
-    background: #3498DB;
     height: 100%;
-    color: #fff;
     white-space: nowrap;
     border-radius: 10px 0 0 10px;
 

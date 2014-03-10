@@ -87,7 +87,7 @@ select {
   float: left;
   width: 25%;
   padding: 11px 10px 9px 13px;
-  font-weight: bold;
+  font-weight: 400;
 }
 .input-row label + input {
   float: right;

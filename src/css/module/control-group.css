@@ -2,47 +2,42 @@
     display: -webkit-box;
     display: box;
     overflow: hidden;
-    font-size: 1em;
-    font-weight: 600;
     list-style: none;
-    line-height: 30px;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
-    color: #fff;
-    background-color: #3498DB;
-    border-radius: 5px;
-    -webkit-border-radius: 5px;
-    -webkit-box-flex: 1;
-    box-flex: 1;
 }
 
 .control-group li {
     overflow: hidden;
     text-align: center;
     white-space: nowrap;
-    font-weight: 600;
-    border-left: 1px solid rgba(0, 0, 0, .2);
-    box-shadow: inset 1px 0 rgba(255, 255, 255, .25);
+    border-right-width: 0;
     -webkit-box-flex: 1;
     box-flex: 1;
+    padding: 5px 0;
 }
 
 .control-group li > a {
     display: block;
-    padding: 8px 16px;
     overflow: hidden;
-    line-height: 15px;
-    font-weight: 600;
     text-overflow: ellipsis;
 }
 
 .control-group li:first-child {
-    border-left-width: 0;
-    box-shadow: none;
+    border-radius: 4px 0 0 4px;
 }
-
+.control-group li:last-child {
+    border-right-width: 1px;
+    border-radius: 0 4px 4px 0;
+}
 .control-group li.active {
-    background-color: #2980B9;
+    border-color: rgba(0, 0, 0, 0.05);
+    box-shadow: 1px 0 rgba(0, 0, 0, 0.05);
+}
+.control-group li.active a,.control-group li.active .icon{
+    color: #fff;
 }
 .control-group .icon{
-    font-size: 1.2em;
+    color: #2087FC;
+}
+.control-group i.icon ~ a {
+    padding: 0;
 }

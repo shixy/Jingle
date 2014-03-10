@@ -2,10 +2,6 @@ header {
     top: 0;
     display: -webkit-box;
     display: box;
-    background-color: #0093d5;
-    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 #03b1ff, inset 0 -1px 0 #007db5;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.25), inset 0 1px 0 #03b1ff, inset 0 -1px 0 #007db5;
-    color: #fff;
 }
 header > *{
     -webkit-box-flex : 0;
@@ -30,11 +26,8 @@ header .title {
     display: block;
     width: 100%;
     font-size: 1.2em;
-    font-weight: bold;
     line-height: 44px;
-    color: #fff;
     text-align: center;
-    text-shadow: 0 -1px rgba(0, 0, 0, .5);
     white-space: nowrap;
     z-index: 1;
 }
@@ -45,13 +38,9 @@ header .button,header button{
     margin: 5px;
     padding: 0 5px;
 }
-header .button,
-header button {
-    background-color: #007db5;
-}
 header .button:active,
 header button:active {
-    background-color: #005880;
+    opacity: .6;
 }
 header nav{
     padding: 0 5px;
@@ -61,14 +50,9 @@ header nav a{
 }
 header nav a:not(.button) {
     height: 44px;
-    color: #00608a;
-    font-weight: 600;
-    -webkit-text-shadow: 0 1px 0 #20baff;
-    -moz-text-shadow: 0 1px 0 #20baff;
-    text-shadow: 0 1px 0 #20baff;
 }
 header nav a:not(.button):active {
-    color: #004a6b;
+    opacity: .6;
 }
 
 header nav a:not(.button) > .icon {
@@ -84,8 +68,6 @@ header .control-group{
 }
 
 .header-secondary{
-    background-color: #282c32;
-    color: #fff;
     display: -webkit-box;
     display: box;
     text-align: center;

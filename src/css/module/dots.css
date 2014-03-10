@@ -19,9 +19,4 @@
     display: block;
     width: 10px;height: 10px;
     border-radius: 10px;
-    background: #b9b4b6;
-
-}
-.dots ul li.active a{
-    background-color: #4c4d4c;
 }

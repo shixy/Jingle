@@ -2,20 +2,14 @@ footer{
     bottom:0;
     display: -webkit-box;
     display: box;
-    background-color: #282c32;
-    background-image: -webkit-linear-gradient(top, #282c32 0, #2b2b2b 100%);
-    color: #fff;
+    border-top: 1px solid #C8C8C8;
 }
 footer > a{
     -webkit-box-flex : 1;
     box-flex : 1;
     display: block;
     text-align: center;
-    color: #fff;
     font-size: 0.85em;
-}
-footer > a.active{
-    box-shadow: inset 0 10px 30px rgba(0, 0, 0, .8);
 }
 footer > a > .icon{
     float: none;
@@ -25,9 +19,6 @@ footer > a > .icon{
     padding-top: 5px;
     margin-bottom: 5px;
     font-size: 1.5em;
-}
-footer .active .icon{
-    color: #3498DB;
 }
 footer > a.label-right{
     text-align: left;
@@ -44,8 +35,6 @@ footer > a.label-right .icon{
     bottom: 51px;
     left: 0;
     width: 100%;
-    background-color: #282c32;
-    color: #fff;
     z-index: 2;
     padding: 10px;
     display: none;
