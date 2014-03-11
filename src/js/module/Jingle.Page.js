@@ -56,7 +56,7 @@ J.Page = (function($){
                 timeout : 20000,
                 data : param,
                 success : function(html){
-                    callback(html);
+                    callback && callback(html);
                 }
             });
     }
