@@ -3,14 +3,14 @@
  */
 J.Util = (function($){
     var parseHash = function(hash){
-        var tag,query,param;
+        var tag,query,param={};
         var arr = hash.split('?');
         tag = arr[0];
         if(arr.length>1){
             var seg,s;
             query = arr[1];
             seg = query.split('&');
-            for(var i=0;i<seg.lenth;i++){
+            for(var i=0;i<seg.length;i++){
                 if(!seg[i])continue;
                 s = seg[i].split('=');
                 param[s[0]] = s[1];
