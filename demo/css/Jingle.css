@@ -130,10 +130,6 @@ sub,sup{
     overflow: hidden;
     background-color: #fff;
 }
-.selected{
-    background-color: #33dba6 !important;
-    color: #fff;
-}
 /****  for page ***/
 @-webkit-keyframes emptyAnim{
     0% { -webkit-transform: scale(1)}
@@ -1768,7 +1764,7 @@ footer .active .icon{
 }
 /**** header ****/
 header{
-    background-color: #46CA5E;
+    background-color: #2087FC;
     border-bottom: 1px solid #c8c8c8;
     color: #fff;
 }
@@ -1883,6 +1879,11 @@ input[type="range"]::-webkit-slider-thumb{
 .toggle.active:before{
     color: #1ABC9C;
     text-shadow: 0 -1px rgba(0, 0, 0, 0.25);
+}
+/**** selected ****/
+.selected{
+    background-color: #2087FC !important;
+    color: #fff;
 }
 #jingle_toast{
     display: none;
