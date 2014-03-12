@@ -26,12 +26,12 @@ $('#section_container').on('pageinit','#refresh_section',function(){
         selector : '#down_refresh_article',
         type : 'pullDown',
         pullText : '你敢往下拉么...',
-        releaseText : '快松开的你的咸猪手！！',
-        refreshTip : '使劲往下拽吧，亲',
+        releaseText : '什么时候你才愿意放手？',
+        refreshTip : '最后一次拉的人：<span style="color:#e222a5">骚年</span>',
         callback : function(){
             var scroll = this;
             setTimeout(function () {
-                $('#down_refresh_article ul.list li').text('擦，我被更新了');
+                $('#down_refresh_article ul.list li').text('嗯哈，长大后我就成了你~');
                 scroll.refresh();
                 J.showToast('更新成功','success');
             }, 2000);
@@ -56,9 +56,9 @@ $('#section_container').on('articleshow','#h_scroll_article',function(){
     J.Scroll('#h_scroll_demo',{hScroll:true,hScrollbar : false});
 })
 $('#section_container').on('pageload','#menu_section',function(){
-    var asides = J.Page.loadContent('html/custom_aside.html');
-    var $asides = $(asides);
-    $('#aside_container').append($asides);
+    $.get('html/custom_aside.html',function(aside){
+        $('#aside_container').append(aside);
+    })
 });
 $('#btn_scan_barcode').on('tap',function(){
     window.plugins.barcodeScanner.scan('all',function(result) {
