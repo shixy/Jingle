@@ -1,10 +1,10 @@
 /*
- * Jingle v0.1 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
+ * Jingle v0.3 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
  * Released under MIT license
  * walker.shixy@gmail.com
  */
 var Jingle = J = {
-    version : '0.1',
+    version : '0.3',
     $ : window.Zepto,
     //参数设置
     settings : {
