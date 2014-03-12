@@ -1,31 +1,24 @@
 .toggle {
     position: relative;
-    width: 80px;
+    width: 70px;
     height: 28px;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 /** 自定义文本 **/
 [data-on]:before {
     content: attr(data-off) !important;
     font-family: "Open Sans" !important;
-    font-size: 1em !important;
-    font-weight: 600;
+    font-size: .9em !important;
+    line-height: 28px;
+    color: #fff;
+    margin-left: 30px;
 }
 
 [data-on].active:before {
     content: attr(data-on) !important;
+    margin-right: 30px;
+    margin-left: 0;
 }
-
-.toggle:before {
-    position: absolute;
-    right: 13px;
-    line-height: 28px;
-    text-transform: uppercase;
-    content: "\e005";
-    font-family: 'Jingle';
-    font-size: 1.2em;
-}
-
 .toggle-handle {
     position: absolute;
     top: 0;
@@ -33,19 +26,10 @@
     z-index: 2;
     width: 30px;
     height: 28px;
-    -webkit-transition: -webkit-transform 0.1s ease-in-out, border 0.1s ease-in-out;
-    transition: transform 0.1s ease-in-out, border 0.1s ease-in-out;
-    border-radius: 6px 0 0 6px;
+    -webkit-transition : left 0.1s ease-in-out;
+    border-radius: 7px 0 0 7px;
 }
-
 .toggle.active .toggle-handle {
-    -webkit-transform: translate3d(50px, 0, 0);
-    transform: translate3d(50px, 0, 0);
-}
-
-.toggle.active:before {
-    right: auto;
-    left: 15px;
-    content: "\e006";
-    font-family: 'Jingle';
+    left:40px;
+    border-radius:0 7px 7px 0;
 }

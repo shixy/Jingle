@@ -28,12 +28,12 @@
 	100% {opacity: 0;-webkit-transform: scale(.5)}
 }
 @-webkit-keyframes slideDownIn {
-	0% {-webkit-transform: translate3d(0,-100%,0)}
-	100% {-webkit-transform: translate3d(0,0,0)}
+	0% {opacity: 0;-webkit-transform: translate3d(0,-100%,0)}
+	100% {opacity: 1;-webkit-transform: translate3d(0,0,0)}
 }
 @-webkit-keyframes slideUpOut {
-	0% {-webkit-transform: translate3d(0,0,0)}
-	100% {-webkit-transform: translate3d(0,-100%,0)}
+	0% {opacity: 1;-webkit-transform: translate3d(0,0,0)}
+	100% {opacity: 0;-webkit-transform: translate3d(0,-100%,0)}
 }
 @-webkit-keyframes slideDownOut {
 	0% {-webkit-transform: translate3d(0,0,0)}
@@ -101,13 +101,10 @@ section.anim{
 /********** for popup  toast **********/
 @-webkit-keyframes bounceIn {
 	0% {opacity: 0;-webkit-transform: scale(.3);}
-	50% {opacity: 1;-webkit-transform: scale(1.05);}
-	70% {-webkit-transform: scale(.9);}
+	50% {opacity: 1;-webkit-transform: scale(1.1);}
 	100% {-webkit-transform: scale(1);}
 }
 @-webkit-keyframes bounceOut {
 	0% {-webkit-transform: scale(1);}
-	25% {-webkit-transform: scale(.95);}
-	50% {opacity: 1;-webkit-transform: scale(1.1);}
-	100% {opacity: 0;-webkit-transform: scale(.3);}
+	100% {opacity: 0;-webkit-transform: scale(.5);}
 }

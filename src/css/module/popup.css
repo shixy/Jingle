@@ -57,19 +57,16 @@
 #popup_btn_container > a{
     -webkit-box-flex:1;
     box-flex:1;
-    border:1px solid rgba(0, 0, 0, 0.4);
     padding: 10px;
     display: block;
-}
-#popup_btn_container > a:first-child{
-    -webkit-border-bottom-left-radius: 3px;
-    border-left: 0 none;
+    color: #222;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    border-left: none;
+    border-bottom: none;
 }
 #popup_btn_container > a:last-child{
-    -webkit-border-bottom-right-radius: 3px;
     border-right: 0 none;
 }
-
 .popup-title{
     text-align: left;
     padding: 10px;

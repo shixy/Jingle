@@ -3,7 +3,7 @@
 }
 input[type="range"] {
     width: 100%;
-    height: 15px;
+    height: 12px;
     -webkit-border-radius: 5px;
     -webkit-appearance: none !important;
     outline: none;
