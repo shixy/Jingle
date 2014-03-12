@@ -160,12 +160,12 @@ sub,sup{
 	100% {opacity: 0;-webkit-transform: scale(.5)}
 }
 @-webkit-keyframes slideDownIn {
-	0% {-webkit-transform: translate3d(0,-100%,0)}
-	100% {-webkit-transform: translate3d(0,0,0)}
+	0% {opacity: 0;-webkit-transform: translate3d(0,-100%,0)}
+	100% {opacity: 1;-webkit-transform: translate3d(0,0,0)}
 }
 @-webkit-keyframes slideUpOut {
-	0% {-webkit-transform: translate3d(0,0,0)}
-	100% {-webkit-transform: translate3d(0,-100%,0)}
+	0% {opacity: 1;-webkit-transform: translate3d(0,0,0)}
+	100% {opacity: 0;-webkit-transform: translate3d(0,-100%,0)}
 }
 @-webkit-keyframes slideDownOut {
 	0% {-webkit-transform: translate3d(0,0,0)}
@@ -233,15 +233,12 @@ section.anim{
 /********** for popup  toast **********/
 @-webkit-keyframes bounceIn {
 	0% {opacity: 0;-webkit-transform: scale(.3);}
-	50% {opacity: 1;-webkit-transform: scale(1.05);}
-	70% {-webkit-transform: scale(.9);}
+	50% {opacity: 1;-webkit-transform: scale(1.1);}
 	100% {-webkit-transform: scale(1);}
 }
 @-webkit-keyframes bounceOut {
 	0% {-webkit-transform: scale(1);}
-	25% {-webkit-transform: scale(.95);}
-	50% {opacity: 1;-webkit-transform: scale(1.1);}
-	100% {opacity: 0;-webkit-transform: scale(.3);}
+	100% {opacity: 0;-webkit-transform: scale(.5);}
 }
 aside[data-position="left"]{
     left:0;
@@ -351,7 +348,6 @@ aside ul.menu li.anchor{
 }
 .jingle-calendar{
     width: 100%;
-    background-color: #eee;
     overflow: hidden;
 }
 .jingle-calendar-nav{
@@ -360,8 +356,6 @@ aside ul.menu li.anchor{
     display: -webkit-box;
     display: box;
     text-align: center;
-    background-color: #222;
-    color: #fff;
 }
 .jingle-calendar-nav>div{
     -webkit-box-flex : 1;
@@ -375,24 +369,15 @@ aside ul.menu li.anchor{
 .jingle-calendar table{
     width: 100%;
 }
-.jingle-calendar table thead{
-    background: #eee;
-}
-.jingle-calendar table tbody{
-    background: #f5f5f5;
-}
 .jingle-calendar table th{
     text-align: center;
     padding: 5px 0;
 }
 .jingle-calendar table td{
-    border: 1px solid #fff;
     text-align: center;
     padding: 15px 0;
 }
-.jingle-calendar table td.active{
-    background-color: #0093d5;
-}
+
 .control-group {
     display: -webkit-box;
     display: box;
@@ -1568,19 +1553,16 @@ ul.list {
 #popup_btn_container > a{
     -webkit-box-flex:1;
     box-flex:1;
-    border:1px solid rgba(0, 0, 0, 0.4);
     padding: 10px;
     display: block;
-}
-#popup_btn_container > a:first-child{
-    -webkit-border-bottom-left-radius: 3px;
-    border-left: 0 none;
+    color: #222;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    border-left: none;
+    border-bottom: none;
 }
 #popup_btn_container > a:last-child{
-    -webkit-border-bottom-right-radius: 3px;
     border-right: 0 none;
 }
-
 .popup-title{
     text-align: left;
     padding: 10px;
@@ -1643,6 +1625,7 @@ ul.list {
     height: 100%;
     white-space: nowrap;
     border-radius: 10px 0 0 10px;
+    margin-left: -1px;
 
 }
 [data-rangeinput] input[type="range"]{
@@ -1650,7 +1633,7 @@ ul.list {
 }
 input[type="range"] {
     width: 100%;
-    height: 15px;
+    height: 12px;
     -webkit-border-radius: 5px;
     -webkit-appearance: none !important;
     outline: none;
@@ -1720,7 +1703,11 @@ aside ul.menu li.anchor{
     color: #fff;
     background-color: #46CA5E;
 }
-
+.button.light,button.light{
+    border: 1px solid #2087FC;
+    color: #2087FC;
+    background: none;
+}
 /**** control group **/
 .control-group li{
     border:1px solid #2087FC;
@@ -1747,19 +1734,19 @@ aside ul.menu li.anchor{
 }
 /**** footer ****/
 footer{
-    background-color: #f8f8f8;
+    background-color: #262F3D;
 }
 footer > a{
-    color: #7C7B83;
+    color: #fff;
 }
 footer > a.active{
-    color: #2087FC;
+    color: #46CA5E;
 }
 footer .active .icon{
-    color: #2087FC;
+    color: #46CA5E;
 }
 .footer-secondary{
-    background-color: #282c32;
+    background-color: #262F3D;
     color: #fff;
 }
 /**** header ****/
@@ -1780,7 +1767,7 @@ header nav a:not(.button){
     color: #fff;
 }
 .header-secondary{
-    background-color: #282c32;
+    background-color: #6A7991;
     color: #fff;
 }
 /**** list ****/
@@ -1788,10 +1775,10 @@ ul.list {
     background-color: #fff;
 }
 .list>li.active{
-    background-color: #BDC3C7 !important;
+    background-color: rgba(231, 238, 229, 0.75) !important;
 }
 .list>li.active>.icon{
-    color: #3498DB;
+    color: #46CA5E;
 }
 .list>li .tag{
     background-color: #3498DB;
@@ -1802,47 +1789,50 @@ ul.list {
     background-color: #222;
 }
 #jingle_popup{
-    background-color: #343A41;
-    color: #fff;
+    background-color: #eef3f3;
+    color: #222;
     -webkit-box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.6);
 }
 #jingle_popup.arrow.top:after{
-    border-bottom-color: #343A41;
+    border-bottom-color: #CAD1DA;
 }
 #jingle_popup.arrow.right:after{
-    border-left-color: #343A41;
+    border-left-color: #CAD1DA;
 }
 #jingle_popup.arrow.bottom:after{
-    border-top-color: #343A41;
+    border-top-color: #CAD1DA;
 }
 #jingle_popup.arrow.left:after{
-    border-right-color: #343A41;
+    border-right-color: #CAD1DA;
 }
 #popup_btn_container{
-    background-color: #282c32;
 }
 .popup-title{
-    color: #3498DB;
-    font-weight: 600;
+    color: #33b4db;
 }
 #tag_close_popup{
     color: #BDC3C7;
 }
 #jingle_popup .nav{
     color: #000;
-    font-weight: 600;
 }
 #jingle_popup .nav.active,#jingle_popup .nav:active{
     background-color: #3498DB;
     color: #fff;
 }
+#jingle_popup.loading{
+    background-color: #2C3E50;
+}
 #jingle_popup.loading p{
     color: #BDC3C7;
 }
+#jingle_popup.loading i.icon{
+    color: #fff;
+}
 /**** progress ****/
 [data-progress]{
-    background: #4c4d4c;
-    color: #000;
+    background: #fff;
+    border: 1px solid #3498DB;
 }
 [data-progress] .bar{
     background: #3498DB;
@@ -1850,40 +1840,50 @@ ul.list {
 }
 /**** range ****/
 input[type="range"]{
-    background: #1ABC9C;
+    border:1px solid #2087FC;
 }
 input[type="range"]::-webkit-slider-thumb{
-    background:#16A085;
+    background: #2087FC;
 }
 /**** toggles ****/
 .toggle {
-    background-color: #CBD2D8;
-    box-shadow: inset 0 0 4px rgba(0, 0, 0, .1);
-}
-.toggle:before{
-    color: #777;
-    text-shadow: 0 1px #fff;
+    background-color: #656968;
 }
 .toggle-handle{
-    background-color: #95a5a6;
+    background-color: #fff;
+    border: 1px solid #656968;
 }
-/* Active state for toggle */
 .toggle.active {
-    background-color: #34495E;
-    box-shadow: inset 0 0 15px rgba(255, 255, 255, .25);
+    background-color: #46CA5E;
 }
 .toggle.active .toggle-handle{
-    background-color: #1ABC9C;
-    border-radius:0 6px 6px 0;
-}
-.toggle.active:before{
-    color: #1ABC9C;
-    text-shadow: 0 -1px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    border:1px solid #46CA5E;
 }
 /**** selected ****/
 .selected{
-    background-color: #2087FC !important;
+    background-color: #46CA5E !important;
     color: #fff;
+}
+/**** calendar ****/
+.jingle-calendar{
+    background-color: #eee;
+}
+.jingle-calendar-nav{
+    background-color: #262F3D;
+    color: #fff;
+}
+.jingle-calendar table thead{
+    background: #eee;
+}
+.jingle-calendar table tbody{
+    background: #f5f5f5;
+}
+.jingle-calendar table td{
+    border: 1px solid #fff;
+}
+.jingle-calendar table td.active{
+    background-color: #46CA5E;
 }
 #jingle_toast{
     display: none;
@@ -1914,32 +1914,25 @@ input[type="range"]::-webkit-slider-thumb{
 }
 .toggle {
     position: relative;
-    width: 80px;
+    width: 70px;
     height: 28px;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 /** 自定义文本 **/
 [data-on]:before {
     content: attr(data-off) !important;
     font-family: "Open Sans" !important;
-    font-size: 1em !important;
-    font-weight: 600;
+    font-size: .9em !important;
+    line-height: 28px;
+    color: #fff;
+    margin-left: 30px;
 }
 
 [data-on].active:before {
     content: attr(data-on) !important;
+    margin-right: 30px;
+    margin-left: 0;
 }
-
-.toggle:before {
-    position: absolute;
-    right: 13px;
-    line-height: 28px;
-    text-transform: uppercase;
-    content: "\e005";
-    font-family: 'Jingle';
-    font-size: 1.2em;
-}
-
 .toggle-handle {
     position: absolute;
     top: 0;
@@ -1947,19 +1940,10 @@ input[type="range"]::-webkit-slider-thumb{
     z-index: 2;
     width: 30px;
     height: 28px;
-    -webkit-transition: -webkit-transform 0.1s ease-in-out, border 0.1s ease-in-out;
-    transition: transform 0.1s ease-in-out, border 0.1s ease-in-out;
-    border-radius: 6px 0 0 6px;
+    -webkit-transition : left 0.1s ease-in-out;
+    border-radius: 7px 0 0 7px;
 }
-
 .toggle.active .toggle-handle {
-    -webkit-transform: translate3d(50px, 0, 0);
-    transform: translate3d(50px, 0, 0);
-}
-
-.toggle.active:before {
-    right: auto;
-    left: 15px;
-    content: "\e006";
-    font-family: 'Jingle';
+    left:40px;
+    border-radius:0 7px 7px 0;
 }
