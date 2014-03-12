@@ -67,8 +67,8 @@ J.Popup = (function($){
             showCloseBtn : true,// 是否显示关闭按钮
             arrowDirection : undefined,//popover的箭头指向
             animation : true,//是否显示动画
-            timingFunc : 'ease-in',
-            duration : 300,//动画执行时间
+            timingFunc : 'linear',
+            duration : 200,//动画执行时间
             onShow : undefined //@event 在popup内容加载完毕，动画开始前触发
         }
         $.extend(settings,options);
@@ -119,7 +119,7 @@ J.Popup = (function($){
         }
 
         _popup.html(html).show();
-
+        J.Element.init(_popup);
         //执行onShow事件，可以动态添加内容
         settings.onShow && settings.onShow.call(_popup);
 
