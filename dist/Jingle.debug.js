@@ -1,10 +1,10 @@
 /*
- * Jingle v0.1 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
+ * Jingle v0.3 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
  * Released under MIT license
  * walker.shixy@gmail.com
  */
 var Jingle = J = {
-    version : '0.1',
+    version : '0.3',
     $ : window.Zepto,
     //参数设置
     settings : {
@@ -798,7 +798,7 @@ J.Toast = (function($){
     var hide = function(){
         J.anim(_toast,'scaleOut',function(){
             _toast.hide();
-           _toast.emtpy();
+           _toast.empty();
         });
     }
     /**
@@ -923,14 +923,14 @@ J.Transition = (function($){
  */
 J.Util = (function($){
     var parseHash = function(hash){
-        var tag,query,param;
+        var tag,query,param={};
         var arr = hash.split('?');
         tag = arr[0];
         if(arr.length>1){
             var seg,s;
             query = arr[1];
             seg = query.split('&');
-            for(var i=0;i<seg.lenth;i++){
+            for(var i=0;i<seg.length;i++){
                 if(!seg[i])continue;
                 s = seg[i].split('=');
                 param[s[0]] = s[1];
@@ -1163,8 +1163,8 @@ J.Popup = (function($){
             showCloseBtn : true,// 是否显示关闭按钮
             arrowDirection : undefined,//popover的箭头指向
             animation : true,//是否显示动画
-            timingFunc : 'ease-in',
-            duration : 300,//动画执行时间
+            timingFunc : 'linear',
+            duration : 200,//动画执行时间
             onShow : undefined //@event 在popup内容加载完毕，动画开始前触发
         }
         $.extend(settings,options);
@@ -1215,7 +1215,7 @@ J.Popup = (function($){
         }
 
         _popup.html(html).show();
-
+        J.Element.init(_popup);
         //执行onShow事件，可以动态添加内容
         settings.onShow && settings.onShow.call(_popup);
 
