@@ -24,7 +24,7 @@ J.Toast = (function($){
     var hide = function(){
         J.anim(_toast,'scaleOut',function(){
             _toast.hide();
-           _toast.emtpy();
+           _toast.empty();
         });
     }
     /**
