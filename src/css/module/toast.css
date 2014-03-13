@@ -16,6 +16,7 @@
     display: inline-block;
     max-width: 80%;
     margin: 0 auto;
+    color:#fff;
     text-align: left;
 }
 #jingle_toast.success>a{background-color: #27AE60;!important}
