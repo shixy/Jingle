@@ -8,6 +8,20 @@ Jingle UI是一个基于html5、css3开发轻量级的移动webapp 框架，提�
 > 
 > [wiki入口](https://github.com/shixy/Jingle/wiki/_pages "wiki")
 
+###部分案例###
+
+**Eoe资讯**
+
+访问地址：http://migrator.duapp.com/static/eoe/
+
+源码地址：https://github.com/shixy/eoe-jingle
+
+**深圳图书馆**
+访问地址：http://shenzhenlib.duapp.com/
+
+源码地址：已打包成apk，源码在https://github.com/shixy/szlib
+
+
 ###页面结构###
 	<div id="aside_container"><!---侧边栏容器--->
 	    <aside id="index_aside" data-position="left" data-transition="reveal" data-show-close="true">
