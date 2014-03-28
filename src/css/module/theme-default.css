@@ -34,17 +34,37 @@ aside ul.menu li.anchor{
 }
 /**** control group **/
 .control-group li{
-    border:1px solid #2087FC;
+    border-color:#2087FC;
 }
 .control-group li > a {
     color: #2087FC;
 }
 .control-group li.active {
     background: #2087FC;
+    color:#fff;
 }
 .control-group .icon{
     color: #2087FC;
 }
+header .control-group {
+    margin: 0 auto;
+    width: 140px;
+    height: 30px;
+    margin-top: 8px;
+    line-height: 30px;
+}
+header .control-group li{
+    border-color: #fff;
+    padding: 0;
+}
+header .control-group li.active{
+    background: #fff;
+    color: #158f75;
+}
+.control-group .icon{
+    color: #fff;
+}
+
 /**** counts ****/
 .count{
     background-color: #E74C3C;
@@ -141,7 +161,7 @@ ul.list {
     color: #000;
 }
 #jingle_popup .nav.active,#jingle_popup .nav:active{
-    background-color: #3498DB;
+    background-color: #79db8d !important;
     color: #fff;
 }
 #jingle_popup.loading{

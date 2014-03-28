@@ -383,16 +383,19 @@ aside ul.menu li.anchor{
     display: box;
     overflow: hidden;
     list-style: none;
+    border-radius: 4px;
 }
 
 .control-group li {
     overflow: hidden;
     text-align: center;
     white-space: nowrap;
-    border-right-width: 0;
     -webkit-box-flex: 1;
     box-flex: 1;
     padding: 5px 0;
+    border-width: 1px;
+    border-style: solid;
+    border-right-width: 0;
 }
 
 .control-group li > a {
@@ -407,10 +410,6 @@ aside ul.menu li.anchor{
 .control-group li:last-child {
     border-right-width: 1px;
     border-radius: 0 4px 4px 0;
-}
-.control-group li.active {
-    border-color: rgba(0, 0, 0, 0.05);
-    box-shadow: 1px 0 rgba(0, 0, 0, 0.05);
 }
 .control-group li.active a,.control-group li.active .icon{
     color: #fff;
@@ -1710,17 +1709,37 @@ aside ul.menu li.anchor{
 }
 /**** control group **/
 .control-group li{
-    border:1px solid #2087FC;
+    border-color:#2087FC;
 }
 .control-group li > a {
     color: #2087FC;
 }
 .control-group li.active {
     background: #2087FC;
+    color:#fff;
 }
 .control-group .icon{
     color: #2087FC;
 }
+header .control-group {
+    margin: 0 auto;
+    width: 140px;
+    height: 30px;
+    margin-top: 8px;
+    line-height: 30px;
+}
+header .control-group li{
+    border-color: #fff;
+    padding: 0;
+}
+header .control-group li.active{
+    background: #fff;
+    color: #158f75;
+}
+.control-group .icon{
+    color: #fff;
+}
+
 /**** counts ****/
 .count{
     background-color: #E74C3C;
@@ -1817,7 +1836,7 @@ ul.list {
     color: #000;
 }
 #jingle_popup .nav.active,#jingle_popup .nav:active{
-    background-color: #3498DB;
+    background-color: #79db8d !important;
     color: #fff;
 }
 #jingle_popup.loading{
@@ -1903,6 +1922,7 @@ input[type="range"]::-webkit-slider-thumb{
     display: inline-block;
     max-width: 80%;
     margin: 0 auto;
+    color:#fff;
     text-align: left;
 }
 #jingle_toast.success>a{background-color: #27AE60;!important}

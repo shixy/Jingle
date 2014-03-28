@@ -146,7 +146,7 @@
 
         var _touchEnd = function(e) {
             //判定是否跳转到下一个卡片
-            //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3
+            //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3，则直接跳转到下一个卡片
             var isValidSlide = (Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20) || Math.abs(deltaX) > slideWidth/3;
                 //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;
