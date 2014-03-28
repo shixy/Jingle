@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mobile Chart</title>
+    <meta charset="utf-8">
+    <meta name = "viewport" content = "initial-scale = 1, user-scalable = no">
+    <script type="text/javascript" src="JChart.js"></script>
+</head>
+<body>
+<h1>线图(左右拖动看看)</h1>
+<canvas id="line" height="450" width="600" style="margin-top: 10px;"></canvas>
+<h1>柱状图</h1>
+<canvas id="bar" height="450" width="600" style="margin-top: 10px;"></canvas>
+<h1>饼图</h1>
+<canvas id="pie" height="200" width="200"></canvas>
+<h2>环形图</h2>
+<canvas id="dount" height="200" width="200" style="margin-top: 10px;"></canvas>
+<script type="text/javascript">
+    var pieData = [
+        {
+            value: 30,
+            color:"#F38630"
+        },
+        {
+            value : 50,
+            color : "#E0E4CC"
+        },
+        {
+            value : 100,
+            color : "#69D2E7"
+        }
+    ];
+    var p1 = new JChart.Pie(pieData,{
+        id : 'pie'
+    });
+    p1.on('click',function(i,data){
+        console.log('点击了第'+i+'个扇形');
+        return true;
+    })
+    p1.on('animationComplete',function(){
+        console.log('动画执行完毕');
+    })
+    p1.on('rotate',function(i,data){
+		console.log('第'+i+'个扇形已经旋转到6点钟方向');
+	});
+	p1.on('pushIn',function(i,data){
+		console.log('所有弹出扇形已经被收回');
+	});
+	p1.on('pullOut',function(i,data){
+		console.log('第'+i+'个扇形已经弹出');
+	});
+    var p2 = new JChart.Pie(pieData,{
+        id : 'dount',
+        clickType : 'rotate',
+        isDount : true,
+        dountText : '环形'
+    });
+    p2.on('click',function(i,data){
+        p2.setDountText(data.value);
+        return true;
+    });
+    var lineData = {
+        labels : ["2012","二月","三月","四月","五月","六月","七月",'八月','九月','十月','十一月','十二月','2013',"二月","三月","四月","五月","六月","七月",'八月','九月','十月','十一月','十二月','2014','一月','二月'],
+        datasets : [
+            {
+                fillColor : "rgba(220,220,220,0.5)",
+                strokeColor : "rgba(220,220,220,1)",
+                pointColor : "rgba(220,220,220,1)",
+                pointStrokeColor : "#fff",
+                data : [65,59,90,81,56,55,40,20,3,20,10,60,65,59,90,81,56,55,40,20,3,20,10,60,10,60,65,59]
+            },
+            {
+                fillColor : "rgba(151,187,205,0.5)",
+                strokeColor : "rgba(151,187,205,1)",
+                pointColor : "rgba(151,187,205,1)",
+                pointStrokeColor : "#fff",
+                data : [28,48,40,19,96,27,100,40,40,70,10,89,28,48,40,19,96,27,100,40,40,70,10,89,28,48,40,19,96]
+            }
+        ]
+    }
+    var bar = new JChart.Bar(lineData,{
+        id : 'bar'
+    });
+    bar.on('doubleTap',function(){
+        alert('double');
+    });
+
+    var line = new JChart.Line(lineData,{
+        id : 'line'
+    });
+    line.on('click',function(data,i,j){
+        alert(JSON.stringify(data));
+    });
+</script>
+</body>
+</html>
