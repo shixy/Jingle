@@ -95,7 +95,6 @@ J.Router = (function($){
         }
         var hashObj = J.Util.parseHash(hash);
         if(_history[0].tag === hashObj.tag)return;
-        _add2History(hash);
         if($(hashObj.tag).length === 0){//当前dom树中不存在
             //加载模板
             J.Page.load(hashObj,function(){
@@ -104,7 +103,7 @@ J.Router = (function($){
         }else{
             _changePage(_history[1].tag,hashObj.tag);
         }
-
+        _add2History(hash);
     }
     /**
      * 后退
