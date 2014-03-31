@@ -20,7 +20,7 @@ function onDeviceReady(){
     }, false);
 }
 
-$('#btn_show_welcome').on('tap', J.showWelcome);
+$('#btn_show_welcome').on('tap', J.Welcome.show);
 $('#section_container').on('pageinit','#refresh_section',function(){
     J.Refresh({
         selector : '#down_refresh_article',
