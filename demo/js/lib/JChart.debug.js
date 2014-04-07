@@ -214,6 +214,17 @@ window.JingleChart = JChart = {
             }
         }
     },
+    getOffset : function(el){
+    	var box = el.getBoundingClientRect(), 
+		doc = el.ownerDocument, 
+		body = doc.body, 
+		html = doc.documentElement, 
+		clientTop = html.clientTop || body.clientTop || 0, 
+		clientLeft = html.clientLeft || body.clientLeft || 0, 
+		top = box.top + (self.pageYOffset || html.scrollTop || body.scrollTop ) - clientTop, 
+		left = box.left + (self.pageXOffset || html.scrollLeft || body.scrollLeft) - clientLeft 
+		return { 'top': top, 'left': left }; 
+    },
     tmpl : (function(){
         //Javascript micro templating by John Resig - source at http://ejohn.org/blog/javascript-micro-templating/
         var cache = {};
@@ -251,132 +262,6 @@ window.JingleChart = JChart = {
 };
 
 
-;(function(_){
-    function Bar(data,cfg){
-        _.Scale.apply(this);
-        var barRanges = [];//记录柱状图的占据的位置
-        this._type_ = 'bar';
-        var _this = this;
-        this.data = data;//所有的数据
-        this.chartData = null;//图表当前展示的数据
-        //配置项
-        this.config = {
-            scaleOverlay : false,
-            scaleOverride : false,
-            scaleSteps : null,
-            scaleStepWidth : null,
-            scaleStartValue : null,
-            scaleLineColor : "rgba(0,0,0,.1)",
-            scaleLineWidth : 1,
-            scaleShowLabels : true,
-            scaleLabel : "<%=value%>",
-            scaleFontFamily : "'Arial'",
-            scaleFontSize : 12,
-            scaleFontStyle : "normal",
-            scaleFontColor : "#666",
-            scaleShowGridLines : true,
-            scaleGridLineColor : "rgba(0,0,0,.05)",
-            scaleGridLineWidth : 1,
-            barShowStroke : true,
-            barStrokeWidth : 2,
-            barValueSpacing : 5,
-            barDatasetSpacing : 1,
-            animation : true,
-            animationSteps : 20,
-            animationEasing : "easeOutQuart",
-            onAnimationComplete : null,
-            //是否可以对数据进行拖动
-            datasetGesture : true,
-            //每次显示的数据条数
-            datasetOffsetNumber : 12
-        }
-        /**
-         * 绑定canvas dom元素上的事件 如：click、touch
-         */
-        this.bindEvents = function(){
-            this.on('_tap',function(x,y){tapHandler(x,y,'tap.bar')});
-            //this.on('_doubleTap',function(x,y){tapHandler(x,y,'doubleTap.bar')});
-            this.on('_longTap',function(x,y){tapHandler(x,y,'longTap.bar')});
-            if(this.config.datasetGesture){
-                this.bindDataGestureEvent();
-            }
-        }
-        /**
-         * 初始化部分元素值
-         */
-        this.init = function(noAnim){
-            if(this.config.datasetGesture && this.data.labels.length > _this.config.datasetOffsetNumber){
-                this.chartData = this.sliceData(this.data,0,this.data.labels.length,this.config.datasetOffsetNumber);
-            }else{
-                this.chartData = this.data;
-            }
-            this.initScale();
-            if(noAnim){
-                this.drawScale();
-                this.drawBars(1);
-            }else{
-                this.doAnim(this.drawScale,this.drawBars);
-            }
-        }
-        this.redraw = function(data){
-            this.chartData = data;
-            this.clear();
-            this.initScale();
-            this.drawScale();
-            this.drawBars(1);
-        }
-
-        this.drawBars = function(animPc){
-            if(animPc == 1)barRanges = [];
-            var ctx = _this.ctx,config = _this.config,scale = _this.scaleData;
-            ctx.lineWidth = config.barStrokeWidth;
-            _.each(_this.chartData.datasets,function(set,i){
-                ctx.fillStyle = set.fillColor;
-                ctx.strokeStyle = set.strokeColor;
-                _.each(set.data,function(d,j){
-                    var x1 = scale.x + config.barValueSpacing + scale.xHop*j + scale.barWidth*i + config.barDatasetSpacing*i + config.barStrokeWidth* i,
-                        y1 = scale.y,x2 = x1 + scale.barWidth,
-                        y2 = scale.y - animPc*_this.calculateOffset(d,scale.yScaleValue,scale.yHop)+(config.barStrokeWidth/2);
-                    ctx.beginPath();
-                    ctx.moveTo(x1, y1);
-                    ctx.lineTo(x1, y2);
-                    ctx.lineTo(x2,y2);
-                    ctx.lineTo(x2, y1);
-                    if(config.barShowStroke){
-                        ctx.stroke();
-                    }
-                    ctx.closePath();
-                    ctx.fill();
-                    if(animPc == 1){
-                        barRanges.push([x1,x2,y1,y2,j,i]);
-                    }
-
-                });
-            })
-        }
-
-        function tapHandler(x,y,event){
-            var p = isInBarRange(x,y);
-            if(p){
-                _this.trigger(event,[_this.chartData.datasets[p[3]].data[p[2]],p[2],p[3]]);
-            }
-        }
-
-        function isInBarRange(x,y){
-            var range;
-            _.each(barRanges,function(r){
-                if(x >= r[0] && x <= r[1] && y >= r[3] && y <= r[2]){
-                    range = r;
-                    return false;
-                }
-            });
-            return range;
-        }
-        //初始化参数
-        if(cfg)this.initial(cfg);
-    }
-    _.Bar = Bar;
-})(JChart)
 ;(function(_){
     var Chart = function(){
         this.events = {};
@@ -437,7 +322,7 @@ window.JingleChart = JChart = {
          * @param callback  执行成功回调函数
          */
         this.doAnim = function(drawScale,drawData,callback){
-            var config = this.config;
+            var config = this.config,_this = this;
             // 1/动画帧数
             var animFrameAmount = (config.animation)? 1/ _.capValue(config.animationSteps,Number.MAX_VALUE,1) : 1,
             //动画效果
@@ -457,19 +342,19 @@ window.JingleChart = JChart = {
                     _.requestAnimFrame.call(window,animLoop);
                 }
                 else{
-                    callback && callback();
+                    callback && callback.call(_this);
                     _this.trigger('animationComplete');
                 }
             };
             function animateFrame(){
                 _this.clear();
-                var easeAdjustedAnimationPercent =(config.animation)? _.capValue(easingFunction(percentAnimComplete),null,0) : 1;
+                var animPercent =(config.animation)? _.capValue(easingFunction(percentAnimComplete),null,0) : 1;
                 if(config.scaleOverlay){
-                    drawData(easeAdjustedAnimationPercent);
-                    drawScale();
+                    drawData.call(_this,animPercent);
+                    drawScale.call(_this);
                 } else {
-                    drawScale();
-                    drawData(easeAdjustedAnimationPercent);
+                    drawScale.call(_this);
+                    drawData.call(_this,animPercent);
                 }
             };
         }
@@ -495,28 +380,34 @@ window.JingleChart = JChart = {
         //给chart添加tap longTap doubleTap事件
         this.bindTouchEvents = function(){
             var touch = {},touchTimeout,longTapDelay = 750, longTapTimeout,now, delta,
-                _this = this;
+	            offset = _.getOffset(this.ctx.canvas),
+	            hasTouch = 'ontouchstart' in window,
+				START_EV = hasTouch ? 'touchstart' : 'mousedown',
+				MOVE_EV = hasTouch ? 'touchmove' : 'mousemove',
+				END_EV = hasTouch ? 'touchend' : 'mouseup',
+				CANCEL_EV = hasTouch ? 'touchcancel' : 'mouseup',
+	            _this = this;
 
-            this.ctx.canvas.addEventListener('mousedown',touchstart);
-            this.ctx.canvas.addEventListener('mousemove',touchmove);
-            this.ctx.canvas.addEventListener('mouseup',touchend);
-            this.ctx.canvas.addEventListener('touchcancel',cancelAll);
+            this.ctx.canvas.addEventListener(START_EV,touchstart);
+            this.ctx.canvas.addEventListener(MOVE_EV,touchmove);
+            this.ctx.canvas.addEventListener(END_EV,touchend);
+            this.ctx.canvas.addEventListener(CANCEL_EV,cancelAll);
 
             function touchstart(e){
                 now = Date.now();
                 e = e.touches ? e.touches[0] : e;
                 delta = now - (touch.last || now);
                 touchTimeout && clearTimeout(touchTimeout);
-                touch.x1 = e.offsetX;
-                touch.y1 = e.offsetY;
+                touch.x1 = e.pageX - offset.left;
+                touch.y1 = e.pageY - offset.top;
                 if (delta > 0 && delta <= 250) touch.isDoubleTap = true;
                 touch.last = now;
                 longTapTimeout = setTimeout(longTap, longTapDelay);
             }
             function touchmove(e){
-                e = e.touches ? e.touches[0] : e;
-                touch.x2 = e.offsetX;
-                touch.y2 = e.offsetY;
+                var ev = e.touches ? e.touches[0] : e;
+                touch.x2 = ev.pageX - offset.left;
+                touch.y2 = ev.pageY - offset.top;
                 if (Math.abs(touch.x1 - touch.x2) > 15){
                     e.preventDefault();
                     cancelAll();
@@ -569,8 +460,382 @@ window.JingleChart = JChart = {
     _.Chart = Chart;
 })(JChart);
 ;(function(_){
+    /**
+     * 抽象类-刻度值
+     * 用来初始化XY轴各项数据
+     * @constructor
+     */
+    function Scale(){
+        _.Chart.apply(this);
+        this.scaleData = {
+            x : 0,//圆点坐标
+            y : 0,
+            xHop : 0,//x轴数据项宽度
+            yHop : 0,//y轴每个刻度的高度
+            xLength : 0,//x轴长度
+            yHeight : 0,//y轴高度
+            yLabelHeight : 0,//y轴刻度文本高度
+            yScaleValue : null,//y轴刻度指标
+            labelRotate : 0,//x轴label旋转角度
+            widestXLabel : 0,//x轴label占用的最宽宽度
+            barWidth : 0//柱形图柱子宽度
+        }
+        /**
+         * 计算X轴文本宽度、旋转角度及Y轴高度
+         */
+        this.calcDrawingSizes = function(){
+            var maxSize = this.height,widestXLabel = 1,labelRotate = 0;
+            //计算X轴，如果发现数据宽度超过总宽度，需要将label进行旋转
+            this.ctx.font = this.config.scaleFontStyle + " " + this.config.scaleFontSize+"px " + this.config.scaleFontFamily;
+            //找出最宽的label
+            _.each(this.chartData.labels,function(o){
+                var textLength = this.ctx.measureText(o).width;
+                widestXLabel = (textLength > widestXLabel)? textLength : widestXLabel;
+            },this);
+            if (this.width/this.chartData.labels.length < widestXLabel){
+                labelRotate = 45;
+                if (this.width/this.chartData.labels.length < Math.cos(labelRotate) * widestXLabel){
+                    labelRotate = 90;
+                    maxSize -= widestXLabel;
+                }
+                else{
+                    maxSize -= Math.sin(labelRotate) * widestXLabel;
+                }
+            }
+            else{
+                maxSize -= this.config.scaleFontSize;
+            }
+            //给Y轴顶部留一点空白
+            maxSize -= 5;
+            maxSize -= this.config.scaleFontSize;
+
+            this.scaleData.yHeight = maxSize;
+            this.scaleData.yLabelHeight = this.config.scaleFontSize;
+            this.scaleData.labelRotate = labelRotate;
+            this.scaleData.widestXLabel = widestXLabel;
+        }
+
+        /**
+         * 计算Y轴刻度的边界及刻度步数
+         * @return {Object}
+         */
+        this.getValueBounds = function(dataset) {
+            var upperValue = Number.MIN_VALUE;
+            var lowerValue = Number.MAX_VALUE;
+            _.each(dataset,function(o){
+                _.each(o.data,function(obj){
+                    if(obj > upperValue){upperValue = obj};
+                    if (obj < lowerValue) { lowerValue = obj};
+                })
+            })
+            var yh = this.scaleData.yHeight;
+            var lh = this.scaleData.yLabelHeight;
+            var maxSteps = Math.floor((yh/(lh*0.66)));
+            var minSteps = Math.floor((yh/lh*0.5));
+
+            return {
+                maxValue : upperValue,
+                minValue : lowerValue,
+                maxSteps : maxSteps,
+                minSteps : minSteps
+            };
+        }
+
+        /**
+         * 计算Y轴刻度的各项数据
+         */
+        this.calcYAxis = function(){
+            var config = this.config,calculatedScale;
+            //Check and set the scale
+            var labelTemplateString = (config.scaleShowLabels)? config.scaleLabel : "";
+            if (!config.scaleOverride){
+                var bounds = this.getValueBounds(this.chartData.datasets);
+                calculatedScale = this.calcScale(this.scaleData.yHeight,bounds.maxSteps,bounds.minSteps,bounds.maxValue,bounds.minValue,labelTemplateString);
+            }else {
+                calculatedScale = {
+                    steps : config.scaleSteps,
+                    stepValue : config.scaleStepWidth,
+                    graphMin : config.scaleStartValue,
+                    labels : []
+                }
+                this.populateLabels(labelTemplateString, calculatedScale.labels,calculatedScale.steps,config.scaleStartValue,config.scaleStepWidth);
+            }
+            this.scaleData.yScaleValue = calculatedScale;
+            this.scaleData.yHop = Math.floor(this.scaleData.yHeight/calculatedScale.steps);
+        }
+
+        /**
+         * 计算X轴宽度，每个数据项宽度大小及坐标原点
+         */
+        this.calcXAxis = function(){
+            var config = this.config,scale = this.scaleData,longestText = 1,xAxisLength,valueHop, x,y;
+            //if we are showing the labels
+            if (config.scaleShowLabels){
+                this.ctx.font = config.scaleFontStyle + " " + config.scaleFontSize+"px " + config.scaleFontFamily;
+                //找出Y轴刻度的最宽值
+                _.each(scale.yScaleValue.labels,function(o){
+                    var measuredText = this.ctx.measureText(o).width;
+                    longestText = (measuredText > longestText)? measuredText : longestText;
+                },this);
+                //Add a little extra padding from the y axis
+                longestText +=10;
+            }
+            xAxisLength = this.width - longestText - scale.widestXLabel;
+
+            if(this._type_ == 'bar'){//计算柱形图柱子宽度，柱形图x轴文本居中显示，需要重新计算数据项宽度
+                valueHop = Math.floor(xAxisLength/this.chartData.labels.length);
+                var len = this.chartData.datasets.length;
+                scale.barWidth = (valueHop - config.scaleGridLineWidth*2 - (config.barValueSpacing*2) - (config.barDatasetSpacing*len-1) - ((config.barStrokeWidth/2)*len-1))/len;
+            }else{
+                valueHop = Math.floor(xAxisLength/(this.chartData.labels.length-1));
+            }
+            x = this.width-scale.widestXLabel/2-xAxisLength;
+            y = scale.yHeight + config.scaleFontSize/2;
+            scale.x = x;
+            scale.y = y;
+            scale.xWidth = xAxisLength;
+            scale.xHop = valueHop;
+        }
+
+        this.drawScale = function(){
+            var ctx = this.ctx,config = this.config,scale = this.scaleData;
+            //画X轴数据项
+            ctx.lineWidth = config.scaleLineWidth;
+            ctx.strokeStyle = config.scaleLineColor;
+            ctx.beginPath();
+            ctx.moveTo(this.width-scale.widestXLabel/2+5,scale.y);
+            ctx.lineTo(this.width-(scale.widestXLabel/2)-scale.xWidth-5,scale.y);
+            ctx.stroke();
+
+
+            if (scale.labelRotate > 0){
+                ctx.save();
+                ctx.textAlign = "right";
+            }
+            else{
+                ctx.textAlign = "center";
+            }
+            ctx.fillStyle = config.scaleFontColor;
+            _.each(this.chartData.labels,function(label,i){
+                ctx.save();
+                var labelX = scale.x + i*scale.xHop,labelY = scale.y + config.scaleFontSize;
+                if(this._type_ == 'bar'){
+                    labelX += scale.xHop/2;
+                }
+                if (scale.labelRotate > 0){
+                    ctx.translate(labelX,labelY);
+                    ctx.rotate(-(scale.labelRotate * (Math.PI/180)));
+                    ctx.fillText(label, 0,0);
+                    ctx.restore();
+                }else{
+                    ctx.fillText(label, labelX,labelY+3);
+                }
+
+                ctx.beginPath();
+
+                //Check i isnt 0, so we dont go over the Y axis twice.
+                if(this._type_ == 'bar'){
+                    ctx.moveTo(scale.x + (i+1) * scale.xHop, scale.y+3);
+                    drawGridLine(scale.x + (i+1) * scale.xHop, 5);
+                }else{
+                    ctx.moveTo(scale.x + i * scale.xHop, scale.y+3);
+                    if(config.scaleShowGridLines && i>0){
+                        drawGridLine(scale.x + i * scale.xHop, 5);
+                    }
+                    else{
+                        ctx.lineTo(scale.x + i * scale.xHop, scale.y+3);
+                    }
+                }
+                ctx.stroke();
+            },this);
+
+            //画Y轴
+            ctx.lineWidth = config.scaleLineWidth;
+            ctx.strokeStyle = config.scaleLineColor;
+            ctx.beginPath();
+            ctx.moveTo(scale.x,scale.y+5);
+            ctx.lineTo(scale.x,5);
+            ctx.stroke();
+
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            for (var j=0; j<scale.yScaleValue.steps; j++){
+                ctx.beginPath();
+                ctx.moveTo(scale.x-3,scale.y - ((j+1) * scale.yHop));
+                if (config.scaleShowGridLines){
+                    drawGridLine(scale.x + scale.xWidth + 5,scale.y - ((j+1) * scale.yHop));
+                }
+                else{
+                    ctx.lineTo(scale.x-0.5,scale.y - ((j+1) * scale.yHop));
+                }
+
+                ctx.stroke();
+
+                if (config.scaleShowLabels){
+                    ctx.fillText(scale.yScaleValue.labels[j],scale.x-8,scale.y - ((j+1) * scale.yHop));
+                }
+            }
+            function drawGridLine(x,y){
+                ctx.lineWidth = config.scaleGridLineWidth;
+                ctx.strokeStyle = config.scaleGridLineColor;
+                ctx.lineTo(x, y);
+            }
+        }
+
+        this.initScale = function(showX){
+            this.calcDrawingSizes();
+            this.calcYAxis();
+            showX && this.calcXAxis();
+        }
+
+		/**
+         * 计算坐标轴的刻度
+         * @param drawingHeight
+         * @param maxSteps
+         * @param minSteps
+         * @param maxValue
+         * @param minValue
+         * @param labelTemplateString
+         */
+        this.calcScale = function(drawingHeight,maxSteps,minSteps,maxValue,minValue,labelTemplateString){
+            var graphMin,graphMax,graphRange,stepValue,numberOfSteps,valueRange,rangeOrderOfMagnitude,decimalNum;
+
+            valueRange = maxValue - minValue;
+
+            rangeOrderOfMagnitude = calculateOrderOfMagnitude(valueRange);
+
+            graphMin = Math.floor(minValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude);
+
+            graphMax = Math.ceil(maxValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude);
+
+            graphRange = graphMax - graphMin;
+
+            stepValue = Math.pow(10, rangeOrderOfMagnitude);
+
+            numberOfSteps = Math.round(graphRange / stepValue);
+
+            //Compare number of steps to the max and min for that size graph, and add in half steps if need be.
+            while(numberOfSteps < minSteps || numberOfSteps > maxSteps) {
+                if (numberOfSteps < minSteps){
+                    stepValue /= 2;
+                    numberOfSteps = Math.round(graphRange/stepValue);
+                }
+                else{
+                    stepValue *=2;
+                    numberOfSteps = Math.round(graphRange/stepValue);
+                }
+            };
+
+            var labels = [];
+            this.populateLabels(labelTemplateString, labels, numberOfSteps, graphMin, stepValue);
+
+            return {
+                steps : numberOfSteps,
+                stepValue : stepValue,
+                graphMin : graphMin,
+                labels : labels
+            }
+            function calculateOrderOfMagnitude(val){
+                return Math.floor(Math.log(val) / Math.LN10);
+            }
+        }
+
+        /**
+         * Populate an array of all the labels by interpolating the string.
+         * @param labelTemplateString
+         * @param labels
+         * @param numberOfSteps
+         * @param graphMin
+         * @param stepValue
+         */
+        this.populateLabels = function (labelTemplateString, labels, numberOfSteps, graphMin, stepValue) {
+            if (labelTemplateString) {
+                //Fix floating point errors by setting to fixed the on the same decimal as the stepValue.
+                for (var i = 1; i < numberOfSteps + 1; i++) {
+                    labels.push(_.tmpl(labelTemplateString, {value: (graphMin + (stepValue * i)).toFixed(_.getDecimalPlaces(stepValue))}));
+                }
+            }
+        },
+        this.calculateOffset = function(val,calculatedScale,scaleHop){
+            var outerValue = calculatedScale.steps * calculatedScale.stepValue;
+            var adjustedValue = val - calculatedScale.graphMin;
+            var scalingFactor = _.capValue(adjustedValue/outerValue,1,0);
+            return (scaleHop*calculatedScale.steps) * scalingFactor;
+        },
+        
+        this.sliceData = function(data,offset,len,num){
+            var newdata = _.clone(data);
+            var min = offset,max = offset + num;
+            if(max > len){
+                min = len - num;
+                max = len;
+            }
+            newdata.labels = newdata.labels.slice(min,max);
+            _.each(newdata.datasets,function(d){
+                d.data = d.data.slice(min,max)
+            });
+            return newdata;
+        }
+		
+
+        this.bindDataGestureEvent = function(){
+            var _this = this,
+            	touchDistanceX,//手指滑动偏移量
+                startPosition,//触摸初始位置记录
+                dataOffset = 0,//数据偏移量
+                currentOffset = 0,//当前一次滑动的偏移量
+                dataNum = this.config.datasetOffsetNumber,//每屏显示的数据条数
+                gestureStarted,
+                hasTouch = 'ontouchstart' in window,
+				START_EV = hasTouch ? 'touchstart' : 'mousedown',
+				MOVE_EV = hasTouch ? 'touchmove' : 'mousemove',
+				END_EV = hasTouch ? 'touchend' : 'mouseup';
+
+            this.ctx.canvas.addEventListener(START_EV,touchstart);
+            this.ctx.canvas.addEventListener(MOVE_EV,touchmove);
+            this.ctx.canvas.addEventListener(END_EV,touchend);
+
+            function touchstart(e){
+            	e = e.touches ? e.touches[0] : e;
+                startPosition = {
+                    x : e.pageX,
+                    y : e.pageY
+                }
+                touchDistanceX = 0;
+                gestureStarted = true;
+            }
+            function touchmove(e){
+                if(!gestureStarted || !_this.config.datasetGesture)return;
+                e = e.touches ? e.touches[0] : e;
+                var x = e.pageX;
+                var y = e.pageY;
+                touchDistanceX = x - startPosition.x;
+				//允许1/10的误差范围
+                //if(touchDistanceX%_this.scaleData.xHop < _this.scaleData.xHop/10){
+            	if(Math.floor(touchDistanceX)%20 < 10){//每滑动20px加载下一组数据，中间偶尔可能会重复加载
+                    var totalLen = _this.data.labels.length;//数据总长度
+                    var offset = dataOffset - Math.floor(touchDistanceX/_this.scaleData.xHop);
+                    if(offset+dataNum > totalLen)return;
+                    if(offset < 0)return;
+                    currentOffset = offset;
+                    //将操作加入系统队列，解决android系统下touchmove的bug
+                    setTimeout(function(){
+                    	_this.redraw(_this.sliceData(_this.data,offset,totalLen,dataNum));
+                    },0)
+                }
+            }
+            function touchend(event){
+                gestureStarted = false;
+                dataOffset = currentOffset;
+            }
+        }
+
+    }
+    _.Scale = Scale;
+})(JChart);
+;(function(_){
     function Line(data,cfg){
-        _.Scale.apply(this);
+      	_.Scale.apply(this);
         var pointRanges = [];//记录线的节点位置 (for click 事件)
         this._type_ = 'line';
         this.data = data;
@@ -603,11 +868,11 @@ window.JingleChart = JChart = {
             datasetStrokeWidth : 2,
             datasetFill : true,
             animation : true,
-            animationSteps : 20,
+            animationSteps : 30,
             animationEasing : "easeOutQuart",
             onAnimationComplete : null,
             //是否可以对数据进行拖动
-            datasetGesture : true,
+            datasetGesture : false,
             //每次显示的数据条数
             datasetOffsetNumber : 12
         }
@@ -630,7 +895,7 @@ window.JingleChart = JChart = {
             }else{
                 this.chartData = this.data;
             }
-            _this.initScale();
+            _this.initScale(true);
             if(noAnim){
                 this.drawScale();
                 this.drawLines(1);
@@ -641,7 +906,7 @@ window.JingleChart = JChart = {
         this.redraw = function(data){
             this.chartData = data;
             this.clear();
-            this.initScale();
+            this.initScale(true);
             this.drawScale();
             this.drawLines(1);
         }
@@ -720,6 +985,132 @@ window.JingleChart = JChart = {
     _.Line = Line;
 })(JChart)
 ;(function(_){
+    function Bar(data,cfg){
+        _.Scale.apply(this);
+        var barRanges = [];//记录柱状图的占据的位置
+        this._type_ = 'bar';
+        var _this = this;
+        this.data = data;//所有的数据
+        this.chartData = null;//图表当前展示的数据
+        //配置项
+        this.config = {
+            scaleOverlay : false,
+            scaleOverride : false,
+            scaleSteps : null,
+            scaleStepWidth : null,
+            scaleStartValue : null,
+            scaleLineColor : "rgba(0,0,0,.1)",
+            scaleLineWidth : 1,
+            scaleShowLabels : true,
+            scaleLabel : "<%=value%>",
+            scaleFontFamily : "'Arial'",
+            scaleFontSize : 12,
+            scaleFontStyle : "normal",
+            scaleFontColor : "#666",
+            scaleShowGridLines : true,
+            scaleGridLineColor : "rgba(0,0,0,.05)",
+            scaleGridLineWidth : 1,
+            barShowStroke : true,
+            barStrokeWidth : 2,
+            barValueSpacing : 5,
+            barDatasetSpacing : 1,
+            animation : true,
+            animationSteps : 30,
+            animationEasing : "easeOutQuart",
+            onAnimationComplete : null,
+            //是否可以对数据进行拖动
+            datasetGesture : false,
+            //每次显示的数据条数
+            datasetOffsetNumber : 12
+        }
+        /**
+         * 绑定canvas dom元素上的事件 如：click、touch
+         */
+        this.bindEvents = function(){
+            this.on('_tap',function(x,y){tapHandler(x,y,'tap.bar')});
+            //this.on('_doubleTap',function(x,y){tapHandler(x,y,'doubleTap.bar')});
+            this.on('_longTap',function(x,y){tapHandler(x,y,'longTap.bar')});
+            if(this.config.datasetGesture){
+                this.bindDataGestureEvent();
+            }
+        }
+        /**
+         * 初始化部分元素值
+         */
+        this.init = function(noAnim){
+            if(this.config.datasetGesture && this.data.labels.length > _this.config.datasetOffsetNumber){
+                this.chartData = this.sliceData(this.data,0,this.data.labels.length,this.config.datasetOffsetNumber);
+            }else{
+                this.chartData = this.data;
+            }
+            this.initScale(true);
+            if(noAnim){
+                this.drawScale();
+                this.drawBars(1);
+            }else{
+                this.doAnim(this.drawScale,this.drawBars);
+            }
+        }
+        this.redraw = function(data){
+            this.chartData = data;
+            this.clear();
+            this.initScale(true);
+            this.drawScale();
+            this.drawBars(1);
+        }
+
+        this.drawBars = function(animPc){
+            if(animPc == 1)barRanges = [];
+            var ctx = _this.ctx,config = _this.config,scale = _this.scaleData;
+            ctx.lineWidth = config.barStrokeWidth;
+            _.each(_this.chartData.datasets,function(set,i){
+                ctx.fillStyle = set.fillColor;
+                ctx.strokeStyle = set.strokeColor;
+                _.each(set.data,function(d,j){
+                    var x1 = scale.x + config.barValueSpacing + scale.xHop*j + scale.barWidth*i + config.barDatasetSpacing*i + config.barStrokeWidth* i,
+                        y1 = scale.y,x2 = x1 + scale.barWidth,
+                        y2 = scale.y - animPc*_this.calculateOffset(d,scale.yScaleValue,scale.yHop)+(config.barStrokeWidth/2);
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x1, y2);
+                    ctx.lineTo(x2,y2);
+                    ctx.lineTo(x2, y1);
+                    if(config.barShowStroke){
+                        ctx.stroke();
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                    if(animPc == 1){
+                        barRanges.push([x1,x2,y1,y2,j,i]);
+                    }
+
+                });
+            })
+        }
+
+        function tapHandler(x,y,event){
+            var p = isInBarRange(x,y);
+            if(p){
+                _this.trigger(event,[_this.chartData.datasets[p[5]].data[p[4]],p[4],p[5]]);
+            }
+        }
+
+        function isInBarRange(x,y){
+            var range;
+            _.each(barRanges,function(r){
+                if(x >= r[0] && x <= r[1] && y >= r[3] && y <= r[2]){
+                    range = r;
+                    return false;
+                }
+            });
+            return range;
+        }
+        //初始化参数
+        if(cfg)this.initial(cfg);
+    }
+    _.Bar = Bar;
+})(JChart)
+;(function(_){
     function Pie(data,cfg){
         _.Chart.apply(this);
         var angleRanges;//记录每个扇形的起始角度（从0开始）
@@ -745,7 +1136,7 @@ window.JingleChart = JChart = {
             //是否开启动画
             animation : true,
             //动画执行步数
-            animationSteps : 20,
+            animationSteps : 30,
             //动画效果
             animationEasing : "linear",
             //环形图
@@ -994,412 +1385,3 @@ window.JingleChart = JChart = {
     }
     _.Pie = Pie;
 }(JChart));
-
-;(function(_){
-    /**
-     * 抽象类-刻度值
-     * 用来初始化XY轴各项数据
-     * @constructor
-     */
-    function Scale(){
-        _.Chart.apply(this);
-        var _this = this;
-        this.scaleData = {
-            x : 0,//圆点坐标
-            y : 0,
-            xHop : 0,//x轴数据项宽度
-            yHop : 0,//y轴每个刻度的高度
-            xLength : 0,//x轴长度
-            yHeight : 0,//y轴高度
-            yScaleValue : null,//y轴刻度指标
-            labelRotate : 0,//x轴label旋转角度
-            widestXLabel : 0,//x轴label占用的最宽宽度
-            barWidth : 0//柱形图柱子宽度
-        }
-        /**
-         * 计算X轴文本宽度、旋转角度及Y轴高度
-         */
-        this.calculateDrawingSizes = function(){
-            var maxSize = _this.height,widestXLabel = 1,labelRotate = 0;
-            //计算X轴，如果发现数据宽度超过总宽度，需要将label进行旋转
-            _this.ctx.font = _this.config.scaleFontStyle + " " + _this.config.scaleFontSize+"px " + _this.config.scaleFontFamily;
-            //找出最宽的label
-            _.each(_this.chartData.labels,function(o){
-                var textLength = _this.ctx.measureText(o).width;
-                widestXLabel = (textLength > widestXLabel)? textLength : widestXLabel;
-            })
-            if (_this.width/_this.chartData.labels.length < widestXLabel){
-                labelRotate = 45;
-                if (_this.width/_this.chartData.labels.length < Math.cos(labelRotate) * widestXLabel){
-                    labelRotate = 90;
-                    maxSize -= widestXLabel;
-                }
-                else{
-                    maxSize -= Math.sin(labelRotate) * widestXLabel;
-                }
-            }
-            else{
-                maxSize -= _this.config.scaleFontSize;
-            }
-            //给Y轴顶部留一点空白
-            maxSize -= 5;
-            maxSize -= _this.config.scaleFontSize;
-
-            this.scaleData.yHeight = maxSize;
-            this.scaleData.labelRotate = labelRotate;
-            this.scaleData.widestXLabel = widestXLabel;
-        }
-
-        /**
-         * 计算Y轴刻度的边界及刻度步数
-         * @return {Object}
-         */
-        this.getValueBounds =function() {
-            var upperValue = Number.MIN_VALUE;
-            var lowerValue = Number.MAX_VALUE;
-            _.each(_this.chartData.datasets,function(o){
-                _.each(o.data,function(obj){
-                    if(obj > upperValue){upperValue = obj};
-                    if (obj < lowerValue) { lowerValue = obj};
-                })
-            })
-            var yh = this.scaleData.yHeight;
-            var lh = _this.config.scaleFontSize;
-            var maxSteps = Math.floor((yh/(lh*0.66)));
-            var minSteps = Math.floor((yh/lh*0.5));
-
-            return {
-                maxValue : upperValue,
-                minValue : lowerValue,
-                maxSteps : maxSteps,
-                minSteps : minSteps
-            };
-        }
-
-        /**
-         * 初始化刻度的各项数据
-         */
-        this.initScaleData = function(){
-            var config = _this.config,calculatedScale;
-            //Check and set the scale
-            var labelTemplateString = (config.scaleShowLabels)? config.scaleLabel : "";
-            if (!config.scaleOverride){
-                var bounds = _this.getValueBounds();
-                calculatedScale = _this.calcScale(_this.scaleData.yHeight,bounds.maxSteps,bounds.minSteps,bounds.maxValue,bounds.minValue,labelTemplateString);
-            }else {
-                calculatedScale = {
-                    steps : config.scaleSteps,
-                    stepValue : config.scaleStepWidth,
-                    graphMin : config.scaleStartValue,
-                    labels : []
-                }
-                _this.populateLabels(labelTemplateString, calculatedScale.labels,calculatedScale.steps,config.scaleStartValue,config.scaleStepWidth);
-            }
-            this.scaleData.yScaleValue = calculatedScale;
-            this.scaleData.yHop = Math.floor(_this.scaleData.yHeight/calculatedScale.steps);
-        }
-        /**
-         * 计算坐标轴的刻度
-         */
-        this.calcScale = function(drawingHeight,maxSteps,minSteps,maxValue,minValue,labelTemplateString){
-            var graphMin,graphMax,graphRange,stepValue,numberOfSteps,valueRange,rangeOrderOfMagnitude,decimalNum;
-
-            valueRange = maxValue - minValue;
-
-            rangeOrderOfMagnitude = calculateOrderOfMagnitude(valueRange);
-
-            graphMin = Math.floor(minValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude);
-
-            graphMax = Math.ceil(maxValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude);
-
-            graphRange = graphMax - graphMin;
-
-            stepValue = Math.pow(10, rangeOrderOfMagnitude);
-
-            numberOfSteps = Math.round(graphRange / stepValue);
-
-            //Compare number of steps to the max and min for that size graph, and add in half steps if need be.
-            while(numberOfSteps < minSteps || numberOfSteps > maxSteps) {
-                if (numberOfSteps < minSteps){
-                    stepValue /= 2;
-                    numberOfSteps = Math.round(graphRange/stepValue);
-                }
-                else{
-                    stepValue *=2;
-                    numberOfSteps = Math.round(graphRange/stepValue);
-                }
-            };
-
-            var labels = [];
-            _this.populateLabels(labelTemplateString, labels, numberOfSteps, graphMin, stepValue);
-
-            return {
-                steps : numberOfSteps,
-                stepValue : stepValue,
-                graphMin : graphMin,
-                labels : labels
-            }
-            function calculateOrderOfMagnitude(val){
-                return Math.floor(Math.log(val) / Math.LN10);
-            }
-        }
-
-        /**
-         * 计算X轴宽度，每个数据项宽度大小及坐标原点
-         */
-        this.calculateXAxisSize = function(){
-            var config = _this.config,scale = _this.scaleData,longestText = 1,xAxisLength,valueHop, x,y;
-            //if we are showing the labels
-            if (config.scaleShowLabels){
-                _this.ctx.font = config.scaleFontStyle + " " + config.scaleFontSize+"px " + config.scaleFontFamily;
-                //找出Y轴刻度的最宽值
-                _.each(scale.yScaleValue.labels,function(o){
-                    var measuredText = _this.ctx.measureText(o).width;
-                    longestText = (measuredText > longestText)? measuredText : longestText;
-                })
-                //Add a little extra padding from the y axis
-                longestText +=10;
-            }
-            xAxisLength = _this.width - longestText - scale.widestXLabel;
-
-            if(_this._type_ == 'bar'){//计算柱形图柱子宽度，柱形图x轴文本居中显示，需要重新计算数据项宽度
-                valueHop = Math.floor(xAxisLength/_this.chartData.labels.length);
-                var len = _this.chartData.datasets.length;
-                scale.barWidth = (valueHop - config.scaleGridLineWidth*2 - (config.barValueSpacing*2) - (config.barDatasetSpacing*len-1) - ((config.barStrokeWidth/2)*len-1))/len;
-            }else{
-                valueHop = Math.floor(xAxisLength/(_this.chartData.labels.length-1));
-            }
-            x = _this.width-scale.widestXLabel/2-xAxisLength;
-            y = scale.yHeight + config.scaleFontSize/2;
-            scale.x = x;
-            scale.y = y;
-            scale.xWidth = xAxisLength;
-            scale.xHop = valueHop;
-        }
-
-        this.drawScale = function(){
-            var ctx = _this.ctx,config = _this.config,scale = _this.scaleData;
-            //画X轴数据项
-            ctx.lineWidth = config.scaleLineWidth;
-            ctx.strokeStyle = config.scaleLineColor;
-            ctx.beginPath();
-            ctx.moveTo(_this.width-scale.widestXLabel/2+5,scale.y);
-            ctx.lineTo(_this.width-(scale.widestXLabel/2)-scale.xWidth-5,scale.y);
-            ctx.stroke();
-
-
-            if (scale.labelRotate > 0){
-                ctx.save();
-                ctx.textAlign = "right";
-            }
-            else{
-                ctx.textAlign = "center";
-            }
-            ctx.fillStyle = config.scaleFontColor;
-            _.each(_this.chartData.labels,function(label,i){
-                ctx.save();
-                var labelX = scale.x + i*scale.xHop,labelY = scale.y + config.scaleFontSize;
-                if(_this._type_ == 'bar'){
-                    labelX += scale.xHop/2;
-                }
-                if (scale.labelRotate > 0){
-                    ctx.translate(labelX,labelY);
-                    ctx.rotate(-(scale.labelRotate * (Math.PI/180)));
-                    ctx.fillText(label, 0,0);
-                    ctx.restore();
-                }else{
-                    ctx.fillText(label, labelX,labelY+3);
-                }
-
-                ctx.beginPath();
-
-                //Check i isnt 0, so we dont go over the Y axis twice.
-                if(this._type_ == 'bar'){
-                    ctx.moveTo(scale.x + (i+1) * scale.xHop, scale.y+3);
-                    drawGridLine(scale.x + (i+1) * scale.xHop, 5);
-                }else{
-                    ctx.moveTo(scale.x + i * scale.xHop, scale.y+3);
-                    if(config.scaleShowGridLines && i>0){
-                        drawGridLine(scale.x + i * scale.xHop, 5);
-                    }
-                    else{
-                        ctx.lineTo(scale.x + i * scale.xHop, scale.y+3);
-                    }
-                }
-                ctx.stroke();
-            })
-
-            //画Y轴
-            ctx.lineWidth = config.scaleLineWidth;
-            ctx.strokeStyle = config.scaleLineColor;
-            ctx.beginPath();
-            ctx.moveTo(scale.x,scale.y+5);
-            ctx.lineTo(scale.x,5);
-            ctx.stroke();
-
-            ctx.textAlign = "right";
-            ctx.textBaseline = "middle";
-            for (var j=0; j<scale.yScaleValue.steps; j++){
-                ctx.beginPath();
-                ctx.moveTo(scale.x-3,scale.y - ((j+1) * scale.yHop));
-                if (config.scaleShowGridLines){
-                    drawGridLine(scale.x + scale.xWidth + 5,scale.y - ((j+1) * scale.yHop));
-                }
-                else{
-                    ctx.lineTo(scale.x-0.5,scale.y - ((j+1) * scale.yHop));
-                }
-
-                ctx.stroke();
-
-                if (config.scaleShowLabels){
-                    ctx.fillText(scale.yScaleValue.labels[j],scale.x-8,scale.y - ((j+1) * scale.yHop));
-                }
-            }
-            function drawGridLine(x,y){
-                ctx.lineWidth = config.scaleGridLineWidth;
-                ctx.strokeStyle = config.scaleGridLineColor;
-                ctx.lineTo(x, y);
-            }
-        }
-
-        /**
-         * 计算坐标轴的刻度
-         * @param drawingHeight
-         * @param maxSteps
-         * @param minSteps
-         * @param maxValue
-         * @param minValue
-         * @param labelTemplateString
-         */
-        this.calcScale = function(drawingHeight,maxSteps,minSteps,maxValue,minValue,labelTemplateString){
-            var graphMin,graphMax,graphRange,stepValue,numberOfSteps,valueRange,rangeOrderOfMagnitude,decimalNum;
-
-            valueRange = maxValue - minValue;
-
-            rangeOrderOfMagnitude = calculateOrderOfMagnitude(valueRange);
-
-            graphMin = Math.floor(minValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude);
-
-            graphMax = Math.ceil(maxValue / (1 * Math.pow(10, rangeOrderOfMagnitude))) * Math.pow(10, rangeOrderOfMagnitude);
-
-            graphRange = graphMax - graphMin;
-
-            stepValue = Math.pow(10, rangeOrderOfMagnitude);
-
-            numberOfSteps = Math.round(graphRange / stepValue);
-
-            //Compare number of steps to the max and min for that size graph, and add in half steps if need be.
-            while(numberOfSteps < minSteps || numberOfSteps > maxSteps) {
-                if (numberOfSteps < minSteps){
-                    stepValue /= 2;
-                    numberOfSteps = Math.round(graphRange/stepValue);
-                }
-                else{
-                    stepValue *=2;
-                    numberOfSteps = Math.round(graphRange/stepValue);
-                }
-            };
-
-            var labels = [];
-            this.populateLabels(labelTemplateString, labels, numberOfSteps, graphMin, stepValue);
-
-            return {
-                steps : numberOfSteps,
-                stepValue : stepValue,
-                graphMin : graphMin,
-                labels : labels
-            }
-            function calculateOrderOfMagnitude(val){
-                return Math.floor(Math.log(val) / Math.LN10);
-            }
-        }
-
-        /**
-         * Populate an array of all the labels by interpolating the string.
-         * @param labelTemplateString
-         * @param labels
-         * @param numberOfSteps
-         * @param graphMin
-         * @param stepValue
-         */
-        this.populateLabels = function (labelTemplateString, labels, numberOfSteps, graphMin, stepValue) {
-            if (labelTemplateString) {
-                //Fix floating point errors by setting to fixed the on the same decimal as the stepValue.
-                for (var i = 1; i < numberOfSteps + 1; i++) {
-                    labels.push(_.tmpl(labelTemplateString, {value: (graphMin + (stepValue * i)).toFixed(_.getDecimalPlaces(stepValue))}));
-                }
-            }
-        }
-
-        this.calculateOffset = function(val,calculatedScale,scaleHop){
-            var outerValue = calculatedScale.steps * calculatedScale.stepValue;
-            var adjustedValue = val - calculatedScale.graphMin;
-            var scalingFactor = _.capValue(adjustedValue/outerValue,1,0);
-            return (scaleHop*calculatedScale.steps) * scalingFactor;
-        }
-
-        this.initScale = function(){
-            _this.calculateDrawingSizes();
-            _this.initScaleData();
-            _this.calculateXAxisSize();
-        }
-
-        this.sliceData = function(data,offset,len,num){
-            var newdata = _.clone(data);
-            var min = offset,max = offset + num;
-            if(max > len){
-                min = len - num;
-                max = len;
-            }
-            newdata.labels = newdata.labels.slice(min,max);
-            _.each(newdata.datasets,function(d){
-                d.data = d.data.slice(min,max)
-            });
-            return newdata;
-        }
-
-
-        this.bindDataGestureEvent = function(){
-            var touchDistanceX,//手指滑动偏移量
-                startPosition,//触摸初始位置记录
-                dataOffset = 0,//数据偏移量
-                currentOffset = 0,//当前一次滑动的偏移量
-                dataNum = this.config.datasetOffsetNumber,//每屏显示的数据条数
-                gestureStarted;
-
-            this.ctx.canvas.addEventListener('mousedown',touchstart);
-            this.ctx.canvas.addEventListener('mousemove',touchmove);
-            this.ctx.canvas.addEventListener('mouseup',touchend);
-
-            function touchstart(event){
-                startPosition = {
-                    x : event.pageX,
-                    y : event.pageY
-                }
-                touchDistanceX = 0;
-                gestureStarted = true;
-            }
-            function touchmove(event){
-                if(!gestureStarted || !_this.config.datasetGesture){return;};
-                var x = event.pageX;
-                var y = event.pageY;
-                touchDistanceX = x - startPosition.x;
-                //允许1/10的误差范围
-                if(touchDistanceX%_this.scaleData.xHop < _this.scaleData.xHop/10){
-                    var totalLen = _this.data.labels.length;//数据总长度
-                    var offset = dataOffset - Math.floor(touchDistanceX/_this.scaleData.xHop);
-                    if(offset+dataNum > totalLen)return;
-                    if(offset < 0)return;
-                    currentOffset = offset;
-                    _this.redraw(_this.sliceData(_this.data,offset,totalLen,dataNum));
-                }
-            }
-            function touchend(event){
-                gestureStarted = false;
-                dataOffset = currentOffset;
-            }
-        }
-
-    }
-    _.Scale = Scale;
-})(JChart);

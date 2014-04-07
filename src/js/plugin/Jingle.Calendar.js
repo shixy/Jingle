@@ -156,7 +156,7 @@
 
         /**
          * 刷新日历为指定日期
-         * @param date 指定日期你
+         * @param date 指定日期
          */
         this.refresh = function(date){
             var oldDate = new Date(currentYear,currentMonth,1),

@@ -1782,6 +1782,7 @@ J.Cache = (function($){
             slideNum,
             slideWidth,
             deltaX,
+            isScrolling,
             autoPlay;
         var _this = this;
 

@@ -475,7 +475,7 @@ App.page('chart_drag',function(){
             new JChart.Line(data,{
                 id : 'chart_drag_line_canvas',
                 datasetGesture : true,
-                datasetOffsetNumber : 12
+                datasetOffsetNumber : 10
             });
         }else{
             $lineChart.hide();
@@ -483,7 +483,7 @@ App.page('chart_drag',function(){
             new JChart.Bar(data,{
                 id : 'chart_drag_bar_canvas',
                 datasetGesture : true,
-                datasetOffsetNumber : 12
+                datasetOffsetNumber : 10
             })
         }
     }
