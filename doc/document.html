@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jingle - 移动WebApp开发框架">
+    <meta name="author" content="walker.shixy">
+    <title>Jingle-html5 webapp framework</title>
+    <link href="http://v3.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Documentation extras -->
+    <link href="http://v3.bootcss.com/docs-assets/css/docs.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/highlight.js/7.3/styles/github.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", sans-serif;
+        }
+
+        h1, .h1, h2, .h2, h3, .h3, h4, .h4, .lead {
+            font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei UI", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+        }
+        pre code {
+            background: transparent;
+        }
+        @media (min-width: 768px) {
+            .bs-docs-home .bs-social,
+            .bs-docs-home .bs-masthead-links {
+                margin-left: 0;
+            }
+        }
+        .bs-docs-section p {
+            line-height: 2;
+        }
+        .bs-docs-section p.lead {
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+<a class="sr-only" href="#content">Skip to main content</a>
+<!-- Docs master nav -->
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="index.html" class="navbar-brand">Jingle</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="doc.html">文档</a>
+                </li>
+                <li>
+                    <a href="demo.html">DEMO</a>
+                </li>
+                <li>
+                    <a href="demo.html">案例</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+
+<!-- Docs page layout -->
+<!--<div class="bs-header" id="content">
+    <div class="container">
+        <h1>Jingle
+            <small>V0.3</small></h1>
+        <p>Jingle是一个SPA(Single Page Application)开发框架，用来开发移动端的html5应用，在体验上尽量去靠近native应用，试图能够与native应用相媲美 `(∩_∩)′(虽然现在看来还相距甚远)。
+        </p>
+    </div>
+</div>-->
+
+<div class="container bs-docs-container">
+<div class="row">
+<div class="col-md-3">
+    <div class="bs-sidebar hidden-print affix-top" role="complementary">
+        <ul class="nav bs-sidenav">
+
+            <li class="active">
+                <a href="#jingle">Jinlge</a>
+                <ul class="nav">
+                    <li class=""><a href="#jingle_attr">属性</a></li>
+                    <li class=""><a href="#jingle_method">方法</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a href="#element">Element</a>
+                <ul class="nav">
+                    <li class=""><a href="#element_method">方法</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a href="#menu">Menu</a>
+                <ul class="nav">
+                    <li class=""><a href="#menu_method">方法</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a href="#router">Router</a>
+                <ul class="nav">
+                    <li class=""><a href="#router_method">方法</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a href="#polar">Template</a>
+                <ul class="nav">
+                    <li class=""><a href="#template_method">方法</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a href="#toast">Toast</a>
+                <ul class="nav">
+                    <li class=""><a href="#toast_method">方法</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a href="#popup">Popup</a>
+                <ul class="nav">
+                    <li class=""><a href="#popup_config">配置项</a></li>
+                    <li class=""><a href="#popup_method">方法</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a href="#refresh">Refresh</a>
+                <ul class="nav">
+                    <li class=""><a href="#refresh_config">配置项</a></li>
+                    <li class=""><a href="#refresh_attr">属性</a></li>
+                    <li class=""><a href="#refresh_method">方法</a></li>
+                </ul>
+            </li>
+            <li class="active">
+                <a href="#slider">Slider</a>
+                <ul class="nav">
+                    <li class=""><a href="#slider_config">配置项</a></li>
+                    <li class=""><a href="#slider_method">方法</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="col-md-9" role="main">
+    <!-- Jingle -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="jingle">Jingle</h1>
+        </div>
+        <h3 id="jingle_attr">属性</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>version</td>
+                    <td>版本号</td>
+                </tr>
+                <tr>
+                    <td>$</td>
+                    <td>Zepto的引用</td>
+                </tr>
+                <tr>
+                    <td>mode</td>
+                    <td>根据屏幕大小判断是手机还是平板</td>
+                </tr>
+                <tr>
+                    <td>hashTouch</td>
+                    <td>判断是否有触摸事件</td>
+                </tr>
+                <tr>
+                    <td>launchCompleted</td>
+                    <td>是否启动完成</td>
+                </tr>
+                <tr>
+                    <td>hasMenuOpen</td>
+                    <td>是否有侧边栏打开</td>
+                </tr>
+                <tr>
+                    <td>hasPopupOpen</td>
+                    <td>是否有打开的弹出框</td>
+                </tr>
+                <tr>
+                    <td>isWebApp</td>
+                    <td>根据协议判断是否为webapp<br>
+                        http为webapp,file://为phonegap</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 id="jingle_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>launch</td>
+                    <td>None</td>
+                    <td>启动Jingle，实现SPA对组件的初始化，路由的自动监控</td>
+                </tr>
+                <tr>
+                    <td>anim</td>
+                    <td>
+                        El 元素<br>
+                        animName 动画名称<br>
+                        duration 持续时间<br>
+                        ease 动画函数<br>
+                        callback 回调函数</td>
+                    <td>Zepto动画函数的改进，主要是增加一些缺省值，让方法更方便的调用</td>
+                </tr>
+                <tr>
+                    <td>showMask</td>
+                    <td>Text：显示文本</td>
+                    <td>显示loading框</td>
+                </tr>
+                <tr>
+                    <td>hideMask</td>
+                    <td>None</td>
+                    <td>关闭loading框</td>
+                </tr>
+                <tr>
+                    <td>showToast</td>
+                    <td>text 显示文本<br>
+                        type 消息类型，可选值toast|success|error|info<br>
+                        duration 显示持续时间，为0则不自动关闭</td>
+                    <td>显示消息</td>
+                </tr>
+                <tr>
+                    <td>hideToast</td>
+                    <td>None</td>
+                    <td>关闭消息提示</td>
+                </tr>
+                <tr>
+                    <td>alert</td>
+                    <td>Title 标题<br>
+                        Content 文本</td>
+                    <td>Alert弹出框</td>
+                </tr>
+                <tr>
+                    <td>confirm</td>
+                    <td>Title 标题<br>
+                        Content 文本<br>
+                        okCall 确认回调函数<br>
+                        cancelCall 取消回调函数</td>
+                    <td>Confirm弹出框</td>
+                </tr>
+                <tr>
+                    <td>popup</td>
+                    <td>Config,参见J.Popup.show()</td>
+                    <td>弹出框</td>
+                </tr>
+                <tr>
+                    <td>closePopup</td>
+                    <td></td>
+                    <td>关闭弹出框</td>
+                </tr>
+                <tr>
+                    <td>popover</td>
+                    <td>html 内容<br>
+                        pos 位置，参见J.Popup<br>
+                        arrowDirection箭头方向<br>
+                        onShow显示之前执行</td>
+                    <td>带箭头的弹出框</td>
+                </tr>
+                <tr>
+                    <td>tmpl</td>
+                    <td>containerSelector 欲填充的容器<br>
+                        templateId 模板ID<br>
+                        data 数据源<br>
+                        type 填充内型add|replace</td>
+                    <td>自动渲染模板并填充到页面</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Element -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="element">Element</h1>
+        </div>
+        <p>Element主要是用来渲染一些小组件</p>
+        <h3 id="element_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>init</td>
+                    <td>elector 选择器 可选</td>
+                    <td>初始化页面内(选择器内)的icon\scroll等元素</td>
+                </tr>
+                <tr>
+                    <td>initIcon</td>
+                    <td>el</td>
+                    <td>初始化icon组件(包含子元素)</td>
+                </tr>
+                <tr>
+                    <td>initToggle</td>
+                    <td>el</td>
+                    <td>初始化toggle组件(包含子元素)</td>
+                </tr>
+                <tr>
+                    <td>initProgress</td>
+                    <td>el</td>
+                    <td>初始化progress组件(包含子元素)</td>
+                </tr>
+                <tr>
+                    <td>initRange</td>
+                    <td>el</td>
+                    <td>初始化range组件(包含子元素)</td>
+                </tr>
+                <tr>
+                    <td>initBadge</td>
+                    <td>el</td>
+                    <td>初始化badge组件(包含子元素)</td>
+                </tr>
+                <tr>
+                    <td>initScroll</td>
+                    <td>el</td>
+                    <td>初始化scroll组件(包含子元素)</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Menu -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="menu">Menu</h1>
+        </div>
+        <p>侧边菜单栏</p>
+        <h3 id="menu_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>init</td>
+                    <td>None</td>
+                    <td>初始化Menu相关的dom元素，绑定事件。
+                        一个SPA工程只需要执行一次。在Jingle.launch中已执行控</td>
+                </tr>
+                <tr>
+                    <td>show</td>
+                    <td>Selector css选择器或element实例</td>
+                    <td>打开指定侧边菜单</td>
+                </tr>
+                <tr>
+                    <td>hide</td>
+                    <td>duration 关闭动画持续时间<br>
+                        callback 动画完毕回调函数</td>
+                    <td>关闭已经打开的侧边菜单</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Router -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="router">Router</h1>
+        </div>
+        <p>路由控制器，实现页面的跳转，动画，事件等</p>
+        <h3 id="router_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>goTo</td>
+                    <td>Hash 卡片#id</td>
+                    <td>跳转到指定的卡片</td>
+                </tr>
+                <tr>
+                    <td>showArticle</td>
+                    <td>href #id<br>
+                        el 当前锚点</td>
+                    <td>激活href对应的article</td>
+                </tr>
+                <tr>
+                    <td>back</td>
+                    <td></td>
+                    <td>后退到前一个卡片</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--Template-->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="template">Template</h1>
+        </div>
+        <p>提供一个模板渲染函数以及常用的模板</p>
+        <h3 id="template_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>render</td>
+                    <td>containerSelector 目标容器<br>
+                        templateId  artTemplate模板ID<br>
+                        data 模板数据<br>
+                        type replace|add 渲染好的文档片段是替换还是添加到目标容器中</td>
+                    <td>借助artTemplate模板来渲染页面</td>
+                </tr>
+                <tr>
+                    <td>background</td>
+                    <td>el  目标容器<br>
+                        title  显示文本<br>
+                        icon   图标  </td>
+                    <td>显示一个带ICON的背景模板</td>
+                </tr>
+                <tr>
+                    <td>loading</td>
+                    <td>el  目标容器</td>
+                    <td>加载等待背景模板</td>
+                </tr>
+                <tr>
+                    <td>no_result</td>
+                    <td>el  目标容器</td>
+                    <td>显示一个无记录的模板</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Toast -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="toast">Toast
+            </h1>
+        </div>
+        <p>消息组件</p>
+        <h3 id="toast_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>show</td>
+                    <td>type 类型  toast|success|error|info<br>
+                        text 文字内容<br>
+                        duration 持续时间 为0则不自动关闭,默认为5000ms</td>
+                    <td>显示消息提示</td>
+                </tr>
+                <tr>
+                    <td>hide</td>
+                    <td></td>
+                    <td>关闭消息提示</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--- Popup  -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="popup">Popup
+            </h1>
+        </div>
+        <p>弹出框组件。提供一系列内置好的常用弹出框。</p>
+        <h3 id="popup_config">配置项</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>类型</th>
+                    <th>默认值</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>height</td>
+                    <td>Number</td>
+                    <td>Null</td>
+                    <td>高度</td>
+                </tr>
+                <tr>
+                    <td>width</td>
+                    <td>Number</td>
+                    <td>Null</td>
+                    <td>宽度</td>
+                </tr>
+                <tr>
+                    <td>opacity</td>
+                    <td>Number</td>
+                    <td>.3</td>
+                    <td>透明度</td>
+                </tr>
+                <tr>
+                    <td>url</td>
+                    <td>String</td>
+                    <td>null</td>
+                    <td>远程加载url</td>
+                </tr>
+                <tr>
+                    <td>tplId</td>
+                    <td>String</td>
+                    <td>null</td>
+                    <td>模板ID-从模板加载</td>
+                </tr>
+                <tr>
+                    <td>tplData</td>
+                    <td>Object</td>
+                    <td>null</td>
+                    <td>模板数据，配合tplId使用</td>
+                </tr>
+                <tr>
+                    <td>html</td>
+                    <td>String</td>
+                    <td></td>
+                    <td>popup内容</td>
+                </tr>
+                <tr>
+                    <td>pos</td>
+                    <td>String/Object</td>
+                    <td>center</td>
+                    <td>位置<br>
+                        String类型：内置的位置top|top-second|center|bottom|bottom-second<br>
+                        Object类型：css样式值</td>
+                </tr>
+                <tr>
+                    <td>clickMask2Close</td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>是否点击外层遮罩关闭popup</td>
+                </tr>
+                <tr>
+                    <td>showCloseBtn</td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>是否显示关闭按钮</td>
+                </tr>
+                <tr>
+                    <td>arrowDirection</td>
+                    <td>String</td>
+                    <td>null</td>
+                    <td>popover的箭头指向</td>
+                </tr>
+                <tr>
+                    <td>animation</td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>是否显示动画</td>
+                </tr>
+                <tr>
+                    <td>timingFunc</td>
+                    <td>String</td>
+                    <td>linear</td>
+                    <td>动画效果</td>
+                </tr>
+                <tr>
+                    <td>duration</td>
+                    <td>Number</td>
+                    <td>200</td>
+                    <td>动画执行时间</td>
+                </tr>
+                <tr>
+                    <td>onShow</td>
+                    <td>Function</td>
+                    <td>null</td>
+                    <td>在popup内容加载完毕，动画开始前触发</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 id="popup_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>show</td>
+                    <td>Options 见配置项</td>
+                    <td>打开一个弹出框</td>
+                </tr>
+                <tr>
+                    <td>close</td>
+                    <td>noTransition立即关闭，无动画</td>
+                    <td>关闭弹出框</td>
+                </tr>
+                <tr>
+                    <td>alert</td>
+                    <td>title 标题<br>
+                        content 内容</td>
+                    <td>Alert弹出框</td>
+                </tr>
+                <tr>
+                    <td>confirm</td>
+                    <td>title 标题<br>
+                        content 内容<br>
+                        okCall 确定按钮handler<br>
+                        cancelCall 取消按钮handler</td>
+                    <td>confirm 组件</td>
+                </tr>
+                <tr>
+                    <td>popover</td>
+                    <td>html 弹出框内容<br>
+                        pos 位置<br>
+                        arrow_direction 箭头方向<br>
+                        onShow onShow事件       </td>
+                    <td>带箭头的弹出框</td>
+                </tr>
+                <tr>
+                    <td>loading</td>
+                    <td>text 文本，默认为“加载中...”</td>
+                    <td>oading组件</td>
+                </tr>
+                <tr>
+                    <td>actionsheet</td>
+                    <td>buttons 按钮集合<br>
+                        <pre>[{color:'red',text:'btn',handler:function(){}},
+{color:'red',text:'btn',handler:function(){}}]</pre></td>
+                    <td>actionsheet组件</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Calendar  -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="calendar">Calendar</h1>
+        </div>
+        <p>一个简单的日历组件</p>
+        <h3 id="calendar_config">配置项</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>类型</th>
+                    <th>默认值</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>swipeable</td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>是否可通过手指滑动</td>
+                </tr>
+                <tr>
+                    <td>date</td>
+                    <td>Date</td>
+                    <td>new Date()</td>
+                    <td>日历当前日期</td>
+                </tr>
+                <tr>
+                    <td>onRenderDay</td>
+                    <td>Function</td>
+                    <td>null</td>
+                    <td>渲染单元格时的事件</td>
+                </tr>
+                <tr>
+                    <td>onSelect</td>
+                    <td>Function</td>
+                    <td>null</td>
+                    <td>选中日期时的事件</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 id="calendar_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>refresh</td>
+                    <td>date 指定日期</td>
+                    <td>刷新日历为指定日期</td>
+                </tr>
+                <tr>
+                    <td>parse</td>
+                    <td>date 日期</td>
+                    <td>字符串转化为日期对象，只支持yyyy-MM-dd 和 yyyy/MM/dd</td>
+                </tr>
+                <tr>
+                    <td>format</td>
+                    <td>dateStr</td>
+                    <td>格式化日期  yyyy-MM-dd</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Refrsh  -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="refresh">Refresh
+            </h1>
+        </div>
+        <p>上拉/下拉刷新组件。利用iScroll4实现。</p>
+        <h3 id="refresh_config">配置项</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>类型</th>
+                    <th>默认值</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>selector</td>
+                    <td>String</td>
+                    <td></td>
+                    <td>容器</td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td>String</td>
+                    <td>pullDown</td>
+                    <td>拉动类型<br>
+                        下拉：pullDown<br>
+                        上拉：pullUp</td>
+                </tr>
+                <tr>
+                    <td>minPullHeight</td>
+                    <td>Number</td>
+                    <td>10</td>
+                    <td>拉动的像素相对值，超过才会翻转</td>
+                </tr>
+                <tr>
+                    <td>pullText</td>
+                    <td>String</td>
+                    <td>下拉刷新...<br>
+                        上拉加载更多...</td>
+                    <td>拉动时的文本</td>
+                </tr>
+                <tr>
+                    <td>releaseText</td>
+                    <td>String</td>
+                    <td>松开立即刷新...<br>
+                        松开开立即加载...</td>
+                    <td>松开文本</td>
+                </tr>
+                <tr>
+                    <td>refreshText</td>
+                    <td>String</td>
+                    <td>刷新中...<br>
+                        加载中...</td>
+                    <td>刷新文本</td>
+                </tr>
+                <tr>
+                    <td>refreshTip</td>
+                    <td>String</td>
+                    <td></td>
+                    <td>下拉时显示的文本，比如：最后更新时间:2013-12-21</td>
+                </tr>
+                <tr>
+                    <td>onPullIcon</td>
+                    <td>String</td>
+                    <td>arrow-down-2<br>
+                        arrow-up-3</td>
+                    <td>拉动时的icon图像</td>
+                </tr>
+                <tr>
+                    <td>onReleaseIcon</td>
+                    <td>String</td>
+                    <td>icon-reverse</td>
+                    <td>松开时的icon图像</td>
+                </tr>
+                <tr>
+                    <td>onRefreshIcon</td>
+                    <td>String</td>
+                    <td>spinner</td>
+                    <td>刷新时的icon图像</td>
+                </tr>
+                <tr>
+                    <td>callback</td>
+                    <td>Function</td>
+                    <td>null</td>
+                    <td>刷新成功的回调函数</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 id="refresh_attr">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>类型</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>scroller</td>
+                    <td>iScroll</td>
+                    <td>对应的iscroll对象</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 id="refresh_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>destroy</td>
+                    <td></td>
+                    <td>销毁刷新控件</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Slider  -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="slider">Slider
+            </h1>
+        </div>
+        <p>一个简单的轮换组件。</p>
+        <h3 id="slider_config">配置项</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>类型</th>
+                    <th>默认值</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>selector</td>
+                    <td>String</td>
+                    <td> </td>
+                    <td>容器</td>
+                </tr>
+                <tr>
+                    <td>noDots</td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>是否显示导航点</td>
+                </tr>
+                <tr>
+                    <td>autoPlay</td>
+                    <td>Boolean</td>
+                    <td>false</td>
+                    <td>是否自动播放</td>
+                </tr>
+                <tr>
+                    <td>beforeSlide</td>
+                    <td>Function</td>
+                    <td>null</td>
+                    <td>滑动卡片前触发</td>
+                </tr>
+                <tr>
+                    <td>afterSlide</td>
+                    <td>Function</td>
+                    <td>null</td>
+                    <td>滑动卡片后触发</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <h3 id="slider_method">方法</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>参数</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>refresh</td>
+                    <td></td>
+                    <td>刷新控件</td>
+                </tr>
+                <tr>
+                    <td>prev</td>
+                    <td></td>
+                    <td>切换到前一个卡片</td>
+                </tr>
+                <tr>
+                    <td>next</td>
+                    <td></td>
+                    <td>切换到后一个卡片</td>
+                </tr>
+                <tr>
+                    <td>index</td>
+                    <td>i : 卡片索引</td>
+                    <td>切换到指定卡片</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+<!-- Footer
+================================================== -->
+<footer class="bs-footer" role="contentinfo">
+    <div class="container">
+        <p>Designed and built with all the love in the world by <a href="http://twitter.com/mdo"
+                                                                   target="_blank">@mdo</a> and <a
+                href="http://twitter.com/fat" target="_blank">@fat</a>.</p>
+
+        <p>Code licensed under MIT, documentation under CC BY 3.0.</p>
+        <ul class="footer-links">
+            <li>当前版本： v0.3</li>
+            <li class="muted">·</li>
+            <li><a href="index.html">Jingle</a></li>
+        </ul>
+    </div>
+</footer>
+
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="js/application.js"></script>
+</body>
+</html>
