@@ -1,111 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen"/>
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jingle - 移动WebApp开发框架">
+    <meta name="author" content="walker.shixy">
+    <title>Jingle-html5 webapp framework</title>
+    <link href="http://v3.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Documentation extras -->
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/highlight.js/7.3/styles/github.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", sans-serif;
+        }
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <title>Jingle by shixy</title>
+        h1, .h1, h2, .h2, h3, .h3, h4, .h4, .lead {
+            font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei UI", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+        }
+        pre code {
+            background: transparent;
+        }
+        @media (min-width: 768px) {
+            .bs-docs-home .bs-social,
+            .bs-docs-home .bs-masthead-links {
+                margin-left: 0;
+            }
+        }
+        .bs-docs-section p {
+            line-height: 2;
+        }
+        .bs-docs-section p.lead {
+            line-height: 1.4;
+        }
+    </style>
 </head>
-
-<body>
-<header>
-    <div class="inner">
-        <h1>Jingle UI </h1>
-
-        <h2>Jingle UI是一个基于html5、css3开发的webapp 框架(针对移动设备)，提供一些基本交互方式，组件，可以更方便的开发移动应用。</h2>
-        <a href="https://github.com/shixy/Jingle" class="button">
-            <small>View project on</small>
-            GitHub</a>
+<body class="bs-docs-home">
+<a class="sr-only" href="#content">Skip to main content</a>
+<!-- Docs master nav -->
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="index.html" class="navbar-brand">Jingle</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="started.html">使用指南</a>
+                </li>
+                <li>
+                    <a href="api.html">开发文档</a>
+                </li>
+                <li>
+                    <a href="samples.html">演示案例</a>
+                </li>
+                <li>
+                    <a href="http://vycool.com/JChart">Jingle Chart</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </header>
 
-<div id="content-wrapper">
-    <div class="inner clearfix">
-        <section id="main-content">
 
-            <div class="iphone" style="float:left;">
-                <iframe src="demo/index.html" width="320" frameborder="0"></iframe>
+<main class="bs-masthead" id="content" role="main">
+    <div class="container">
+        <div class="demo-container">
+            <iframe src="http://vycool.com/Jingle/demo/index.html" width="320" frameborder="0"></iframe>
+        </div>
+        <div class="info-container">
+            <h1>Jingle<small>V0.3</small></h1>
+            <p class="lead">Jingle是一个SPA(Single Page Application)开发框架，用来开发移动端的html5应用，在体验上尽量去靠近native应用，试图能够与native应用相媲美(梦还没醒...)。</p>
+
+            <div class="bs-callout bs-callout-info">
+                <h4>丰富的UI组件</h4>
+                <p>提供了按钮、列表、表单、弹出框、轮换、上拉/下拉、日历等各种移动端常用的组件，简单适用</p>
             </div>
-            <div style="float: left;padding-left:60px; ">
-                <h3>手机请直接访问</h3>
-                <p><a href="http://shixy.github.io/Jingle/demo" target="_blank">http://shixy.github.io/Jingle/demo</a></p>
-                <p><img src="images/url-code.png" width="200"></p>
-                <h3>android演示应用下载:</h3>
-                <p><img src="images/apk-code.png" width="200"></p>
+            <div class="bs-callout bs-callout-info">
+                <h4>前后端分离</h4>
+                <p>支持前端模板渲染，模板按需自动加载，完善的事件机制。</p>
             </div>
-
-            <!--<h3>Welcome to GitHub Pages.</h3>
-
-            <p>This automatic page generator is the easiest way to create beautiful pages for all of your projects.
-                Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer,
-                and publish. After your page is generated, you can check out the new branch:</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-    $ git fetch origin
-    $ git checkout gh-pages
-</code></pre>
-
-            <p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
-
-            <h3>Designer Templates</h3>
-
-            <p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through
-                them. You can easily go back to edit your page before publishing. After publishing your page, you can
-                revisit the page generator and switch to another theme. Your Page content will be preserved if it
-                remained markdown format.</p>
-
-            <h3>Rather Drive Stick?</h3>
-
-            <p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your
-                repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages
-                support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll
-                makes it easy to create site-wide headers and footers without having to copy them across every page. It
-                also offers intelligent blog support and other advanced templating features.</p>
-
-            <h3>Authors and Contributors</h3>
-
-            <p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to
-                generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the
-                contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a
-                        href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a
-                        href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a
-                        href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-            <h3>Support or Contact</h3>
-
-            <p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a>
-                or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.
-            </p>-->
-        </section>
-
-        <aside id="sidebar">
-            <a href="https://github.com/shixy/Jingle/zipball/master" class="button">
-                <small>Download</small>
-                .zip file
-            </a>
-            <a href="https://github.com/shixy/Jingle/tarball/master" class="button">
-                <small>Download</small>
-                .tar.gz file
-            </a>
-
-            <p class="repo-owner"><a href="https://github.com/shixy/Jingle"></a> is maintained by <a
-                    href="https://github.com/shixy">shixy</a>.</p>
-
-            <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a
-                    href="http://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
+            <div class="bs-callout bs-callout-info">
+                <h4>轻量级</h4>
+                <p>基于Zepto开发，依赖了iscroll。体积min24k,gzip大小我就不拿来显摆了...</p>
+            </div>
+            <div class="bs-callout bs-callout-info">
+                <h4>开源免费</h4>
+                <p>MIT. Enjoy it！！</p>
+            </div>
+            </div>
+            <p>
+                <a href="https://github.com/shixy/Jingle/zipball/master" class="btn btn-outline-inverse btn-lg">下载Jingle</a>
+                <a href="https://github.com/shixy/Jingle" target="_blank" class="btn btn-outline-inverse btn-lg">Github</a>
+            </p>
+        </div>
     </div>
-</div>
+</main>
 
-
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/highlight.min.js"></script>
+<script src="js/application.js"></script>
 </body>
 </html>

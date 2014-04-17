@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Jingle - 移动WebApp开发框架">
+    <meta name="author" content="walker.shixy">
+    <title>Started - Jingle-html5 webapp framework</title>
+    <link href="http://v3.bootcss.com/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Documentation extras -->
+    <link href="css/docs.css" rel="stylesheet">
+    <link href="http://cdn.bootcss.com/highlight.js/7.3/styles/github.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "WenQuanYi Micro Hei", sans-serif;
+        }
+
+        h1, .h1, h2, .h2, h3, .h3, h4, .h4, .lead {
+            font-family: "ff-tisa-web-pro-1", "ff-tisa-web-pro-2", "Lucida Grande", "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Hiragino Sans GB W3", "Microsoft YaHei UI", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+        }
+        pre code {
+            background: transparent;
+        }
+        @media (min-width: 768px) {
+            .bs-docs-home .bs-social,
+            .bs-docs-home .bs-masthead-links {
+                margin-left: 0;
+            }
+        }
+        .bs-docs-section p {
+            line-height: 2;
+        }
+        .bs-docs-section p.lead {
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+<a class="sr-only" href="#content">Skip to main content</a>
+<!-- Docs master nav -->
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="index.html" class="navbar-brand">Jingle</a>
+        </div>
+        <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+            <ul class="nav navbar-nav">
+                <li class="active">
+                    <a href="started.html">使用指南</a>
+                </li>
+                <li>
+                    <a href="api.html">开发文档</a>
+                </li>
+                <li>
+                    <a href="samples.html">演示案例</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="container bs-docs-container">
+<div class="row">
+<div class="col-md-3">
+    <div class="bs-sidebar hidden-print affix-top" role="complementary">
+        <ul class="nav bs-sidenav">
+            <li class="active">
+                <a href="#started">怎么使用Jingle</a>
+            </li>
+            <li class="active">
+                <a href="#cometo">认识Jingle</a>
+            </li>
+            <li class="active">
+                <a href="#attr">功能组件</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="col-md-9" role="main">
+    <!-- Jingle -->
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="started">怎么使用Jingle</h1>
+        </div>
+        <h3>下载</h3>
+        <p>
+            源码都在github上，直接从github下载。 主要包含：
+        <ul>
+            <li> Jingle js组件</li>
+            <li>Jingle css</li>
+            <li>依赖的js框架(zepto\template\iscroll)</li>
+        </ul>
+        默认Jingle组件已经打包好放在dist文件夹中，开发者可以根据需要修改src中的源码后通过grunt重新进行打包
+        </p>
+        <h3>代码结构</h3>
+        <p>css</p>
+        <div class="highlight"><pre><code class="html">
+&lt;link rel=&quot;stylesheet&quot; href=&quot;Jingle.css&quot;&gt;
+        </code></pre>
+        </div>
+        <p>javascript</p>
+        <pre><code class="html">
+&lt;script type="text/javascript" src="js/zepto.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/iscroll.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/template.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="js/Jingle.debug.js"&gt;&lt;/script&gt;
+        </code></pre>
+        <p>html(具体请参见demo中index.html):</p>
+        <pre><code class="html">
+&lt;div id="aside_container"&gt;&lt;!---侧边栏容器---&gt;
+&lt;aside id="index_aside" data-position="left" data-transition="reveal" data-show-close="true"&gt;
+侧边栏
+&lt;/aside&gt;
+&lt;aside id="main_aside" data-position="left" data-transition="reveal" data-show-close="true"&gt;
+侧边栏
+&lt;/aside&gt;
+&lt;/div&gt;
+&lt;div id="section_container"&gt;&lt;!--页面容器---&gt;
+&lt;section id="index_section" class="active"&gt;
+&lt;header&gt;
+&lt;nav class="left"&gt;
+&lt;a data-target="menu" data-icon="menu" href="#index_aside"&gt;&lt;/a&gt;
+&lt;/nav&gt;
+&lt;h1 class="title"&gt;Jingle&lt;/h1&gt;
+&lt;nav class="right"&gt;
+&lt;a href="#about_section" class="button" data-target="section" data-icon="question"&gt;&lt;/a&gt;
+&lt;/nav&gt;
+&lt;/header&gt;
+&lt;footer&gt;
+&lt;a  href="#" data-target="article" data-icon="book" class="active"&gt;book&lt;/a&gt;
+&lt;a  href="#" data-target="article" data-icon="pencil"&gt;pencil&lt;/a&gt;
+&lt;a  href="#" data-icon="ellipsis"&gt;more&lt;/a&gt;
+&lt;/footer&gt;
+&lt;article class="active"&gt;
+&lt;!---do it yourself ---&gt;
+&lt;/article&gt;
+&lt;/section&gt;
+&lt;/div&gt;
+        </code></pre>
+        <p>初始化Jingle:</p>
+        <pre><code class="js">
+Jingle.launch();
+        </code></pre>
+    </div>
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="cometo">认识Jingle</h1>
+        </div>
+        <h3>Jingle适合开发什么样的应用</h3>
+        <p>Jingle是一个Webapp框架，基于H5C3开发，理论上可以用来开发各种类型的webapp,如轻应用、触屏站、hrbrid应用等等。</p>
+        <p>目前因Jingle的不完善，最适合用来开发Hybrid应用</p>
+
+        <h3>Jingle代码结构描述</h3>
+        <p>section</p>
+        <ul>
+            <li>卡片式结构，一个section对应一个卡片(模仿android里的activity)</li>
+            <li>按需加载section模板，section Id与模板的名称需要一致</li>
+        </ul>
+        <p>article</p>
+        <ul>
+            <li>包含在section里面(模仿android里的fragment)</li>
+            <li>根据header footer自动充满屏幕</li>
+            <li>一个section里包含多个article</li>
+        </ul>
+        <p>header</p>
+        <ul>
+            <li>固定在屏幕顶部</li>
+        </ul>
+        <p>footer</p>
+        <ul>
+            <li>固定在屏幕底部</li>
+        </ul>
+        <p>popup</p>
+        <ul>
+            <li>同时只会有一个popup存在</li>
+        </ul>
+    <h3>推荐开发方式</h3>
+    <p>服务端提供RestAPI(JSON)， 客户端渲染模板，处理逻辑</p>
+    </div>
+    <div class="bs-docs-section">
+        <div class="page-header">
+            <h1 id="attr">组件属性</h1>
+        </div>
+        <div class="markdown-body">
+            <h2>自装配UI组件</h2>
+
+            <p>通过data-*等不同配置来实现组件的自动装配</p>
+
+            <h3>基本组件</h3>
+
+            <p>图标</p>
+
+<pre><code>data-icon="icon name"
+    icon name请参见demo中的icons页面，基本所有的组件都可以用
+</code></pre>
+
+            <p>badge 数字标签</p>
+
+<pre><code>&lt;a class="button" data-count=3 data-orient="left"&gt;按钮&lt;/a&gt;
+    data-orient: left|right 标签显示位置，默认显示在右上角
+</code></pre>
+
+            <h3>布局组件</h3>
+
+            <p>section <em>页面</em></p>
+
+<pre><code>data-transition:页面转场动画，默认为“slide”,
+    目前框架已内置“slideUp”，“slideDown”,"scale"，亲们可以自己编写css3动画...
+</code></pre>
+
+            <p>aside <em>侧边菜单</em></p>
+
+            <p>基本属性：</p>
+
+<pre><code>data-position:  left(左侧边栏) right(右侧边栏)
+    data-transition: push(抽屉式) overlay(侧边栏覆盖页面) reveal(页面退出显示侧边栏)
+    data-show-close: true false (是否显示关闭按钮)
+</code></pre>
+
+            <p>list <em>列表组件</em></p>
+
+<pre><code>ul class="list" 基本设置
+    li data-selected="selected" data-icon="next"
+    // selected的值为class名称，元素被触摸时的高亮样式
+    // icon用来表示li行后的小图标
+</code></pre>
+
+            <h3>交互组件</h3>
+
+<pre><code>&lt;a href="#" data-target="section"&gt;ok&lt;/a&gt;
+</code></pre>
+
+            <p>data-target的值有：</p>
+
+<pre><code>section:页面跳转
+    article:页面中的元素块切换
+    menu:显示/隐藏侧边菜单
+    link:执行a标签默认行为
+    back:后退
+
+    href对应section|article|menu 的 #id
+</code></pre>
+
+            <h3>组件模板</h3>
+
+            <p>导航栏</p>
+
+<pre><code>&lt;!--只有文字--&gt;
+    &lt;ul class="control-group"&gt;
+    &lt;li class="active"&gt;&lt;a href="#"&gt;Hello&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Jingle&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#" &gt;html5&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;!--只有图标--&gt;
+    &lt;ul class="control-group"&gt;
+    &lt;li data-icon="home"&gt;&lt;/li&gt;
+    &lt;li class="active" data-icon="bell"&gt;&lt;/li&gt;
+    &lt;li data-icon="spinner"&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;!--图标+文字 左右--&gt;
+    &lt;ul class="control-group"&gt;
+    &lt;li class="active"&gt;&lt;a href="#" data-icon="home"&gt;Hello&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#" data-icon="bell"&gt;Jingle&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#" data-icon="spinner"&gt;html5&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;!--图标+文字 上下--&gt;
+    &lt;ul class="control-group"&gt;
+    &lt;li class="active" data-icon="home"&gt;&lt;a href="#"&gt;Hello&lt;/a&gt;&lt;/li&gt;
+    &lt;li data-icon="bell"&gt;&lt;a href="#"&gt;Jingle&lt;/a&gt;&lt;/li&gt;
+    &lt;li data-icon="spinner"&gt;&lt;a href="#" &gt;html5&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+</code></pre>
+
+            <p>toggle</p>
+
+<pre><code>&lt;div class="toggle" class="active"&gt;&lt;/div&gt;
+    默认为√和×，可以自定义文字
+    data-on="开启"
+    data-off="关闭"
+</code></pre>
+
+            <p>范围选择器</p>
+
+<pre><code>&lt;div  data-rangeinput="right"&gt;
+    &lt;input type="range" min=4 max=10 value="7"/&gt;
+    &lt;/div&gt;
+    data-rangeinput: 输入框显示在左侧还是右侧
+</code></pre>
+
+            <p>进度条</p>
+
+<pre><code>&lt;div data-progress="80" data-title="已完成"&gt;&lt;/div&gt;
+    data-title:自定义进度文字
+</code></pre>
+
+            <p>checkbox</p>
+
+<pre><code>&lt;div data-checkbox="unchecked"&gt;爱我你就勾勾我&lt;/div&gt;
+    data-checkbox:unchecked(未选中) checked(选中)
+</code></pre>
+
+            <h2>功能组件</h2>
+
+            <p>toast 消息提示框(单例)</p>
+
+<pre><code>J.Toast.show(type,text,duration);
+    //type: toast|success|error|info  内置的几种样式
+    //text： 显示文本
+    //duration:持续时间，为0则不自动关闭
+
+    J.Toast.hide(); //关闭消息
+</code></pre>
+
+            <p>popup 弹出框(单例)</p>
+
+<pre><code>J.Popup.show(options);
+    J.Popup.close();
+    J.Popup.alert();
+    J.Popup.confirm();
+    J.Popup.popover();
+    J.Popup.loading();
+    J.Popup.actionsheet();
+</code></pre>
+
+            <p>slider 轮换组件</p>
+
+            <p>javascript</p>
+
+<pre><code>var slider = new J.Slider("#sliderId");
+</code></pre>
+
+            <p>html</p>
+
+<pre><code>&lt;div id="sliderId"&gt;
+    &lt;div&gt;
+    &lt;div&gt;slider1&lt;/div&gt;
+    &lt;div&gt;slider2&lt;/div&gt;
+    &lt;div&gt;slider2&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+    **注意：有2层wrapper**
+</code></pre>
+
+            <p>scroll 滚动组件(下拉刷新)</p>
+
+<pre><code>自动装载模式：data-scroll=true
+</code></pre>
+
+            <p>javascript</p>
+
+<pre><code>var slider = new J.Scroll("#scrollId");
+</code></pre>
+
+            <p>html</p>
+
+<pre><code>&lt;div id="scrollId"&gt;
+    &lt;div&gt;
+    &lt;div&gt;content&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;/div&gt;
+    **注意：有2层wrapper**
+</code></pre>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+<!-- Footer
+================================================== -->
+<footer class="bs-footer" role="contentinfo">
+    <div class="container">
+        <p>Designed and built with all the love in the world by <a href="http://twitter.com/mdo"
+                                                                   target="_blank">@mdo</a> and <a
+                href="http://twitter.com/fat" target="_blank">@fat</a>.</p>
+
+        <p>Code licensed under MIT, documentation under CC BY 3.0.</p>
+        <ul class="footer-links">
+            <li>当前版本： v0.3</li>
+            <li class="muted">·</li>
+            <li><a href="index.html">Jingle</a></li>
+        </ul>
+    </div>
+</footer>
+
+<script src="js/jquery-1.10.2.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+<script src="js/application.js"></script>
+</body>
+</html>

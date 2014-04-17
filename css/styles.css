@@ -1,0 +1,32 @@
+
+.demo-container{
+    width: 375px;
+    height: 806px;
+    float:right;
+    background-image: url("../img/iphone.png");
+}
+.demo-container iframe{
+    margin-top: 147px;
+    margin-left: 27px;
+    width: 320px;
+    height: 548px;
+    overflow: hidden;
+    background-color: white;
+}
+.info-container{
+    margin-right: 380px;
+}
+.bs-callout{
+    width:80%;
+}
+@media (max-width: 992px)  {
+    .demo-container{
+        display: none;
+    }
+    .info-container{
+        margin-right: 0;
+    }
+    .bs-callout{
+        width: auto;
+    }
+}
