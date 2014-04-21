@@ -71,8 +71,8 @@ $('#btn_scan_barcode').on('tap',function(){
     );
 })
 $(function () {
+	J.Transition.add('flip','slideLeftOut','flipOut','slideRightOut','flipIn');
     Jingle.launch({
         showPageLoading : true
     });
-    J.Transition.add('flip','slideLeftOut','flipOut','slideRightOut','flipIn');
 })
