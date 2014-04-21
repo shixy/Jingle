@@ -37,11 +37,6 @@ J.Transition = (function($){
         }
         //触发pagehide事件
         $current.trigger('pagehide',[isBack]);
-
-        var url = $target.data('remote');
-        if(!isBack && url){
-            J.Page.loadSection(url,$target);
-        }
         //触发pageshow事件
         $target.trigger('pageshow',[isBack]);
 
