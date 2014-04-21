@@ -45,11 +45,11 @@ var App = (function(){
                 }
             });
         });
+		J.Transition.add('flip','slideLeftOut','flipOut','slideRightOut','flipIn');
         Jingle.launch({
             showPageLoading : true
         });
-        J.Transition.add('flip','slideLeftOut','flipOut','slideRightOut','flipIn');
-
+       
     };
     var page = function(id,factory){
         return ((id && factory)?_addPage:_getPage).call(this,id,factory);
