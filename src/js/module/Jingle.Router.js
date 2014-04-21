@@ -93,17 +93,15 @@ J.Router = (function($){
             });
             return;
         }
+        //读取hash信息
         var hashObj = J.Util.parseHash(hash);
+        //同一个页面
         if(_history[0].tag === hashObj.tag)return;
-        if($(hashObj.tag).length === 0){//当前dom树中不存在
-            //加载模板
-            J.Page.load(hashObj,function(){
-                _changePage(_history[1].tag,hashObj.tag);
-            });
-        }else{
-            _changePage(_history[1].tag,hashObj.tag);
-        }
-        _add2History(hash);
+        //加载模板
+        J.Page.load(hashObj,function(){
+            _changePage(_history[0].tag,hashObj.tag);
+            _add2History(hash);
+        });
     }
     /**
      * 后退
@@ -119,7 +117,7 @@ J.Router = (function($){
      * 缓存访问记录
      */
     var _add2History = function(hash){
-        var hashObj = J.Util.parseHash(hash);
+       var hashObj = J.Util.parseHash(hash);
         _history.unshift(hashObj);
         window.history.pushState(hashObj,'',hash);
     }

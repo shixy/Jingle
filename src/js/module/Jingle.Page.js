@@ -6,34 +6,42 @@ J.Page = (function($){
         return hash.indexOf('#') == 0 ? hash.substr(1) : hash;
     }
     /**
-     * ajax远程加载页面
-     * @param {string} sectionId或者#sectionId
+     * 加载section模板
+     * @param {string} hash信息
      * @param {string} url参数
      */
     var loadSectionTpl = function(hash,callback){
-        var param = {};
+        var param = {},query,appendTpl = true;
         if($.type(hash) == 'object'){
             hash = hash.tag;
             param = hash.param;
+            query = hash.query;
+        }
+        var q = $(hash).data('query');
+        //已经存在则直接跳转到对应的页面
+        if($(hash).length == 1 && q == query){
+            if(q == query){
+                callback();
+                return;
+            }else{
+                appendTpl = false;
+            }
         }
         var id = _formatHash(hash);
-        //根据id自动从basePagePath中装载模板
-        var url = J.settings.basePagePath+id+'.html'
-        if(!url){
-            console.error(404,'页面不存在！');
-            return;
-        }
-        if(J.settings.showPageLoading){
-            J.showMask();
-        }
+        //当前dom中不存在，需要从服务端加载
+        var url = J.settings.remotePage[hash];
+        //检查remotePage中是否有配置,没有则自动从basePagePath中装载模板
+        url || (url = J.settings.basePagePath+id+'.html');
+        J.settings.showPageLoading && J.showMask();
         loadContent(url,param,function(html){
-            if(J.settings.showPageLoading){
-                J.hideMask();
-            }
+            J.settings.showPageLoading && J.hideMask();
             //添加到dom树中
+            if(!appendTpl){
+                $(hash).remove();
+            }
             $('#section_container').append(html);
             //触发pageload事件
-            $('#'+id).trigger('pageload');
+            $(hash).trigger('pageload').data('query',query);
             //构造组件
             J.Element.init(hash);
             callback();
