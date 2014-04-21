@@ -19,7 +19,7 @@ J.Util = (function($){
         return {
             hash : hash,
             tag : tag,
-            param : query,
+            query : query,
             param : param
         }
     }
