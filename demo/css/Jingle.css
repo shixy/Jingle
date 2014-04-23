@@ -64,6 +64,7 @@ th, td, caption {
 sub,sup{
     font-size: 10px;
 }
+
 .bold{
     font-weight: 600;
 }
@@ -81,6 +82,63 @@ sub,sup{
 
 .clearfix:after {
     clear: both;
+}
+h1,h2,h3,h4,h5,h6,
+.h1,.h2,.h3,.h4,.h5,.h6 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    line-height: 1.1;
+    color: inherit;
+}
+
+h1 small,h2 small,h3 small,h4 small,h5 small,h6 small,
+.h1 small,.h2 small,.h3 small,.h4 small,.h5 small,.h6 small,
+h1 .small,h2 .small,h3 .small,h4 .small,h5 .small,h6 .small,.h1 .small,.h2 .small,.h3 .small,.h4 .small,.h5 .small,.h6 .small {
+    font-weight: normal;
+    line-height: 1;
+    color: #999999;
+}
+
+h1,h2,h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+h1 small,h2 small,h3 small,h1 .small,h2 .small,h3 .small {
+    font-size: 65%;
+}
+
+h4,h5,h6 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+h4 small,h5 small,h6 small,h4 .small,h5 .small,h6 .small {
+    font-size: 75%;
+}
+
+h1,.h1 {
+    font-size: 36px;
+}
+
+h2,.h2 {
+    font-size: 30px;
+}
+
+h3,.h3 {
+    font-size: 24px;
+}
+
+h4,.h4 {
+    font-size: 18px;
+}
+
+h5,.h5 {
+    font-size: 14px;
+}
+
+h6,.h6 {
+    font-size: 12px;
 }
 /******colors**********/
 .turquoise{background-color: #1ABC9C !important;}
@@ -411,12 +469,6 @@ aside ul.menu li.anchor{
     border-right-width: 1px;
     border-radius: 0 4px 4px 0;
 }
-.control-group li.active a,.control-group li.active .icon{
-    color: #fff;
-}
-.control-group .icon{
-    color: #2087FC;
-}
 .control-group i.icon ~ a {
     padding: 0;
 }
@@ -624,18 +676,13 @@ select {
     width: 100px;
     font-weight: 600;
 }
-.one-part{
-    -webkit-box-flex:1;
-    box-flex:1
-}
-.two-part{
-    -webkit-box-flex:2;
-    box-flex:2
-}
-.three-part{
-    -webkit-box-flex:3;
-    box-flex:3
-}
+.col-0 {-webkit-box-flex:0;box-flex:0;}
+.col-1 {-webkit-box-flex:1;box-flex:1;}
+.col-2 {-webkit-box-flex:2;box-flex:2;}
+.col-3 {-webkit-box-flex:3;box-flex:3;}
+.col-4 {-webkit-box-flex:4;box-flex:3;}
+.col-5 {-webkit-box-flex:5;box-flex:5;}
+
 header {
     top: 0;
     display: -webkit-box;
@@ -662,6 +709,7 @@ header .title {
     top: 0;
     left: 0;
     display: block;
+    margin: 0;
     width: 100%;
     font-size: 1.2em;
     line-height: 44px;
@@ -1703,23 +1751,23 @@ aside ul.menu li.anchor{
     background-color: #46CA5E;
 }
 .button.light,button.light{
-    border: 1px solid #2087FC;
-    color: #2087FC;
+    border: 1px solid #46CA5E;
+    color: #46CA5E;
     background: none;
 }
 /**** control group **/
 .control-group li{
-    border-color:#2087FC;
+    border-color:#46CA5E;
 }
 .control-group li > a {
-    color: #2087FC;
+    color: #46CA5E;
 }
 .control-group li.active {
-    background: #2087FC;
+    background: #46CA5E;
     color:#fff;
 }
 .control-group .icon{
-    color: #2087FC;
+    color: #46CA5E;
 }
 header .control-group {
     margin: 0 auto;
@@ -1736,8 +1784,11 @@ header .control-group li.active{
     background: #fff;
     color: #158f75;
 }
-.control-group .icon{
+.control-group li.active a,.control-group li.active .icon{
     color: #fff;
+}
+.control-group .icon{
+    color: #46CA5E;
 }
 
 /**** counts ****/
@@ -1851,18 +1902,18 @@ ul.list {
 /**** progress ****/
 [data-progress]{
     background: #fff;
-    border: 1px solid #3498DB;
+    border: 1px solid #46CA5E;
 }
 [data-progress] .bar{
-    background: #3498DB;
+    background: #46CA5E;
     color: #fff;
 }
 /**** range ****/
 input[type="range"]{
-    border:1px solid #2087FC;
+    border:1px solid #46CA5E;
 }
 input[type="range"]::-webkit-slider-thumb{
-    background: #2087FC;
+    background: #46CA5E;
 }
 /**** toggles ****/
 .toggle {

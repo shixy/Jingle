@@ -24,6 +24,7 @@ header .title {
     top: 0;
     left: 0;
     display: block;
+    margin: 0;
     width: 100%;
     font-size: 1.2em;
     line-height: 44px;

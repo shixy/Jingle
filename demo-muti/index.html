@@ -1,0 +1,67 @@
+<!DOCTYPE >
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Jingle</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" href="css/Jingle.css">
+    <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="aside_container">
+</div>
+
+<div id="section_container">
+    <section id="index_section" class="active">
+        <header>
+            <!--<nav class="left">
+                <a id="btn_scan_barcode" data-icon="qrcode" href=""></a>
+            </nav>-->
+            <h1 class="title">Jingle</h1>
+            <nav class="right">
+                <a data-target="section" data-icon="info" href="#about_section"></a>
+            </nav>
+        </header>
+        <article class="active" data-scroll="true" style="padding: 10px 0;">
+            <div>
+            <ul class="list inset demo-list">
+                <li data-icon="next" data-selected="selected">
+                    <span class="icon newspaper"></span>
+                    <a href="html/layout_section.html" class="one-part"  data-target="section">
+                        <strong>layout</strong>
+                        <p>基本布局</p>
+                    </a>
+                </li>
+                <li data-icon="next" data-selected="selected">
+                    <span class="icon rocket"></span>
+                    <a href="html/popup_section.html"data-target="section">
+                        <strong>popup</strong>
+                        <p>弹出框组件</p>
+                    </a>
+                </li>
+                <li data-icon="next" data-selected="selected">
+                    <span class="icon ellipsis"></span>
+                    <a href="html/slider_section.html"data-target="section">
+                        <strong>slider</strong>
+                        <p>页面轮换组件</p>
+                    </a>
+                </li>
+            </ul>
+            </div>
+        </article>
+    </section>
+</div>
+<!--<script type="text/javascript" src="js/lib/cordova.js"></script>-->
+<!-- lib -->
+<script type="text/javascript" src="js/lib/zepto.js"></script>
+<script type="text/javascript" src="js/lib/iscroll.js"></script>
+<script type="text/javascript" src="js/lib/template.min.js"></script>
+<script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
+<script type="text/javascript" src="js/lib/zepto.touch2mouse.js"></script>
+<!--- app --->
+<script type="text/javascript" src="js/app/app.js"></script>
+</body>
+</html>

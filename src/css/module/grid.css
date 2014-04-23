@@ -12,15 +12,9 @@
     width: 100px;
     font-weight: 600;
 }
-.one-part{
-    -webkit-box-flex:1;
-    box-flex:1
-}
-.two-part{
-    -webkit-box-flex:2;
-    box-flex:2
-}
-.three-part{
-    -webkit-box-flex:3;
-    box-flex:3
-}
+.col-0 {-webkit-box-flex:0;box-flex:0;}
+.col-1 {-webkit-box-flex:1;box-flex:1;}
+.col-2 {-webkit-box-flex:2;box-flex:2;}
+.col-3 {-webkit-box-flex:3;box-flex:3;}
+.col-4 {-webkit-box-flex:4;box-flex:3;}
+.col-5 {-webkit-box-flex:5;box-flex:5;}

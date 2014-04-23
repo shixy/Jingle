@@ -108,12 +108,3 @@
     border-width: 20px;
     border-bottom-color: #95A5A6;
 }
-.demo-grid{
-    padding: 5px;
-}
-.demo-grid>div{
-    margin:1px;
-    border: 1px solid #666;
-    color: #C0392B;
-    text-align: center;
-}

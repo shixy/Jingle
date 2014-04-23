@@ -2,7 +2,7 @@
  *  消息组件
  */
 J.Toast = (function($){
-    var TOAST_DURATION = 5000;
+    var TOAST_DURATION = 3000;
     //定义模板
     var TEMPLATE = {
         toast : '<a href="#">{value}</a>',
@@ -31,7 +31,7 @@ J.Toast = (function($){
      * 显示消息提示
      * @param type 类型  toast|success|error|info
      * @param text 文字内容
-     * @param duration 持续时间 为0则不自动关闭,默认为5000ms
+     * @param duration 持续时间 为0则不自动关闭,默认为3000ms
      */
     var show = function(type,text,duration){
         if(timer) clearTimeout(timer);

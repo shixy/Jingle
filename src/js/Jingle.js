@@ -4,10 +4,12 @@
  * walker.shixy@gmail.com
  */
 var Jingle = J = {
-    version : '0.3',
+    version : '0.4',
     $ : window.Zepto,
     //参数设置
     settings : {
+        //single  单页面工程  muti  多页面工程
+        appType : 'single',
         //page默认动画效果
         transitionType : 'slide',
         //自定义动画时的默认动画时间(非page转场动画时间)
@@ -20,7 +22,7 @@ var Jingle = J = {
         showPageLoading : false,
         //page模板默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
         basePagePath : 'html/',
-        //page模板的远程路径
+        //page模板的远程路径{#id: href,#id: href}
         remotePage:{}
     },
     //手机或者平板
@@ -44,6 +46,7 @@ var Jingle = J = {
             this.Welcome.show();
         }
         this.Element.init();
+        this.Element.initControlGroup();
         this.Router.init();
         this.Menu.init();
         this.Selected.init();

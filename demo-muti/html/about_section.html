@@ -1,0 +1,64 @@
+<!DOCTYPE >
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Jingle</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" href="../css/Jingle.css">
+    <link rel="stylesheet" href="../css/app.css">
+</head>
+<body>
+<div id="aside_container">
+</div>
+
+<div id="section_container">
+    <section id="about_section" data-transition="flip" class="active">
+        <header>
+            <nav class="left">
+                <a href="#"  data-icon="arrow-down-left-2" data-target="back">返回</a>
+            </nav>
+            <h1 class="title">About Me</h1>
+        </header>
+        <article class="active indented">
+            <div style="line-height: 2em;margin-bottom: 20px;">
+                Jingle UI是一个基于html5、css3开发轻量级的移动webapp 框架，提供一些基本交互方式，常用的组件(scroll,actionsheet,sidemenu,toggle,push2refresh......)，帮助您更方便的开发移动应用。
+            </div>
+            <div class="grid">
+                <a href="javascript:window.open('https://github.com/shixy/Jingle','_system')"
+                   data-target="link" class="button one-part">
+                    在Github上查看源码
+                </a>
+                <a href="javascript:window.open('https://github.com/shixy/Jingle/zipball/master','_system')"
+                   class="button one-part"  data-target="link">
+                    下载源码
+                </a>
+            </div>
+            <ul class="list inset" style="margin: 10px 0;">
+                <li data-icon="envelop">
+                    <a href="mailto:walker.shixy@gmail.com" data-target="link">
+                        walker.shixy # gmail.com
+                    </a>
+                </li>
+                <li data-icon="sina-weibo">
+                    <a href="javascript:window.open('http://weibo.com/walkershixy','_system')" data-target="link">
+                        @问题石
+                    </a>
+                </li>
+            </ul>
+        </article>
+    </section>
+</div>
+<!--<script type="text/javascript" src="js/lib/cordova.js"></script>-->
+<!-- lib -->
+<script type="text/javascript" src="../js/lib/zepto.js"></script>
+<script type="text/javascript" src="../js/lib/iscroll.js"></script>
+<script type="text/javascript" src="../js/lib/template.min.js"></script>
+<script type="text/javascript" src="../js/lib/Jingle.debug.js"></script>
+<script type="text/javascript" src="../js/lib/zepto.touch2mouse.js"></script>
+<!--- app --->
+<script type="text/javascript" src="../js/app/app.js"></script>
+</body>
+</html>

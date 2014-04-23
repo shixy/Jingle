@@ -4,10 +4,12 @@
  * walker.shixy@gmail.com
  */
 var Jingle = J = {
-    version : '0.3',
+    version : '0.4',
     $ : window.Zepto,
     //参数设置
     settings : {
+        //single  单页面工程  muti  多页面工程
+        appType : 'single',
         //page默认动画效果
         transitionType : 'slide',
         //自定义动画时的默认动画时间(非page转场动画时间)
@@ -20,7 +22,7 @@ var Jingle = J = {
         showPageLoading : false,
         //page模板默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
         basePagePath : 'html/',
-        //page模板的远程路径
+        //page模板的远程路径{#id: href,#id: href}
         remotePage:{}
     },
     //手机或者平板
@@ -44,6 +46,7 @@ var Jingle = J = {
             this.Welcome.show();
         }
         this.Element.init();
+        this.Element.initControlGroup();
         this.Router.init();
         this.Menu.init();
         this.Selected.init();
@@ -72,7 +75,7 @@ J.Element = (function($){
         if(!selector){
             //iscroll 必须在元素可见的情况下才能初始化
             $(document).on('articleshow','article',function(){
-                J.Element.initScroll(this);
+                J.Element.scroll(this);
             });
         };
         var $el = $(selector || 'body');
@@ -84,6 +87,18 @@ J.Element = (function($){
         $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
         $.map(_getMatchElements($el,SELECTOR.count),_init_badge);
         $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
+    }
+
+    /**
+     * 初始化按钮组(绑定事件)
+     */
+    var initControlGroup = function(){
+        $(document).on('tap','ul.control-group li',function(){
+            var $this = $(this);
+            if($this.hasClass('active'))return;
+            $this.addClass('active').siblings('.active').removeClass('active');
+            $this.parent().trigger('change',[$this]);
+        });
     }
     /**
      * 自身与子集相结合
@@ -107,7 +122,6 @@ J.Element = (function($){
         }else{
             $el.prepend('<i class="icon '+icon+'"></i>');
         }
-
     }
     /**
      * 构造toggle切换组件
@@ -218,12 +232,13 @@ J.Element = (function($){
 
     return {
         init : init,
-        initIcon : _init_icon,
-        initToggle : _init_toggle,
-        initProgress : _init_progress,
-        initRange : _init_range,
-        initBadge : _init_badge,
-        initScroll : initScroll
+        initControlGroup : initControlGroup,
+        icon : _init_icon,
+        toggle : _init_toggle,
+        progress : _init_progress,
+        range : _init_range,
+        badge : _init_badge,
+        scroll : initScroll
     }
 })(J.$);
 /**
@@ -320,34 +335,42 @@ J.Page = (function($){
         return hash.indexOf('#') == 0 ? hash.substr(1) : hash;
     }
     /**
-     * ajax远程加载页面
-     * @param {string} sectionId或者#sectionId
+     * 加载section模板
+     * @param {string} hash信息
      * @param {string} url参数
      */
     var loadSectionTpl = function(hash,callback){
-        var param = {};
+        var param = {},query,appendTpl = true;
         if($.type(hash) == 'object'){
             hash = hash.tag;
             param = hash.param;
+            query = hash.query;
+        }
+        var q = $(hash).data('query');
+        //已经存在则直接跳转到对应的页面
+        if($(hash).length == 1 && q == query){
+            if(q == query){
+                callback();
+                return;
+            }else{
+                appendTpl = false;
+            }
         }
         var id = _formatHash(hash);
-        //根据id自动从basePagePath中装载模板
-        var url = J.settings.basePagePath+id+'.html'
-        if(!url){
-            console.error(404,'页面不存在！');
-            return;
-        }
-        if(J.settings.showPageLoading){
-            J.showMask();
-        }
+        //当前dom中不存在，需要从服务端加载
+        var url = J.settings.remotePage[hash];
+        //检查remotePage中是否有配置,没有则自动从basePagePath中装载模板
+        url || (url = J.settings.basePagePath+id+'.html');
+        J.settings.showPageLoading && J.showMask();
         loadContent(url,param,function(html){
-            if(J.settings.showPageLoading){
-                J.hideMask();
-            }
+            J.settings.showPageLoading && J.hideMask();
             //添加到dom树中
+            if(!appendTpl){
+                $(hash).remove();
+            }
             $('#section_container').append(html);
             //触发pageload事件
-            $('#'+id).trigger('pageload');
+            $(hash).trigger('pageload').data('query',query);
             //构造组件
             J.Element.init(hash);
             callback();
@@ -390,36 +413,28 @@ J.Router = (function($){
      */
     var init = function(){
         $(window).on('popstate', _popstateHandler);
-        //点击时click事件和tap事件都会触发，在此阻止a标签的默认click行为
+        //阻止含data-target或者href以'#'开头的的a元素的默认行为
         $(document).on('click','a',function(e){
-            var target = $(this).data('target');
-            if(!target || target != 'link'){
+            var target = $(this).data('target'),
+                href = $(this).attr('href');
+            if(!href ||  href.match(/^#/) || target){
                 e.preventDefault();
                 return false;
             }
         });
-        //阻止data-target != 'link'的a元素的默认行为
-        $(document).on('tap','a',function(e){
-            var target = $(this).data('target');
-            if(!target){
-                e.preventDefault();
-            }else{
-                if(target != 'link'){
-                    e.preventDefault();
-                    _targetHandler.call(this);
-                }
-            }
-        });
+        $(document).on('tap','a',_targetHandler);
         _initIndex();
     }
 
     var _initIndex = function(){
-        var currentHash = location.hash;
-        var $section = $('#section_container section.active');
-        _add2History('#'+$section.attr('id'));
-        $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
-        if(currentHash != ''){
-            _showSection(currentHash);//跳转到指定的页面
+        var targetHash = location.hash;
+        var $section = $('#section_container section').first();
+        var indexHash = '#'+$section.attr('id');
+        _add2History(indexHash,true);
+        if(targetHash != '' && targetHash != indexHash){
+            _showSection(targetHash);//跳转到指定的页面
+        }else{
+            $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
         }
     }
 
@@ -432,8 +447,8 @@ J.Router = (function($){
         if(e.state && e.state.hash){
             var hash = e.state.hash;
             if(_history[1] && hash === _history[1].hash){//存在历史记录，证明是后退事件
-                J.Menu.hide();//关闭当前页面的菜单
-                J.Popup.close();//关闭当前页面的弹出窗口
+                J.hasMenuOpen && J.Menu.hide();//关闭当前页面的菜单
+                J.hasPopupOpen && J.Popup.close();//关闭当前页面的弹出窗口
                 back();
             }else{//其他认为是非法后退或者前进
                 return;
@@ -450,7 +465,9 @@ J.Router = (function($){
 
         switch(target){
             case 'section' :
-                _showSection(href);
+                if(J.settings.appType == 'single'){
+                    _showSection(href);
+                }
                 break;
             case 'article' :
                 _showArticle(href,_this);
@@ -459,7 +476,7 @@ J.Router = (function($){
                 _toggleMenu(href);
                 break;
             case 'back' :
-                back();
+                window.history.go(-1);
                 break;
         }
     }
@@ -475,25 +492,24 @@ J.Router = (function($){
             });
             return;
         }
+        //读取hash信息
         var hashObj = J.Util.parseHash(hash);
-        if(_history[0].tag === hashObj.tag)return;
-        _add2History(hash);
-        if($(hashObj.tag).length === 0){//当前dom树中不存在
-            //加载模板
-            J.Page.load(hashObj,function(){
-                _changePage(_history[1].tag,hashObj.tag);
-            });
-        }else{
-            _changePage(_history[1].tag,hashObj.tag);
-        }
-
+        var current = _history[0]?_history[0].tag:null;
+        //同一个页面
+        if(current === hashObj.tag)return;
+        //加载模板
+        J.Page.load(hashObj,function(){
+            _changePage(current,hashObj.tag);
+            _add2History(hash);
+        });
     }
     /**
      * 后退
      */
     var back = function(){
-        _changePage(_history.shift().tag,_history[0].tag,true)
-        window.history.replaceState(_history[0],'',_history[0].hash);
+        if(J.settings.appType == 'single'){
+            _changePage(_history.shift().tag,_history[0].tag,true)
+        }
     }
     var _changePage = function(current,target,isBack){
         J.Transition.run(current,target,isBack);
@@ -501,10 +517,14 @@ J.Router = (function($){
     /**
      * 缓存访问记录
      */
-    var _add2History = function(hash){
-        var hashObj = J.Util.parseHash(hash);
+    var _add2History = function(hash,noState){
+       var hashObj = J.Util.parseHash(hash);
         _history.unshift(hashObj);
-        window.history.pushState(hashObj,'',hash);
+        if(noState){
+            window.history.replaceState(hashObj,'',hash);
+        }else{
+            window.history.pushState(hashObj,'',hash);
+        }
     }
 
     /**
@@ -776,7 +796,7 @@ J.Template = (function($){
  *  消息组件
  */
 J.Toast = (function($){
-    var TOAST_DURATION = 5000;
+    var TOAST_DURATION = 3000;
     //定义模板
     var TEMPLATE = {
         toast : '<a href="#">{value}</a>',
@@ -805,7 +825,7 @@ J.Toast = (function($){
      * 显示消息提示
      * @param type 类型  toast|success|error|info
      * @param text 文字内容
-     * @param duration 持续时间 为0则不自动关闭,默认为5000ms
+     * @param duration 持续时间 为0则不自动关闭,默认为3000ms
      */
     var show = function(type,text,duration){
         if(timer) clearTimeout(timer);
@@ -866,11 +886,6 @@ J.Transition = (function($){
         }
         //触发pagehide事件
         $current.trigger('pagehide',[isBack]);
-
-        var url = $target.data('remote');
-        if(!isBack && url){
-            J.Page.loadSection(url,$target);
-        }
         //触发pageshow事件
         $target.trigger('pageshow',[isBack]);
 
@@ -939,7 +954,7 @@ J.Util = (function($){
         return {
             hash : hash,
             tag : tag,
-            param : query,
+            query : query,
             param : param
         }
     }
@@ -1224,7 +1239,6 @@ J.Popup = (function($){
             var height = _popup.height();
             _popup.css('margin-top','-'+height/2+'px')
         }
-        J.Element.init(_popup);
         if(settings.animation){
             J.anim(_popup,transition[0],settings.duration,settings.timingFunc);
         }
@@ -1250,9 +1264,7 @@ J.Popup = (function($){
     }
     var _subscribeEvents = function(){
         _mask.on('tap',function(){
-            if(clickMask2close){
-                hide();
-            }
+            clickMask2close &&  hide();
         });
         _popup.on('tap','[data-target="closePopup"]',function(){hide();});
     }
@@ -1262,8 +1274,8 @@ J.Popup = (function($){
      * @param title 标题
      * @param content 内容
      */
-    var alert = function(title,content){
-        var markup = TEMPLATE.alert.replace('{title}',title).replace('{content}',content).replace('{ok}','确定');
+    var alert = function(title,content,btnName){
+        var markup = TEMPLATE.alert.replace('{title}',title).replace('{content}',content).replace('{ok}',btnName || '确定');
         show({
             html : markup,
             pos : 'center',
@@ -1337,7 +1349,7 @@ J.Popup = (function($){
     var actionsheet = function(buttons){
         var markup = '<div class="actionsheet">';
         $.each(buttons,function(i,n){
-            markup += '<button style="background-color: '+ n.backgroudColor +' !important;">'+ n.text +'</button>';
+            markup += '<button style="background-color: '+ n.color +' !important;">'+ n.text +'</button>';
         });
         markup += '<button class="alizarin">取消</button>';
         markup += '</div>';
@@ -1379,13 +1391,12 @@ J.Selected = (function($){
     var SELECTOR = '[data-selected]',
         activeEl,timer;
     var init = function(){
-        //添加命名空间，防止冲突
         $(document).on('touchstart.selected',SELECTOR,function(){
             var $el = $(this);
             //在滑动的时候有闪烁，添加一个延时器,防止误操作
             timer = setTimeout(function(){
                 activeEl = $el.addClass($el.data('selected'));
-            },50);
+            },0);
 
         });
         $(document).on('touchmove.selected touchend.selected touchcancel.selected',function(){
@@ -1682,7 +1693,7 @@ J.Cache = (function($){
 
         /**
          * 刷新日历为指定日期
-         * @param date 指定日期你
+         * @param date 指定日期
          */
         this.refresh = function(date){
             var oldDate = new Date(currentYear,currentMonth,1),
@@ -1913,7 +1924,7 @@ J.Cache = (function($){
 
         var _touchEnd = function(e) {
             //判定是否跳转到下一个卡片
-            //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3
+            //滑动时间小于250ms或者滑动X轴的距离大于屏幕宽度的1/3，则直接跳转到下一个卡片
             var isValidSlide = (Number(new Date()) - start.time < 250 && Math.abs(deltaX) > 20) || Math.abs(deltaX) > slideWidth/3;
                 //判定是否达到了边界即第一个右滑、最后一个左滑
             var isPastBounds = !index && deltaX > 0 || index == slideNum - 1 && deltaX < 0;

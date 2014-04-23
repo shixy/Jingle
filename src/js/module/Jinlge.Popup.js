@@ -153,9 +153,7 @@ J.Popup = (function($){
     }
     var _subscribeEvents = function(){
         _mask.on('tap',function(){
-            if(clickMask2close){
-                hide();
-            }
+            clickMask2close &&  hide();
         });
         _popup.on('tap','[data-target="closePopup"]',function(){hide();});
     }
@@ -165,8 +163,8 @@ J.Popup = (function($){
      * @param title 标题
      * @param content 内容
      */
-    var alert = function(title,content){
-        var markup = TEMPLATE.alert.replace('{title}',title).replace('{content}',content).replace('{ok}','确定');
+    var alert = function(title,content,btnName){
+        var markup = TEMPLATE.alert.replace('{title}',title).replace('{content}',content).replace('{ok}',btnName || '确定');
         show({
             html : markup,
             pos : 'center',
@@ -240,7 +238,7 @@ J.Popup = (function($){
     var actionsheet = function(buttons){
         var markup = '<div class="actionsheet">';
         $.each(buttons,function(i,n){
-            markup += '<button style="background-color: '+ n.backgroudColor +' !important;">'+ n.text +'</button>';
+            markup += '<button style="background-color: '+ n.color +' !important;">'+ n.text +'</button>';
         });
         markup += '<button class="alizarin">取消</button>';
         markup += '</div>';

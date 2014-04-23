@@ -31,12 +31,6 @@
     border-right-width: 1px;
     border-radius: 0 4px 4px 0;
 }
-.control-group li.active a,.control-group li.active .icon{
-    color: #fff;
-}
-.control-group .icon{
-    color: #2087FC;
-}
 .control-group i.icon ~ a {
     padding: 0;
 }

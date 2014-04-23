@@ -42,8 +42,8 @@ J.Router = (function($){
         if(e.state && e.state.hash){
             var hash = e.state.hash;
             if(_history[1] && hash === _history[1].hash){//存在历史记录，证明是后退事件
-                J.Menu.hide();//关闭当前页面的菜单
-                J.Popup.close();//关闭当前页面的弹出窗口
+                J.hasMenuOpen && J.Menu.hide();//关闭当前页面的菜单
+                J.hasPopupOpen && J.Popup.close();//关闭当前页面的弹出窗口
                 back();
             }else{//其他认为是非法后退或者前进
                 return;
