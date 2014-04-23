@@ -71,7 +71,7 @@ J.Router = (function($){
                 _toggleMenu(href);
                 break;
             case 'back' :
-                back();
+                window.history.go(-1);
                 break;
         }
     }
@@ -105,7 +105,6 @@ J.Router = (function($){
         if(J.settings.appType == 'single'){
             _changePage(_history.shift().tag,_history[0].tag,true)
         }
-        window.history.go(-1);
     }
     var _changePage = function(current,target,isBack){
         J.Transition.run(current,target,isBack);
