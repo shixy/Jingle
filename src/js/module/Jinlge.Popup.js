@@ -128,7 +128,6 @@ J.Popup = (function($){
             var height = _popup.height();
             _popup.css('margin-top','-'+height/2+'px')
         }
-        J.Element.init(_popup);
         if(settings.animation){
             J.anim(_popup,transition[0],settings.duration,settings.timingFunc);
         }

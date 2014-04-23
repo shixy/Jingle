@@ -6,7 +6,7 @@
  * 完善zepto的动画函数,让参数变为可选
  */
 J.anim  =  function(el,animName,duration,ease,callback){
-    var d, e,c;
+    var d, e,c = function(){};
     var len = arguments.length;
     for(var i = 2;i<len;i++){
         var a = arguments[i];
