@@ -20,7 +20,7 @@ J.Element = (function($){
         if(!selector){
             //iscroll 必须在元素可见的情况下才能初始化
             $(document).on('articleshow','article',function(){
-                J.Element.initScroll(this);
+                J.Element.scroll(this);
             });
         };
         var $el = $(selector || 'body');
@@ -32,6 +32,18 @@ J.Element = (function($){
         $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
         $.map(_getMatchElements($el,SELECTOR.count),_init_badge);
         $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
+    }
+
+    /**
+     * 初始化按钮组(绑定事件)
+     */
+    var initControlGroup = function(){
+        $(document).on('tap','control-group li',function(){
+            var $this = $(this);
+            if($this.hasClass('active'))return;
+            $this.addClass('active').siblings('.active').removeClass('active');
+            $this.parent().trigger('change',[$this]);
+        });
     }
     /**
      * 自身与子集相结合
@@ -55,7 +67,6 @@ J.Element = (function($){
         }else{
             $el.prepend('<i class="icon '+icon+'"></i>');
         }
-
     }
     /**
      * 构造toggle切换组件
@@ -166,11 +177,12 @@ J.Element = (function($){
 
     return {
         init : init,
-        initIcon : _init_icon,
-        initToggle : _init_toggle,
-        initProgress : _init_progress,
-        initRange : _init_range,
-        initBadge : _init_badge,
-        initScroll : initScroll
+        initControlGroup : initControlGroup,
+        icon : _init_icon,
+        toggle : _init_toggle,
+        progress : _init_progress,
+        range : _init_range,
+        badge : _init_badge,
+        scroll : initScroll
     }
 })(J.$);
