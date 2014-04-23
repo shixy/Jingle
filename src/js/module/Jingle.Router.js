@@ -8,36 +8,28 @@ J.Router = (function($){
      */
     var init = function(){
         $(window).on('popstate', _popstateHandler);
-        //点击时click事件和tap事件都会触发，在此阻止a标签的默认click行为
+        //阻止含data-target或者href以'#'开头的的a元素的默认行为
         $(document).on('click','a',function(e){
-            var target = $(this).data('target');
-            if(!target || target != 'link'){
+            var target = $(this).data('target'),
+                href = $(this).attr('href');
+            if(!href ||  href.match(/^#/) || target){
                 e.preventDefault();
                 return false;
             }
         });
-        //阻止data-target != 'link'的a元素的默认行为
-        $(document).on('tap','a',function(e){
-            var target = $(this).data('target');
-            if(!target){
-                e.preventDefault();
-            }else{
-                if(target != 'link'){
-                    e.preventDefault();
-                    _targetHandler.call(this);
-                }
-            }
-        });
+        $(document).on('tap','a',_targetHandler);
         _initIndex();
     }
 
     var _initIndex = function(){
-        var currentHash = location.hash;
-        var $section = $('#section_container section.active');
-        _add2History('#'+$section.attr('id'));
-        $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
-        if(currentHash != ''){
-            _showSection(currentHash);//跳转到指定的页面
+        var targetHash = location.hash;
+        var $section = $('#section_container section').first();
+        var indexHash = '#'+$section.attr('id');
+        _add2History(indexHash,true);
+        if(targetHash != '' && targetHash != indexHash){
+            _showSection(targetHash);//跳转到指定的页面
+        }else{
+            $section.trigger('pageinit').trigger('pageshow').data('init',true).find('article.active').trigger('articleshow');
         }
     }
 
@@ -68,7 +60,9 @@ J.Router = (function($){
 
         switch(target){
             case 'section' :
-                _showSection(href);
+                if(J.settings.appType == 'single'){
+                    _showSection(href);
+                }
                 break;
             case 'article' :
                 _showArticle(href,_this);
@@ -95,11 +89,12 @@ J.Router = (function($){
         }
         //读取hash信息
         var hashObj = J.Util.parseHash(hash);
+        var current = _history[0]?_history[0].tag:null;
         //同一个页面
-        if(_history[0].tag === hashObj.tag)return;
+        if(current === hashObj.tag)return;
         //加载模板
         J.Page.load(hashObj,function(){
-            _changePage(_history[0].tag,hashObj.tag);
+            _changePage(current,hashObj.tag);
             _add2History(hash);
         });
     }
@@ -107,8 +102,10 @@ J.Router = (function($){
      * 后退
      */
     var back = function(){
-        _changePage(_history.shift().tag,_history[0].tag,true)
-        window.history.replaceState(_history[0],'',_history[0].hash);
+        if(J.settings.appType == 'single'){
+            _changePage(_history.shift().tag,_history[0].tag,true)
+        }
+        window.history.go(-1);
     }
     var _changePage = function(current,target,isBack){
         J.Transition.run(current,target,isBack);
@@ -116,10 +113,14 @@ J.Router = (function($){
     /**
      * 缓存访问记录
      */
-    var _add2History = function(hash){
+    var _add2History = function(hash,noState){
        var hashObj = J.Util.parseHash(hash);
         _history.unshift(hashObj);
-        window.history.pushState(hashObj,'',hash);
+        if(noState){
+            window.history.replaceState(hashObj,'',hash);
+        }else{
+            window.history.pushState(hashObj,'',hash);
+        }
     }
 
     /**
