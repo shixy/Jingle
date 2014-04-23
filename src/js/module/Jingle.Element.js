@@ -38,7 +38,7 @@ J.Element = (function($){
      * 初始化按钮组(绑定事件)
      */
     var initControlGroup = function(){
-        $(document).on('tap','control-group li',function(){
+        $(document).on('tap','ul.control-group li',function(){
             var $this = $(this);
             if($this.hasClass('active'))return;
             $this.addClass('active').siblings('.active').removeClass('active');
