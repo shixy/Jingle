@@ -3,6 +3,8 @@
     width: 70px;
     height: 28px;
     border-radius: 8px;
+    display:inline-block;
+    text-align: center;
 }
 /** 自定义文本 **/
 [data-on]:before {
