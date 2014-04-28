@@ -20,7 +20,13 @@
     background-image: none;
     background-position: 0% 0%;
     background-repeat: repeat;
-    margin-right: 3px;
+    margin: 0 3px;
+}
+.icon.left{
+    float:left;
+}
+.icon.right{
+    float:right;
 }
 .icon:before {
     text-decoration: inherit;
