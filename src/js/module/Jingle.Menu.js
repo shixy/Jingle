@@ -37,7 +37,7 @@ J.Menu = (function($){
         }
 
         //aside中可能需要scroll组件
-        J.Element.initScroll($aside);
+        J.Element.scroll($aside);
 
         if(transition == 'overlay'){
             J.anim($aside,{translateX : '0%'});

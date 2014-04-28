@@ -785,7 +785,13 @@ header .control-group{
     background-image: none;
     background-position: 0% 0%;
     background-repeat: repeat;
-    margin-right: 3px;
+    margin: 0 3px;
+}
+.icon.left{
+    float:left;
+}
+.icon.right{
+    float:right;
 }
 .icon:before {
     text-decoration: inherit;
@@ -1988,6 +1994,8 @@ input[type="range"]::-webkit-slider-thumb{
     width: 70px;
     height: 28px;
     border-radius: 8px;
+    display:inline-block;
+    text-align: center;
 }
 /** 自定义文本 **/
 [data-on]:before {

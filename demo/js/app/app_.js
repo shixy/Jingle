@@ -383,13 +383,7 @@ App.page('chart_pie',function(){
             id : 'pie_canvas',
             clickType : 'rotate'
         });
-        pie.on('rotate',function(data,i,j){
-            J.popup({
-                html: '<div style="height: 100px;text-align: center;font-size: 20px;font-weight: 600;margin-top: 10px;color:#E74C3C ">'+data+'</div>',
-                pos : 'center',
-                mask : false
-            })
-        });
+        pie.draw();
     }
     function updateChart(type){
         if(type == 'pie'){
