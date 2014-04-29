@@ -96,6 +96,9 @@ select {
   margin-bottom: 0;
   border-bottom: 0;
 }
+.input-row label + .toggle {
+    margin: 11px 10px 9px 13px;
+}
 .label{
     background-color: #E67E22;
     color: #fff;
