@@ -91,7 +91,7 @@ select {
 }
 .input-row label + input {
   float: right;
-  width: 65%;
+  width: 75%;
   padding-left: 0;
   margin-bottom: 0;
   border-bottom: 0;
