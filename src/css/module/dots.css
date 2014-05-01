@@ -1,5 +1,5 @@
 .dots{
-    width:100%;height: 20px;position:absolute;left: 0;bottom: 50px;z-index: 999;
+    width:100%;height: 20px;position:absolute;left: 0;bottom: 10px;z-index: 999;
     opacity: 0.7;
 }
 .dots ul{
