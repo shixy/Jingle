@@ -2,7 +2,7 @@
  * 幻灯片组件
  */
 ;(function($){
-    function slider(selector,noDots){
+    function slider(selector,showDots){
         var afterSlide = function(){},
             beforeSlide = function(){return true},
             gestureStarted = false,
@@ -15,15 +15,17 @@
             slideNum,
             slideWidth,
             deltaX,
-            autoPlay;
+            autoPlay
+            interval = 3000;
         var _this = this;
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);
-            noDots = selector.noDots;
+            showDots = selector.noDots;
             beforeSlide = selector.onBeforeSlide || beforeSlide;
             afterSlide = selector.onAfterSlide || afterSlide;
             autoPlay = selector.autoPlay;
+            interval = selector.interval;
         }else{
             wrapper = $(selector);
         }
@@ -31,7 +33,10 @@
          * 初始化容器大小
          */
         var _init = function() {
-            wrapper.css('overflow','hidden');
+            wrapper.css({
+                'overflow':'hidden',
+                'position':'relative'
+            });
             container = wrapper.children().first();
             slides = container.children();
             slideNum = slides.length;
@@ -42,7 +47,8 @@
                     'width':slideWidth,
                     'float':'left'
             })
-            if(!noDots)_initDots();
+            if(showDots == undefined)showDots = true;
+            showDots && _initDots();
             _slide(0, 0);
             if(autoPlay){
                 _autoPlay();
@@ -57,7 +63,7 @@
                     _this.next();
                 }
                 _autoPlay();
-            },3000);
+            },interval);
         }
 
         var _initDots = function(){
