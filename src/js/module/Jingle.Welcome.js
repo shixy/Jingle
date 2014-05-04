@@ -14,7 +14,10 @@ J.Welcome = (function($){
             success : function(html){
                 //添加到dom树中
                 $('body').append(html);
-                new J.Slider('#jingle_welcome');
+                new J.Slider({
+                    selector : '#jingle_welcome',
+                    onAfterSlide  : J.settings.welcomeSlideChange
+                });
             }
         })
     }

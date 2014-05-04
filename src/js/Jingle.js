@@ -1,5 +1,5 @@
 /*
- * Jingle v0.3 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
+ * Jingle v0.4 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
  * Released under MIT license
  * walker.shixy@gmail.com
  */
@@ -18,6 +18,8 @@ var Jingle = J = {
         transitionTimingFunc : 'ease-in',
         //是否显示欢迎界面
         showWelcome : false,
+        //欢迎界面卡片切换时的执行函数，可以制作酷帅吊炸天的欢迎界面
+        welcomeSlideChange : null,
         //加载page模板时，是否显示遮罩
         showPageLoading : false,
         //page模板默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
