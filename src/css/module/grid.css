@@ -2,6 +2,12 @@
     display: -webkit-box;
     display: box;
 }
+.grid.middle{
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+    box-pack:center;
+    box-align:center;
+}
 .grid.vertical{
     -webkit-box-orient:vertical;
     box-orient:vertical;
