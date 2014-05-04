@@ -72,7 +72,7 @@ var App = (function(){
             },
             showPageLoading : true,
             remotePage : {
-                '#about_section' : '/remote/about_section.html'
+                '#about_section' : 'remote/about_section.html'
             }
         });
        
@@ -270,9 +270,6 @@ App.page('slider',function(){
         $('#slider_section article').on('articleshow',function(){
             slider = new J.Slider({
                 selector : '#slider_test',
-                autoPlay : true,
-                interval : 5000,
-                //showDots : true,
                 onBeforeSlide : function(){
                     return true;
                 },
