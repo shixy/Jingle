@@ -33,10 +33,6 @@
          * 初始化容器大小
          */
         var _init = function() {
-            wrapper.css({
-                'overflow':'hidden',
-                'position':'relative'
-            });
             container = wrapper.children().first();
             slides = container.children();
             slideNum = slides.length;
@@ -46,7 +42,7 @@
             slides.css({
                     'width':slideWidth,
                     'float':'left'
-            })
+            }).show();
             if(showDots == undefined)showDots = true;
             showDots && _initDots();
             _slide(0, 0);
