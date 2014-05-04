@@ -1,8 +1,8 @@
-<!DOCTYPE>
+<!DOCTYPE >
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Jingle</title>
+    <title>Jingle V0.4</title>
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -20,17 +20,17 @@
             <!--<nav class="left">
                 <a id="btn_scan_barcode" data-icon="qrcode" href=""></a>
             </nav>-->
-            <h1 class="title">Jingle</h1>
+            <h1 class="title">Jingle V0.4</h1>
             <nav class="right">
                 <a data-target="section" data-icon="info" href="#about_section"></a>
             </nav>
         </header>
-        <article class="active" data-scroll="true" style="padding: 10px 0;">
-            <div>
+        <article class="active" data-scroll="true">
+            <div style="padding: 10px 0 20px;">
             <ul class="list inset demo-list">
                 <li data-icon="next" data-selected="selected">
                     <span class="icon newspaper"></span>
-                    <a href="#layout_section?a=1&b=2" class="one-part"  data-target="section">
+                    <a href="#layout_section?a=1&b=2"  data-target="section">
                         <strong>layout</strong>
                         <p>基本布局</p>
                     </a>
@@ -50,10 +50,26 @@
                     </a>
                 </li>
                 <li data-icon="next" data-selected="selected">
+                    <span class="icon bars"></span>
+                    <div class="tag alizarin">new</div>
+                    <a href="#chart_section"data-target="section">
+                        <strong>chart</strong>
+                        <p>Jingle Chart，独立的移动端图表组件</p>
+                    </a>
+                </li>
+                <li data-icon="next" data-selected="selected">
                     <span class="icon stack"></span>
                     <a href="#form_section"data-target="section">
                         <strong>form</strong>
                         <p>表单基本组件</p>
+                    </a>
+                </li>
+                <li data-icon="next" data-selected="selected">
+                    <span class="icon grid"></span>
+                    <div class="tag alizarin">new</div>
+                    <a href="#grid_section"data-target="section">
+                        <strong>grid</strong>
+                        <p>栅格组件</p>
                     </a>
                 </li>
                 <li data-icon="next" data-selected="selected">
@@ -120,7 +136,7 @@
                     </a>
                 </li>
                 <li class="divider">其他</li>
-                <li data-icon="next" data-selected="selected"><a href="#" data-icon="exit" id="btn_show_welcome">欢迎页</a></li>
+                <li data-icon="next" data-selected="selected"><a href="#" data-icon="exit" id="btn_show_welcome"><strong>欢迎页</strong></a></li>
             </ul>
             </div>
         </article>
@@ -133,7 +149,7 @@
 <script type="text/javascript" src="js/lib/template.min.js"></script>
 <script type="text/javascript" src="js/lib/Jingle.debug.js"></script>
 <script type="text/javascript" src="js/lib/zepto.touch2mouse.js"></script>
-<script type="text/javascript" src="js/lib/barcodescanner.js"></script>
+<script type="text/javascript" src="js/lib/JChart.debug.js"></script>
 <!--- app --->
 <script type="text/javascript" src="js/app/app.js"></script>
 <!--<script src="http://192.168.2.141:8080/target/target-script-min.js#anonymous"></script>-->

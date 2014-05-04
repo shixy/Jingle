@@ -41,6 +41,10 @@
                     <label>用户名</label>
                     <input id="username_form" type="text" placeholder="字母、数字、下划线">
                 </div>
+                <div class="input-row">
+                    <label>性别</label>
+                    <div class="toggle active" data-on="男" data-off="女"></div>
+                </div>
             </form>
         </div>
     </article>
@@ -61,10 +65,15 @@
                     <div class="toggle" >
                     </div>
                     <div style="text-align: left">自定义文字 data-on="开启" data-off="关闭"</div>
-                    <div class="toggle active" data-on="开启" data-off="关闭">
+                    <div style="text-align: left">
+                        <label>测试：</label>
+                        <div class="toggle active" data-on="开启" data-off="关闭"></div>
                     </div>
-                    <div class="toggle" data-on="开启" data-off="关闭">
+                    <div style="text-align: left">
+                        <label>测试：</label>
+                        <div class="toggle" data-on="是" data-off="否"></div>
                     </div>
+
                 </div>
             </li>
             <li class="divider">range</li>
@@ -91,35 +100,6 @@
                     <div data-progress="40"></div>
                     <div style="text-align: left">自定义文字：</div>
                     <div data-progress="80" data-title="已完成"></div>
-                </div>
-            </li>
-            <li class="divider">navbar</li>
-            <li>
-                <div class="demo-btn-group">
-                    <div style="text-align: left">默认(只有文字)：</div>
-                    <ul class="control-group">
-                        <li class="active"><a href="#">Hello</a></li>
-                        <li><a href="#">Jingle</a></li>
-                        <li><a href="#" >html5</a></li>
-                    </ul>
-                    <div style="text-align: left">只有图标：</div>
-                    <ul class="control-group">
-                        <li data-icon="home"></li>
-                        <li class="active" data-icon="bell"></li>
-                        <li data-icon="spinner"></li>
-                    </ul>
-                    <div style="text-align: left">文字+图标(左右)：</div>
-                    <ul class="control-group">
-                        <li class="active"><a href="#" data-icon="home">Hello</a></li>
-                        <li><a href="#" data-icon="bell">Jingle</a></li>
-                        <li><a href="#" data-icon="spinner">html5</a></li>
-                    </ul>
-                    <div style="text-align: left">文字+图标(上下)：</div>
-                    <ul class="control-group">
-                        <li class="active" data-icon="home"><a href="#">Hello</a></li>
-                        <li data-icon="bell"><a href="#">Jingle</a></li>
-                        <li data-icon="spinner"><a href="#" >html5</a></li>
-                    </ul>
                 </div>
             </li>
         </ul>
