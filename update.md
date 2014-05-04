@@ -3,7 +3,10 @@
 2. 重新定义服务端渲染模板方式，由之前的section上使用data-remote更改为在config中配置remotePage,hash中的querystring也会自动附加到remotePage上
 3. 按钮组(controlGroup)增加change事件
 4.data-icon支持左文字右图标方式
-4. 完善路由机制
-5. 修复部分bug...
+5. 增加栅格系统
+6. 完善路由机制
+7. form表单布局示例完善
+8. 欢迎界面组件完善
+9. 修复部分bug...
 ##0.1-0.3##
 未做记录...
