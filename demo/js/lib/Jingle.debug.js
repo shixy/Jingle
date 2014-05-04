@@ -1,5 +1,5 @@
 /*
- * Jingle v0.3 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
+ * Jingle v0.4 Copyright (c) 2013 shixy, http://shixy.github.io/Jingle/
  * Released under MIT license
  * walker.shixy@gmail.com
  */
@@ -18,6 +18,8 @@ var Jingle = J = {
         transitionTimingFunc : 'ease-in',
         //是否显示欢迎界面
         showWelcome : false,
+        //欢迎界面卡片切换时的执行函数，可以制作酷帅吊炸天的欢迎界面
+        welcomeSlideChange : null,
         //加载page模板时，是否显示遮罩
         showPageLoading : false,
         //page模板默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
@@ -1005,7 +1007,10 @@ J.Welcome = (function($){
             success : function(html){
                 //添加到dom树中
                 $('body').append(html);
-                new J.Slider('#jingle_welcome');
+                new J.Slider({
+                    selector : '#jingle_welcome',
+                    onAfterSlide  : J.settings.welcomeSlideChange
+                });
             }
         })
     }
@@ -1780,7 +1785,7 @@ J.Cache = (function($){
  * 幻灯片组件
  */
 ;(function($){
-    function slider(selector,noDots){
+    function slider(selector,showDots){
         var afterSlide = function(){},
             beforeSlide = function(){return true},
             gestureStarted = false,
@@ -1793,15 +1798,17 @@ J.Cache = (function($){
             slideNum,
             slideWidth,
             deltaX,
-            autoPlay;
+            autoPlay
+            interval = 3000;
         var _this = this;
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);
-            noDots = selector.noDots;
+            showDots = selector.noDots;
             beforeSlide = selector.onBeforeSlide || beforeSlide;
             afterSlide = selector.onAfterSlide || afterSlide;
             autoPlay = selector.autoPlay;
+            interval = selector.interval;
         }else{
             wrapper = $(selector);
         }
@@ -1809,7 +1816,6 @@ J.Cache = (function($){
          * 初始化容器大小
          */
         var _init = function() {
-            wrapper.css('overflow','hidden');
             container = wrapper.children().first();
             slides = container.children();
             slideNum = slides.length;
@@ -1819,9 +1825,11 @@ J.Cache = (function($){
             slides.css({
                     'width':slideWidth,
                     'float':'left'
-            })
-            if(!noDots)_initDots();
+            }).show();
+            if(showDots == undefined)showDots = true;
+            showDots && _initDots();
             _slide(0, 0);
+            afterSlide(0);
             if(autoPlay){
                 _autoPlay();
             }
@@ -1835,7 +1843,7 @@ J.Cache = (function($){
                     _this.next();
                 }
                 _autoPlay();
-            },3000);
+            },interval);
         }
 
         var _initDots = function(){

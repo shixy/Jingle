@@ -695,7 +695,7 @@ window.JingleChart = JChart = {
             //动画帧数
             animationSteps : 10,
             //动画函数
-            animationEasing : "easeOutBounce"
+            animationEasing : "linear"
         }
         this.defaultFont = {
             family : 'Arial',
@@ -778,7 +778,7 @@ window.JingleChart = JChart = {
             data && (this.data = data);
             this.dataOffset = 0;
             this.clear();
-            this.draw(animation);
+            this.draw(!animation);
         }
         this.mergeFont = function(key){
             if(key instanceof Array){

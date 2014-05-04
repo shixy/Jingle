@@ -5,8 +5,8 @@
         </nav>
         <h1 class="title">栅格系统</h1>
     </header>
-    <article class="active" data-scroll="true" style="padding: 10px;">
-        <div>
+    <article class="active" data-scroll="true">
+        <div style="padding: 20px;">
             <p>栅格系统采用的是css3的flex-box来实现的，展示更自由。内置了col-1 - 5,等比例分配div,可随意使用margin与padding</p>
             <h3>横向</h3>
             <h4>1:1</h4>
@@ -37,6 +37,22 @@
                 <div class="col-1">col-1</div>
                 <div class="col-2">col-2</div>
                 <div class="col-3">col-3</div>
+            </div>
+            <h4>任意高度宽度div水平垂直居中</h4>
+            <div class="grid middle" style="height: 100px;border:1px solid #ee3207">
+                <div style="margin: auto;border: 1px solid #00364d;padding: 5px;">看我如何居中</div>
+            </div>
+            <h4>综合布局</h4>
+
+            <div class="grid middle demo-grid" style="height: 200px">
+                <div class="col-1">
+                    <div class="col-1">col-1</div>
+                </div>
+                <div class="col-2 grid vertical demo-grid">
+                    <div class="col-1">col-1</div>
+                    <div class="col-2">col-2</div>
+                    <div class="col-3">col-3</div>
+                </div>
             </div>
         </div>
     </article>
