@@ -1,5 +1,5 @@
 document.addEventListener('deviceready', onDeviceReady, false);
-function onDeviceReady(){
+function onDeviceReady(){  
     navigator.splashscreen.hide();
     //注册后退按钮
     document.addEventListener("backbutton", function (e) {
