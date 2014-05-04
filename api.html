@@ -63,6 +63,9 @@
                 <li>
                     <a href="samples.html">演示案例</a>
                 </li>
+				<li>
+                    <a href="http://vycool.com/JChart">Jingle Chart</a>
+                </li>
             </ul>
         </nav>
     </div>
@@ -148,6 +151,64 @@
     <div class="bs-docs-section">
         <div class="page-header">
             <h1 id="jingle">Jingle</h1>
+        </div>
+        <h3 id="popup_config">配置项</h3>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 100px;">名称</th>
+                    <th>类型</th>
+                    <th>默认值</th>
+                    <th>描述</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>appType</td>
+                    <td>String</td>
+                    <td>single</td>
+                    <td>工程类型，默认为单页面工程single,
+                    多页面工程muti(也就是普通的webapp,去掉了路由的功能)</td>
+                </tr>
+                <tr>
+                    <td>transitionType</td>
+                    <td>String</td>
+                    <td>slide</td>
+                    <td>页面转场默认动画效果</td>
+                </tr>
+                <tr>
+                    <td>showWelcome</td>
+                    <td>Boolean</td>
+                    <td>false</td>
+                    <td>是否显示欢迎界面,需要在basePagePath放置welcome.html文件</td>
+                </tr>
+                <tr>
+                    <td>welcomeSlideChange</td>
+                    <td>Function</td>
+                    <td>null</td>
+                    <td>欢迎界面卡片切换时的执行函数，可以制作酷帅吊炸天的欢迎界面</td>
+                </tr>
+                <tr>
+                    <td>showPageLoading</td>
+                    <td>Boolean</td>
+                    <td>true</td>
+                    <td>加载page模板时，是否显示遮罩</td>
+                </tr>
+                <tr>
+                    <td>basePagePath</td>
+                    <td>String</td>
+                    <td>html/</td>
+                    <td>page模板默认的相对位置，主要用于开发hybrid应用，实现page的自动装载</td>
+                </tr>
+                <tr>
+                    <td>remotePage</td>
+                    <td>Object</td>
+                    <td>{}</td>
+                    <td>page模板的远程加载路径{#id: href,#id: href}，可以用来获取服务端渲染的模板</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
         <h3 id="jingle_attr">属性</h3>
         <div class="table-responsive">
@@ -310,32 +371,32 @@
                     <td>初始化页面内(选择器内)的icon\scroll等元素</td>
                 </tr>
                 <tr>
-                    <td>initIcon</td>
+                    <td>icon</td>
                     <td>el</td>
                     <td>初始化icon组件(包含子元素)</td>
                 </tr>
                 <tr>
-                    <td>initToggle</td>
+                    <td>toggle</td>
                     <td>el</td>
                     <td>初始化toggle组件(包含子元素)</td>
                 </tr>
                 <tr>
-                    <td>initProgress</td>
+                    <td>progress</td>
                     <td>el</td>
                     <td>初始化progress组件(包含子元素)</td>
                 </tr>
                 <tr>
-                    <td>initRange</td>
+                    <td>range</td>
                     <td>el</td>
                     <td>初始化range组件(包含子元素)</td>
                 </tr>
                 <tr>
-                    <td>initBadge</td>
+                    <td>badge</td>
                     <td>el</td>
                     <td>初始化badge组件(包含子元素)</td>
                 </tr>
                 <tr>
-                    <td>initScroll</td>
+                    <td>scroll</td>
                     <td>el</td>
                     <td>初始化scroll组件(包含子元素)</td>
                 </tr>
@@ -907,7 +968,7 @@
                     <td>容器</td>
                 </tr>
                 <tr>
-                    <td>noDots</td>
+                    <td>showDots</td>
                     <td>Boolean</td>
                     <td>true</td>
                     <td>是否显示导航点</td>
@@ -919,13 +980,19 @@
                     <td>是否自动播放</td>
                 </tr>
                 <tr>
-                    <td>beforeSlide</td>
+                    <td>interval</td>
+                    <td>int</td>
+                    <td>3000</td>
+                    <td>自动播放时间间隔，默认3秒</td>
+                </tr>
+                <tr>
+                    <td>onBeforeSlide</td>
                     <td>Function</td>
                     <td>null</td>
                     <td>滑动卡片前触发</td>
                 </tr>
                 <tr>
-                    <td>afterSlide</td>
+                    <td>onAfterSlide</td>
                     <td>Function</td>
                     <td>null</td>
                     <td>滑动卡片后触发</td>
@@ -983,7 +1050,7 @@
 
         <p>Code licensed under MIT, documentation under CC BY 3.0.</p>
         <ul class="footer-links">
-            <li>当前版本： v0.3</li>
+            <li>当前版本： v0.4</li>
             <li class="muted">·</li>
             <li><a href="index.html">Jingle</a></li>
         </ul>
