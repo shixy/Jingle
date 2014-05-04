@@ -46,6 +46,7 @@
             if(showDots == undefined)showDots = true;
             showDots && _initDots();
             _slide(0, 0);
+            afterSlide(0);
             if(autoPlay){
                 _autoPlay();
             }
