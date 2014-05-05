@@ -72,7 +72,7 @@ var App = (function(){
             },
             showPageLoading : true,
             remotePage : {
-                '#about_section' : '/remote/about_section.html'
+                '#about_section' : 'remote/about_section.html'
             }
         });
        
