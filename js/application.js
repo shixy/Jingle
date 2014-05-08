@@ -69,7 +69,12 @@
 
     setTimeout(function () {
       $('.bs-top').affix()
-    }, 100)
+    }, 100);
+	
+	 if(!/webkit/.test(navigator.userAgent.toLowerCase())){
+		$('#tip_info').show();
+	 }
+
 
 })
 
