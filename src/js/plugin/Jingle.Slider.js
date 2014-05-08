@@ -21,7 +21,7 @@
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);
-            showDots = selector.noDots;
+            showDots = selector.showDots;
             beforeSlide = selector.onBeforeSlide || beforeSlide;
             afterSlide = selector.onAfterSlide || afterSlide;
             autoPlay = selector.autoPlay;
