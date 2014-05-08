@@ -121,6 +121,8 @@
 &lt;script type="text/javascript" src="js/iscroll.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="js/template.min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="js/Jingle.debug.js"&gt;&lt;/script&gt;
+&lt;!---PC端测试时需要这个文件，将click事件模拟成touch事件，正式上线删除该js文件即可---&gt;
+&lt;script type="text/javascript" src="js/zepto.touch2mouse.js"&gt;&lt;/script&gt;
         </code></pre>
         <p>html(具体请参见demo中index.html):</p>
         <pre><code class="html">
@@ -164,7 +166,7 @@ Jingle.launch();
             <h1 id="cometo">认识Jingle</h1>
         </div>
         <h3>Jingle适合开发什么样的应用</h3>
-        <p>Jingle是一个Webapp框架，基于H5C3开发，理论上可以用来开发各种类型的webapp,如轻应用、触屏站、hrbrid应用等等。</p>
+        <p>Jingle是一个Webapp框架，基于H5C3开发，理论上可以用来开发各种类型的webapp,如轻应用、触屏站、hybrid应用等等。</p>
         <p>最适合用来开发Hybrid应用</p>
 
         <h3>Jingle代码结构描述</h3>
