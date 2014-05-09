@@ -24,6 +24,7 @@ var Jingle = J = {
         showPageLoading : false,
         //page模板默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
         basePagePath : 'html/',
+        basePageSuffix : '.html',
         //page模板的远程路径{#id: href,#id: href}
         remotePage:{}
     },
