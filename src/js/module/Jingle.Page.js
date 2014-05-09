@@ -13,9 +13,9 @@ J.Page = (function($){
     var loadSectionTpl = function(hash,callback){
         var param = {},query,appendTpl = true;
         if($.type(hash) == 'object'){
-            hash = hash.tag;
             param = hash.param;
             query = hash.query;
+            hash = hash.tag;
         }
         var q = $(hash).data('query');
         //已经存在则直接跳转到对应的页面
