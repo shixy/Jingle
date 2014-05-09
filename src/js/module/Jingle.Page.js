@@ -11,7 +11,7 @@ J.Page = (function($){
      * @param {string} url参数
      */
     var loadSectionTpl = function(hash,callback){
-        var param = {},query,appendTpl = true;
+        var param = {},query,replaceSection = false;
         if($.type(hash) == 'object'){
             param = hash.param;
             query = hash.query;
@@ -24,22 +24,23 @@ J.Page = (function($){
                 callback();
                 return;
             }else{
-                appendTpl = false;
+                replaceSection = true;
             }
         }
         var id = _formatHash(hash);
         //当前dom中不存在，需要从服务端加载
         var url = J.settings.remotePage[hash];
         //检查remotePage中是否有配置,没有则自动从basePagePath中装载模板
-        url || (url = J.settings.basePagePath+id+'.html');
+        url || (url = J.settings.basePagePath+id+J.settings.basePageSuffix);
         J.settings.showPageLoading && J.showMask();
         loadContent(url,param,function(html){
             J.settings.showPageLoading && J.hideMask();
             //添加到dom树中
-            if(!appendTpl){
-                $(hash).remove();
+            if(replaceSection){
+                $(hash).replaceWith(html);
+            }else{
+                $('#section_container').append(html);
             }
-            $('#section_container').append(html);
             //触发pageload事件
             $(hash).trigger('pageload').data('query',query);
             //构造组件

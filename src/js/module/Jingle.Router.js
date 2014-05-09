@@ -89,13 +89,18 @@ J.Router = (function($){
         }
         //读取hash信息
         var hashObj = J.Util.parseHash(hash);
-        var current = _history[0]?_history[0].tag:null;
-        //同一个页面
-        if(current === hashObj.tag)return;
+        var current = _history[0];
+        //同一个页面,则不重新加载
+        if(current.hash === hashObj.hash){
+            return;
+        }
         //加载模板
         J.Page.load(hashObj,function(){
-            _changePage(current,hashObj.tag);
-            _add2History(hash);
+            var sameSection = current.tag == hashObj.tag;
+           if(!sameSection){//不同卡片页跳转
+               _changePage(current.tag,hashObj.tag);
+           }
+            _add2History(hash,sameSection);
         });
     }
     /**
@@ -114,12 +119,13 @@ J.Router = (function($){
      */
     var _add2History = function(hash,noState){
        var hashObj = J.Util.parseHash(hash);
-        _history.unshift(hashObj);
-        if(noState){
+        if(noState){//不添加浏览器历史记录
+            _history.shift(hashObj);
             window.history.replaceState(hashObj,'',hash);
         }else{
             window.history.pushState(hashObj,'',hash);
         }
+        _history.unshift(hashObj);
     }
 
     /**
