@@ -19,8 +19,7 @@ J.Transition = (function($){
         //触发 beforepageshow 事件
         $target.trigger('beforepageshow',[isBack]);
         var c_class = transitionName[0]||'empty' ,t_class = transitionName[1]||'empty';
-        $current.bind('webkitAnimationEnd.jingle', _finishTransition);
-        $current.addClass('anim '+ c_class);
+        $current.bind('webkitAnimationEnd.jingle', _finishTransition).addClass('anim '+ c_class);
         $target.addClass('anim animating '+ t_class);
     }
     var _finishTransition = function() {
@@ -30,11 +29,8 @@ J.Transition = (function($){
         $current.attr('class','');
         $target.attr('class','active');
         //add custom events
-        if(!$target.data('init')){
-            //触发pageinit事件
-            $target.trigger('pageinit');
-            $target.data('init',true);
-        }
+        !$target.data('init') && $target.trigger('pageinit').data('init',true);
+        !$current.data('init') && $current.trigger('pageinit').data('init',true);
         //触发pagehide事件
         $current.trigger('pagehide',[isBack]);
         //触发pageshow事件
@@ -42,6 +38,7 @@ J.Transition = (function($){
 
         $current.find('article.active').trigger('articlehide');
         $target.find('article.active').trigger('articleshow');
+        $current = $target = null;//释放
     }
 
     /**
