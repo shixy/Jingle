@@ -1,6 +1,7 @@
 /**
  * 对zeptojs的ajax进行封装，实现离线访问
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
+ * @Deprecated 用J.Cache代替
  */
 J.Service = (function($){
     var UNPOST_KEY = 'JINGLE_POST_DATA',
