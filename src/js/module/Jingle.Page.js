@@ -19,7 +19,7 @@ J.Page = (function($){
         }
         var q = $(hash).data('query');
         //已经存在则直接跳转到对应的页面
-        if($(hash).length == 1 && q == query){
+        if($(hash).length == 1){
             if(q == query){
                 callback();
                 return;
@@ -36,16 +36,18 @@ J.Page = (function($){
         loadContent(url,param,function(html){
             J.settings.showPageLoading && J.hideMask();
             //添加到dom树中
+            $(hash).remove();
+            var $h = $(html);
+            $('#section_container').append($h);
             if(replaceSection){
-                $(hash).replaceWith(html);
-            }else{
-                $('#section_container').append(html);
+                $h.addClass('active');
             }
             //触发pageload事件
-            $(hash).trigger('pageload').data('query',query);
+            $h.trigger('pageload').data('query',query);
             //构造组件
             J.Element.init(hash);
             callback();
+            $h = null;
         });
     }
     var loadSectionRemote = function(url,section){

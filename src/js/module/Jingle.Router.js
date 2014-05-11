@@ -21,8 +21,10 @@ J.Router = (function($){
         _initIndex();
     }
 
+    //处理app页面初始化
     var _initIndex = function(){
         var targetHash = location.hash;
+        //取页面中第一个section作为app的起始页
         var $section = $('#section_container section').first();
         var indexHash = '#'+$section.attr('id');
         _add2History(indexHash,true);
@@ -96,8 +98,10 @@ J.Router = (function($){
         }
         //加载模板
         J.Page.load(hashObj,function(){
-            var sameSection = current.tag == hashObj.tag;
-           if(!sameSection){//不同卡片页跳转
+            var sameSection = (current.tag == hashObj.tag);
+           if(sameSection){//相同页面，触发相关事件
+               $(current.tag).trigger('pageshow').find('article.active').trigger('articlehide');
+           }else{//不同卡片页跳转动画
                _changePage(current.tag,hashObj.tag);
            }
             _add2History(hash,sameSection);
