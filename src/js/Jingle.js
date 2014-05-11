@@ -4,7 +4,7 @@
  * walker.shixy@gmail.com
  */
 var Jingle = J = {
-    version : '0.4',
+    version : '0.41',
     $ : window.Zepto,
     //参数设置
     settings : {
@@ -16,6 +16,8 @@ var Jingle = J = {
         transitionTime : 250,
         //自定义动画时的默认动画函数(非page转场动画函数)
         transitionTimingFunc : 'ease-in',
+        //toast 持续时间,默认为3s
+        toastDuration : 3000,
         //是否显示欢迎界面
         showWelcome : false,
         //欢迎界面卡片切换时的执行函数，可以制作酷帅吊炸天的欢迎界面
