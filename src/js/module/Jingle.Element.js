@@ -32,6 +32,7 @@ J.Element = (function($){
         $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
         $.map(_getMatchElements($el,SELECTOR.count),_init_badge);
         $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
+        $el = null;
     }
 
     /**
@@ -41,8 +42,7 @@ J.Element = (function($){
         $(document).on('tap','ul.control-group li',function(){
             var $this = $(this);
             if($this.hasClass('active'))return;
-            $this.addClass('active').siblings('.active').removeClass('active');
-            $this.parent().trigger('change',[$this]);
+            $this.addClass('active').siblings('.active').removeClass('active').parent().trigger('change',[$this]);
         });
     }
     /**
@@ -72,7 +72,7 @@ J.Element = (function($){
      * 构造toggle切换组件
      */
     var _init_toggle = function(el){
-        var $el = $(el),$input;
+        var $el = $(el);
         if($el.find('div.toggle-handle').length>0){//已经初始化
             return;
         }
@@ -82,19 +82,10 @@ J.Element = (function($){
             $el.append('<input style="display: none;" name="'+name+'" value="'+$el.hasClass('active')+'"/>');
         }
         $el.append('<div class="toggle-handle"></div>');
-        $input = $el.find('input');
         $el.tap(function(){
-            var value;
-            if($el.hasClass('active')){
-                $el.removeClass('active');
-                value = false;
-            }else{
-                $el.addClass('active');
-                value = true;
-            }
-            $input.val(value);
-            //自定义事件：toggle
-            $el.trigger('toggle');
+            var $t = $(this),v = !$t.hasClass('active');
+            $t.toggleClass('active').trigger('toggle',[v]);//定义toggle事件
+            $t.find('input').val(v);
         })
     }
     /**
@@ -104,7 +95,7 @@ J.Element = (function($){
         var $el = $(el),$input;
         var $range = $('input[type="range"]',el);
         var align = $el.data('rangeinput');
-        var input = $('<input type="text" name="test" value="'+$range.val()+'"/>');
+        var input = $('<input type="number" name="test" value="'+$range.val()+'"/>');
         if(align == 'left'){
             $input = input.prependTo($el);
         }else{
@@ -139,7 +130,7 @@ J.Element = (function($){
         }
     }
     /**
-     * 构造count组件
+     * 构造badge组件
      */
     var _init_badge = function(el){
         var $el = $(el),$count;
@@ -167,8 +158,7 @@ J.Element = (function($){
         $el.prepend('<i class="icon checkbox-'+value+'"></i>');
         $el.on('tap',function(){
             var status = ($el.data('checkbox') == 'checked') ? 'unchecked':'checked';
-            $el.find('i.icon').attr('class','icon checkbox-'+status);
-            $el.data('checkbox',status);
+            $el.data('checkbox',status).find('i.icon').attr('class','icon checkbox-'+status);
             //自定义change事件
             $el.trigger('change');
         });
