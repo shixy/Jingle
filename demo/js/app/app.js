@@ -185,6 +185,9 @@ App.page('menu',function(){
 });
 App.page('layout',function(){
     this.init = function(){
+        $('#layout_header_ctrl').on('change',function(event,el){
+            J.alert('提示','你点了'+$(el).text());
+        })
         $('#layout-btn-getmore').tap(function(){
             J.popup({
                 html: '<div style="height: 100px;line-height: 100px;font-size: 20px;font-weight: 600;text-align: center;">这里展示更多功能</div>',
@@ -285,16 +288,19 @@ App.page('slider',function(){
 App.page('toast',function(){
     this.init = function(){
         $('#btn_t_default').tap(function(){
-            J.showToast('这是默认的Toast,仿安卓');
+            J.showToast('这是默认的Toast,默认3s后小时');
         })
         $('#btn_t_success').tap(function(){
-            J.showToast('恭喜，success','success');
+            J.showToast('恭喜，success,5s后消失','success',5000);
         })
         $('#btn_t_error').tap(function(){
             J.showToast('抱歉，error','error');
         })
         $('#btn_t_info').tap(function(){
             J.showToast('提示，info','info');
+        })
+        $('#btn_t_top').tap(function(){
+            J.showToast('更新了50条数据','toast top');
         })
     }
 });
@@ -563,7 +569,14 @@ App.page('chart_dynamic',function(){
         },1000);
     }
 });
-
+App.page('form',function(){
+    this.init = function(){
+        alert('init');
+        $('#checkbox_1').on('change',function(){
+            alert($(this).data('checkbox'));
+        })
+    }
+})
 $(function(){
     App.run();
 })

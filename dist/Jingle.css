@@ -1996,14 +1996,21 @@ input[type="range"]::-webkit-slider-thumb{
     text-align: center;
     width: 100%;;left: 0;
 }
+#jingle_toast.top{
+    top: 50px;
+    opacity: .7;
+}
 #jingle_toast>a{
     padding: 10px 15px;
     background: #222;
     display: inline-block;
-    max-width: 80%;
+    max-width: 90%;
     margin: 0 auto;
     color:#fff;
-    text-align: left;
+    text-align: center;
+}
+#jingle_toast.top>a{
+    width:90%;
 }
 #jingle_toast.success>a{background-color: #27AE60;!important}
 #jingle_toast.error>a{background-color: #E74C3C;!important}

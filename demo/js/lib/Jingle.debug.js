@@ -4,7 +4,7 @@
  * walker.shixy@gmail.com
  */
 var Jingle = J = {
-    version : '0.4',
+    version : '0.41',
     $ : window.Zepto,
     //参数设置
     settings : {
@@ -16,6 +16,8 @@ var Jingle = J = {
         transitionTime : 250,
         //自定义动画时的默认动画函数(非page转场动画函数)
         transitionTimingFunc : 'ease-in',
+        //toast 持续时间,默认为3s
+        toastDuration : 3000,
         //是否显示欢迎界面
         showWelcome : false,
         //欢迎界面卡片切换时的执行函数，可以制作酷帅吊炸天的欢迎界面
@@ -90,6 +92,7 @@ J.Element = (function($){
         $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
         $.map(_getMatchElements($el,SELECTOR.count),_init_badge);
         $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
+        $el = null;
     }
 
     /**
@@ -99,8 +102,7 @@ J.Element = (function($){
         $(document).on('tap','ul.control-group li',function(){
             var $this = $(this);
             if($this.hasClass('active'))return;
-            $this.addClass('active').siblings('.active').removeClass('active');
-            $this.parent().trigger('change',[$this]);
+            $this.addClass('active').siblings('.active').removeClass('active').parent().trigger('change',[$this]);
         });
     }
     /**
@@ -130,7 +132,7 @@ J.Element = (function($){
      * 构造toggle切换组件
      */
     var _init_toggle = function(el){
-        var $el = $(el),$input;
+        var $el = $(el);
         if($el.find('div.toggle-handle').length>0){//已经初始化
             return;
         }
@@ -140,19 +142,10 @@ J.Element = (function($){
             $el.append('<input style="display: none;" name="'+name+'" value="'+$el.hasClass('active')+'"/>');
         }
         $el.append('<div class="toggle-handle"></div>');
-        $input = $el.find('input');
         $el.tap(function(){
-            var value;
-            if($el.hasClass('active')){
-                $el.removeClass('active');
-                value = false;
-            }else{
-                $el.addClass('active');
-                value = true;
-            }
-            $input.val(value);
-            //自定义事件：toggle
-            $el.trigger('toggle');
+            var $t = $(this),v = !$t.hasClass('active');
+            $t.toggleClass('active').trigger('toggle',[v]);//定义toggle事件
+            $t.find('input').val(v);
         })
     }
     /**
@@ -162,7 +155,7 @@ J.Element = (function($){
         var $el = $(el),$input;
         var $range = $('input[type="range"]',el);
         var align = $el.data('rangeinput');
-        var input = $('<input type="text" name="test" value="'+$range.val()+'"/>');
+        var input = $('<input type="number" name="test" value="'+$range.val()+'"/>');
         if(align == 'left'){
             $input = input.prependTo($el);
         }else{
@@ -197,7 +190,7 @@ J.Element = (function($){
         }
     }
     /**
-     * 构造count组件
+     * 构造badge组件
      */
     var _init_badge = function(el){
         var $el = $(el),$count;
@@ -225,8 +218,7 @@ J.Element = (function($){
         $el.prepend('<i class="icon checkbox-'+value+'"></i>');
         $el.on('tap',function(){
             var status = ($el.data('checkbox') == 'checked') ? 'unchecked':'checked';
-            $el.find('i.icon').attr('class','icon checkbox-'+status);
-            $el.data('checkbox',status);
+            $el.data('checkbox',status).find('i.icon').attr('class','icon checkbox-'+status);
             //自定义change事件
             $el.trigger('change');
         });
@@ -351,7 +343,7 @@ J.Page = (function($){
         }
         var q = $(hash).data('query');
         //已经存在则直接跳转到对应的页面
-        if($(hash).length == 1 && q == query){
+        if($(hash).length == 1){
             if(q == query){
                 callback();
                 return;
@@ -368,16 +360,18 @@ J.Page = (function($){
         loadContent(url,param,function(html){
             J.settings.showPageLoading && J.hideMask();
             //添加到dom树中
+            $(hash).remove();
+            var $h = $(html);
+            $('#section_container').append($h);
             if(replaceSection){
-                $(hash).replaceWith(html);
-            }else{
-                $('#section_container').append(html);
+                $h.addClass('active');
             }
             //触发pageload事件
-            $(hash).trigger('pageload').data('query',query);
+            $h.trigger('pageload').data('query',query);
             //构造组件
             J.Element.init(hash);
             callback();
+            $h = null;
         });
     }
     var loadSectionRemote = function(url,section){
@@ -430,8 +424,10 @@ J.Router = (function($){
         _initIndex();
     }
 
+    //处理app页面初始化
     var _initIndex = function(){
         var targetHash = location.hash;
+        //取页面中第一个section作为app的起始页
         var $section = $('#section_container section').first();
         var indexHash = '#'+$section.attr('id');
         _add2History(indexHash,true);
@@ -505,8 +501,10 @@ J.Router = (function($){
         }
         //加载模板
         J.Page.load(hashObj,function(){
-            var sameSection = current.tag == hashObj.tag;
-           if(!sameSection){//不同卡片页跳转
+            var sameSection = (current.tag == hashObj.tag);
+           if(sameSection){//相同页面，触发相关事件
+               $(current.tag).trigger('pageshow').find('article.active').trigger('articlehide');
+           }else{//不同卡片页跳转动画
                _changePage(current.tag,hashObj.tag);
            }
             _add2History(hash,sameSection);
@@ -565,6 +563,7 @@ J.Router = (function($){
 /**
  * 对zeptojs的ajax进行封装，实现离线访问
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
+ * @Deprecated 用J.Cache代替
  */
 J.Service = (function($){
     var UNPOST_KEY = 'JINGLE_POST_DATA',
@@ -806,15 +805,15 @@ J.Template = (function($){
  *  消息组件
  */
 J.Toast = (function($){
-    var TOAST_DURATION = 3000;
-    //定义模板
-    var TEMPLATE = {
-        toast : '<a href="#">{value}</a>',
-        success : '<a href="#"><i class="icon checkmark-circle"></i>{value}</a>',
-        error : '<a href="#"><i class="icon cancel-circle"></i>{value}</a></div>',
-        info : '<a href="#"><i class="icon info-2"></i>{value}</a>'
-    }
-    var toast_type = 'toast',_toast,timer;
+    var toast_type = 'toast',_toast,timer,
+        //定义模板
+        TEMPLATE = {
+            toast : '<a href="#">{value}</a>',
+            success : '<a href="#"><i class="icon checkmark-circle"></i>{value}</a>',
+            error : '<a href="#"><i class="icon cancel-circle"></i>{value}</a></div>',
+            info : '<a href="#"><i class="icon info-2"></i>{value}</a>'
+        }
+
     var _init = function(){
         //全局只有一个实例
         $('body').append('<div id="jingle_toast"></div>');
@@ -833,17 +832,18 @@ J.Toast = (function($){
     }
     /**
      * 显示消息提示
-     * @param type 类型  toast|success|error|info
+     * @param type 类型  toast|success|error|info  空格 + class name 可以实现自定义样式
      * @param text 文字内容
      * @param duration 持续时间 为0则不自动关闭,默认为3000ms
      */
     var show = function(type,text,duration){
         if(timer) clearTimeout(timer);
-        toast_type = type;
-        _toast.attr('class',type).html(TEMPLATE[type].replace('{value}',text)).show();
+        var classname = type.split(/\s/);
+        toast_type = classname[0];
+        _toast.attr('class',type).html(TEMPLATE[toast_type].replace('{value}',text)).show();
         J.anim(_toast,'scaleIn');
         if(duration !== 0){//为0 不自动关闭
-            timer = setTimeout(hide,duration || TOAST_DURATION);
+            timer = setTimeout(hide,duration || J.settings.toastDuration);
         }
     }
     var _subscribeCloseTag = function(){
@@ -878,8 +878,7 @@ J.Transition = (function($){
         //触发 beforepageshow 事件
         $target.trigger('beforepageshow',[isBack]);
         var c_class = transitionName[0]||'empty' ,t_class = transitionName[1]||'empty';
-        $current.bind('webkitAnimationEnd.jingle', _finishTransition);
-        $current.addClass('anim '+ c_class);
+        $current.bind('webkitAnimationEnd.jingle', _finishTransition).addClass('anim '+ c_class);
         $target.addClass('anim animating '+ t_class);
     }
     var _finishTransition = function() {
@@ -889,11 +888,8 @@ J.Transition = (function($){
         $current.attr('class','');
         $target.attr('class','active');
         //add custom events
-        if(!$target.data('init')){
-            //触发pageinit事件
-            $target.trigger('pageinit');
-            $target.data('init',true);
-        }
+        !$target.data('init') && $target.trigger('pageinit').data('init',true);
+        !$current.data('init') && $current.trigger('pageinit').data('init',true);
         //触发pagehide事件
         $current.trigger('pagehide',[isBack]);
         //触发pageshow事件
@@ -901,6 +897,7 @@ J.Transition = (function($){
 
         $current.find('article.active').trigger('articlehide');
         $target.find('article.active').trigger('articleshow');
+        $current = $target = null;//释放
     }
 
     /**
