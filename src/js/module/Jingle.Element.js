@@ -133,16 +133,12 @@ J.Element = (function($){
      * 构造badge组件
      */
     var _init_badge = function(el){
-        var $el = $(el),$count;
-        var count = parseInt($el.data('count'));
-        var orient = $el.data('orient');
-        var className = (orient == 'left')?'left':'';
-        var $markup = $('<span class="count '+className+'">'+count+'</span>');
-        $count = $el.find('span.count');
+        var $el = $(el),$count = $el.find('span.count'),count = parseInt($el.data('count')),
+            orient = $el.data('orient'), className = (orient == 'left')?'left':'';
         if($count.length>0){
-            $count.text(count);//更新数字
+            $count.text(count).show();//更新数字
         }else{
-            $count = $markup.appendTo($el);
+            $count = $('<span class="count '+className+'">'+count+'</span>').appendTo($el);
         }
         if(count == 0){
             $count.hide();
