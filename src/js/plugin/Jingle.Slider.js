@@ -16,7 +16,7 @@
             slideWidth,
             deltaX,
             autoPlay
-            interval = 3000;
+            interval;
         var _this = this;
 
         if($.isPlainObject(selector)){
@@ -25,7 +25,7 @@
             beforeSlide = selector.onBeforeSlide || beforeSlide;
             afterSlide = selector.onAfterSlide || afterSlide;
             autoPlay = selector.autoPlay;
-            interval = selector.interval;
+            interval = selector.interval || 3000;
         }else{
             wrapper = $(selector);
         }
