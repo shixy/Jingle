@@ -16,7 +16,7 @@
             slideWidth,
             deltaX,
             autoPlay
-            interval;
+            interval = 0;
         var _this = this;
 
         if($.isPlainObject(selector)){
@@ -38,7 +38,6 @@
             slideNum = slides.length;
             slideWidth = wrapper.offset().width;
             container.css('width',slideNum * slideWidth);
-
             slides.css({
                     'width':slideWidth,
                     'float':'left'
@@ -47,9 +46,7 @@
             showDots && _initDots();
             _slide(0, 0);
             afterSlide(0);
-            if(autoPlay){
-                _autoPlay();
-            }
+            autoPlay && _autoPlay();
         };
 
         var _autoPlay = function(){

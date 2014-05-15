@@ -190,7 +190,10 @@
      * @return {String}
      */
     calendar.prototype.format = function(date){
-        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        var y  = date.getFullYear(),m = date.getMonth()+1,d = date.getDate();
+        m = (m<10)?('0'+m):m;
+        d = (d<10)?('0'+d):d;
+        return y + '-' + m + '-' + d;
     }
     J.Calendar = calendar;
 })(J.$);
