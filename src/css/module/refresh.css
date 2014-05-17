@@ -17,5 +17,7 @@
 }
 .icon-reverse{
     -webkit-transform:rotate(180deg);
+    transform:rotate(180deg);
     -webkit-transition-duration:.5s;
+    transition-duration:.5s;
 }

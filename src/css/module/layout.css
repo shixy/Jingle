@@ -18,6 +18,7 @@ aside{
     top:0;
     bottom:0;
     -webkit-transform : translateX(-100%);
+    transform : translateX(-100%);
     z-index: 3;
 }
 

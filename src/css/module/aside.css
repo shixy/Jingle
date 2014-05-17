@@ -1,10 +1,12 @@
 aside[data-position="left"]{
     left:0;
     -webkit-transform:translateX(-100%);
+    transform:translateX(-100%);
 }
 aside[data-position="right"]{
     right:0;
     -webkit-transform:translateX(100%);
+    transform:translateX(100%);
 }
 aside[data-transition="overlay"]{
     z-index: 4;
@@ -14,6 +16,7 @@ aside[data-transition="reveal"]{
 }
 aside[data-position][data-transition="reveal"]{
     -webkit-transform:translateX(0);
+    transform:translateX(0);
 }
 aside{
     display: none;

@@ -34,6 +34,7 @@ input[type="color"],
     -webkit-appearance: none;
     -webkit-user-select: text;
     -webkit-font-smoothing: antialiased;
+    -wekbit-box-sizing: border-box;
     box-sizing: border-box;
     outline: none;
 }
@@ -97,6 +98,7 @@ select {
 .input-row label + input {
     display: block;
     -webkit-box-flex: 1;
+    box-flex : 1;
     padding-left: 0;
     margin-bottom: 0;
     border-bottom: 0;
