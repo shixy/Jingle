@@ -224,8 +224,8 @@ J.Popup = (function($){
         show({
             html : markup,
             pos : 'loading',
-            opacity : 0,
-            animation : false,
+            opacity :.1,
+            animation : true,
             clickMask2Close : false
         });
     }
