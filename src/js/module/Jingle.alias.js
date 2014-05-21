@@ -1,3 +1,20 @@
+/*
+ * alias func
+ * 简化一些常用方法的写法
+ ** /
+/**
+ * 完善zepto的动画函数,让参数变为可选
+ */
+J.anim  =  function(el,animName,duration,ease,callback){
+    var d, e,c;
+    var len = arguments.length;
+    for(var i = 2;i<len;i++){
+        var a = arguments[i];
+        var t = $.type(a);
+        t == 'number'?(d=a):(t=='string'?(e=a):(t=='function')?(c=a):null);
+    }
+    $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
+}
 /**
  * 显示loading框
  * @param text
