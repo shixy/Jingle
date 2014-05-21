@@ -4,21 +4,16 @@
  * data-selected="selected" 值为高亮的样式
  */
 J.Selected = (function($){
-    var SELECTOR = '[data-selected]',
-        activeEl,timer;
+    var SELECTOR = '[data-selected]',activeEl,classname;
     var init = function(){
         $(document).on('touchstart.selected',SELECTOR,function(){
-            var $el = $(this);
-            //在滑动的时候有闪烁，添加一个延时器,防止误操作
-            timer = setTimeout(function(){
-                activeEl = $el.addClass($el.data('selected'));
-            },0);
+            classname = $(this).data('selected');
+            activeEl = $(this).addClass(classname);
 
         });
         $(document).on('touchmove.selected touchend.selected touchcancel.selected',function(){
-            timer && clearTimeout(timer);
             if(activeEl){
-                activeEl.removeClass(activeEl.data('selected'));
+                activeEl.removeClass(classname);
                 activeEl = null;
             }
         });
