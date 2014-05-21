@@ -505,7 +505,7 @@ App.page('chart_drag',function(){
                 id : 'chart_drag_line_canvas',
                 datasetGesture : true,
                 datasetOffsetNumber : 10
-            }).draw();
+            }).draw(true);
         }else{
             $lineChart.hide();
             $barChart.show();
@@ -513,7 +513,7 @@ App.page('chart_drag',function(){
                 id : 'chart_drag_bar_canvas',
                 datasetGesture : true,
                 datasetOffsetNumber : 10
-            }).draw();
+            }).draw(true);
         }
     }
 });

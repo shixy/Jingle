@@ -193,16 +193,12 @@ J.Element = (function($){
      * 构造badge组件
      */
     var _init_badge = function(el){
-        var $el = $(el),$count;
-        var count = parseInt($el.data('count'));
-        var orient = $el.data('orient');
-        var className = (orient == 'left')?'left':'';
-        var $markup = $('<span class="count '+className+'">'+count+'</span>');
-        $count = $el.find('span.count');
+        var $el = $(el),$count = $el.find('span.count'),count = parseInt($el.data('count')),
+            orient = $el.data('orient'), className = (orient == 'left')?'left':'';
         if($count.length>0){
-            $count.text(count);//更新数字
+            $count.text(count).show();//更新数字
         }else{
-            $count = $markup.appendTo($el);
+            $count = $('<span class="count '+className+'">'+count+'</span>').appendTo($el);
         }
         if(count == 0){
             $count.hide();
@@ -1345,8 +1341,8 @@ J.Popup = (function($){
         show({
             html : markup,
             pos : 'loading',
-            opacity : 0,
-            animation : false,
+            opacity :.1,
+            animation : true,
             clickMask2Close : false
         });
     }
@@ -1398,21 +1394,16 @@ J.Popup = (function($){
  * data-selected="selected" 值为高亮的样式
  */
 J.Selected = (function($){
-    var SELECTOR = '[data-selected]',
-        activeEl,timer;
+    var SELECTOR = '[data-selected]',activeEl,classname;
     var init = function(){
         $(document).on('touchstart.selected',SELECTOR,function(){
-            var $el = $(this);
-            //在滑动的时候有闪烁，添加一个延时器,防止误操作
-            timer = setTimeout(function(){
-                activeEl = $el.addClass($el.data('selected'));
-            },0);
+            classname = $(this).data('selected');
+            activeEl = $(this).addClass(classname);
 
         });
         $(document).on('touchmove.selected touchend.selected touchcancel.selected',function(){
-            timer && clearTimeout(timer);
             if(activeEl){
-                activeEl.removeClass(activeEl.data('selected'));
+                activeEl.removeClass(classname);
                 activeEl = null;
             }
         });
@@ -1737,7 +1728,10 @@ J.Cache = (function($){
      * @return {String}
      */
     calendar.prototype.format = function(date){
-        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        var y  = date.getFullYear(),m = date.getMonth()+1,d = date.getDate();
+        m = (m<10)?('0'+m):m;
+        d = (d<10)?('0'+d):d;
+        return y + '-' + m + '-' + d;
     }
     J.Calendar = calendar;
 })(J.$);
@@ -1804,7 +1798,7 @@ J.Cache = (function($){
             slideWidth,
             deltaX,
             autoPlay
-            interval = 3000;
+            interval = 0;
         var _this = this;
 
         if($.isPlainObject(selector)){
@@ -1813,7 +1807,7 @@ J.Cache = (function($){
             beforeSlide = selector.onBeforeSlide || beforeSlide;
             afterSlide = selector.onAfterSlide || afterSlide;
             autoPlay = selector.autoPlay;
-            interval = selector.interval;
+            interval = selector.interval || 3000;
         }else{
             wrapper = $(selector);
         }
@@ -1826,7 +1820,6 @@ J.Cache = (function($){
             slideNum = slides.length;
             slideWidth = wrapper.offset().width;
             container.css('width',slideNum * slideWidth);
-
             slides.css({
                     'width':slideWidth,
                     'float':'left'
@@ -1835,9 +1828,7 @@ J.Cache = (function($){
             showDots && _initDots();
             _slide(0, 0);
             afterSlide(0);
-            if(autoPlay){
-                _autoPlay();
-            }
+            autoPlay && _autoPlay();
         };
 
         var _autoPlay = function(){
