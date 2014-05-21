@@ -4,7 +4,7 @@
  * walker.shixy@gmail.com
  */
 var Jingle = J = {
-    version : '0.4',
+    version : '0.41',
     $ : window.Zepto,
     //参数设置
     settings : {
@@ -16,6 +16,8 @@ var Jingle = J = {
         transitionTime : 250,
         //自定义动画时的默认动画函数(非page转场动画函数)
         transitionTimingFunc : 'ease-in',
+        //toast 持续时间,默认为3s
+        toastDuration : 3000,
         //是否显示欢迎界面
         showWelcome : false,
         //欢迎界面卡片切换时的执行函数，可以制作酷帅吊炸天的欢迎界面
@@ -24,6 +26,7 @@ var Jingle = J = {
         showPageLoading : false,
         //page模板默认的相对位置，主要用于开发hybrid应用，实现page的自动装载
         basePagePath : 'html/',
+        basePageSuffix : '.html',
         //page模板的远程路径{#id: href,#id: href}
         remotePage:{}
     },
@@ -89,6 +92,7 @@ J.Element = (function($){
         $.map(_getMatchElements($el,SELECTOR.progress),_init_progress);
         $.map(_getMatchElements($el,SELECTOR.count),_init_badge);
         $.map(_getMatchElements($el,SELECTOR.checkbox),_init_checkbox);
+        $el = null;
     }
 
     /**
@@ -98,8 +102,7 @@ J.Element = (function($){
         $(document).on('tap','ul.control-group li',function(){
             var $this = $(this);
             if($this.hasClass('active'))return;
-            $this.addClass('active').siblings('.active').removeClass('active');
-            $this.parent().trigger('change',[$this]);
+            $this.addClass('active').siblings('.active').removeClass('active').parent().trigger('change',[$this]);
         });
     }
     /**
@@ -129,7 +132,7 @@ J.Element = (function($){
      * 构造toggle切换组件
      */
     var _init_toggle = function(el){
-        var $el = $(el),$input;
+        var $el = $(el);
         if($el.find('div.toggle-handle').length>0){//已经初始化
             return;
         }
@@ -139,19 +142,10 @@ J.Element = (function($){
             $el.append('<input style="display: none;" name="'+name+'" value="'+$el.hasClass('active')+'"/>');
         }
         $el.append('<div class="toggle-handle"></div>');
-        $input = $el.find('input');
         $el.tap(function(){
-            var value;
-            if($el.hasClass('active')){
-                $el.removeClass('active');
-                value = false;
-            }else{
-                $el.addClass('active');
-                value = true;
-            }
-            $input.val(value);
-            //自定义事件：toggle
-            $el.trigger('toggle');
+            var $t = $(this),v = !$t.hasClass('active');
+            $t.toggleClass('active').trigger('toggle',[v]);//定义toggle事件
+            $t.find('input').val(v);
         })
     }
     /**
@@ -161,7 +155,7 @@ J.Element = (function($){
         var $el = $(el),$input;
         var $range = $('input[type="range"]',el);
         var align = $el.data('rangeinput');
-        var input = $('<input type="text" name="test" value="'+$range.val()+'"/>');
+        var input = $('<input type="number" name="test" value="'+$range.val()+'"/>');
         if(align == 'left'){
             $input = input.prependTo($el);
         }else{
@@ -196,19 +190,15 @@ J.Element = (function($){
         }
     }
     /**
-     * 构造count组件
+     * 构造badge组件
      */
     var _init_badge = function(el){
-        var $el = $(el),$count;
-        var count = parseInt($el.data('count'));
-        var orient = $el.data('orient');
-        var className = (orient == 'left')?'left':'';
-        var $markup = $('<span class="count '+className+'">'+count+'</span>');
-        $count = $el.find('span.count');
+        var $el = $(el),$count = $el.find('span.count'),count = parseInt($el.data('count')),
+            orient = $el.data('orient'), className = (orient == 'left')?'left':'';
         if($count.length>0){
-            $count.text(count);//更新数字
+            $count.text(count).show();//更新数字
         }else{
-            $count = $markup.appendTo($el);
+            $count = $('<span class="count '+className+'">'+count+'</span>').appendTo($el);
         }
         if(count == 0){
             $count.hide();
@@ -224,8 +214,7 @@ J.Element = (function($){
         $el.prepend('<i class="icon checkbox-'+value+'"></i>');
         $el.on('tap',function(){
             var status = ($el.data('checkbox') == 'checked') ? 'unchecked':'checked';
-            $el.find('i.icon').attr('class','icon checkbox-'+status);
-            $el.data('checkbox',status);
+            $el.data('checkbox',status).find('i.icon').attr('class','icon checkbox-'+status);
             //自定义change事件
             $el.trigger('change');
         });
@@ -342,40 +331,43 @@ J.Page = (function($){
      * @param {string} url参数
      */
     var loadSectionTpl = function(hash,callback){
-        var param = {},query,appendTpl = true;
+        var param = {},query,replaceSection = false;
         if($.type(hash) == 'object'){
-            hash = hash.tag;
             param = hash.param;
             query = hash.query;
+            hash = hash.tag;
         }
         var q = $(hash).data('query');
         //已经存在则直接跳转到对应的页面
-        if($(hash).length == 1 && q == query){
+        if($(hash).length == 1){
             if(q == query){
                 callback();
                 return;
             }else{
-                appendTpl = false;
+                replaceSection = true;
             }
         }
         var id = _formatHash(hash);
         //当前dom中不存在，需要从服务端加载
         var url = J.settings.remotePage[hash];
         //检查remotePage中是否有配置,没有则自动从basePagePath中装载模板
-        url || (url = J.settings.basePagePath+id+'.html');
+        url || (url = J.settings.basePagePath+id+J.settings.basePageSuffix);
         J.settings.showPageLoading && J.showMask();
         loadContent(url,param,function(html){
             J.settings.showPageLoading && J.hideMask();
             //添加到dom树中
-            if(!appendTpl){
-                $(hash).remove();
+            $(hash).remove();
+            var $h = $(html);
+            $('#section_container').append($h);
+            if(replaceSection){
+                $h.addClass('active');
             }
-            $('#section_container').append(html);
             //触发pageload事件
-            $(hash).trigger('pageload').data('query',query);
+            $h.trigger('pageload').data('query',query);
             //构造组件
             J.Element.init(hash);
             callback();
+            $h = null;
         });
     }
     var loadSectionRemote = function(url,section){
@@ -428,8 +420,10 @@ J.Router = (function($){
         _initIndex();
     }
 
+    //处理app页面初始化
     var _initIndex = function(){
         var targetHash = location.hash;
+        //取页面中第一个section作为app的起始页
         var $section = $('#section_container section').first();
         var indexHash = '#'+$section.attr('id');
         _add2History(indexHash,true);
@@ -496,13 +490,20 @@ J.Router = (function($){
         }
         //读取hash信息
         var hashObj = J.Util.parseHash(hash);
-        var current = _history[0]?_history[0].tag:null;
-        //同一个页面
-        if(current === hashObj.tag)return;
+        var current = _history[0];
+        //同一个页面,则不重新加载
+        if(current.hash === hashObj.hash){
+            return;
+        }
         //加载模板
         J.Page.load(hashObj,function(){
-            _changePage(current,hashObj.tag);
-            _add2History(hash);
+            var sameSection = (current.tag == hashObj.tag);
+           if(sameSection){//相同页面，触发相关事件
+               $(current.tag).trigger('pageshow').find('article.active').trigger('articlehide');
+           }else{//不同卡片页跳转动画
+               _changePage(current.tag,hashObj.tag);
+           }
+            _add2History(hash,sameSection);
         });
     }
     /**
@@ -521,12 +522,13 @@ J.Router = (function($){
      */
     var _add2History = function(hash,noState){
        var hashObj = J.Util.parseHash(hash);
-        _history.unshift(hashObj);
-        if(noState){
+        if(noState){//不添加浏览器历史记录
+            _history.shift(hashObj);
             window.history.replaceState(hashObj,'',hash);
         }else{
             window.history.pushState(hashObj,'',hash);
         }
+        _history.unshift(hashObj);
     }
 
     /**
@@ -557,6 +559,7 @@ J.Router = (function($){
 /**
  * 对zeptojs的ajax进行封装，实现离线访问
  * 推荐纯数据的ajax请求调用本方法，其他的依旧使用zeptojs自己的ajax
+ * @Deprecated 用J.Cache代替
  */
 J.Service = (function($){
     var UNPOST_KEY = 'JINGLE_POST_DATA',
@@ -798,15 +801,15 @@ J.Template = (function($){
  *  消息组件
  */
 J.Toast = (function($){
-    var TOAST_DURATION = 3000;
-    //定义模板
-    var TEMPLATE = {
-        toast : '<a href="#">{value}</a>',
-        success : '<a href="#"><i class="icon checkmark-circle"></i>{value}</a>',
-        error : '<a href="#"><i class="icon cancel-circle"></i>{value}</a></div>',
-        info : '<a href="#"><i class="icon info-2"></i>{value}</a>'
-    }
-    var toast_type = 'toast',_toast,timer;
+    var toast_type = 'toast',_toast,timer,
+        //定义模板
+        TEMPLATE = {
+            toast : '<a href="#">{value}</a>',
+            success : '<a href="#"><i class="icon checkmark-circle"></i>{value}</a>',
+            error : '<a href="#"><i class="icon cancel-circle"></i>{value}</a></div>',
+            info : '<a href="#"><i class="icon info-2"></i>{value}</a>'
+        }
+
     var _init = function(){
         //全局只有一个实例
         $('body').append('<div id="jingle_toast"></div>');
@@ -825,17 +828,18 @@ J.Toast = (function($){
     }
     /**
      * 显示消息提示
-     * @param type 类型  toast|success|error|info
+     * @param type 类型  toast|success|error|info  空格 + class name 可以实现自定义样式
      * @param text 文字内容
      * @param duration 持续时间 为0则不自动关闭,默认为3000ms
      */
     var show = function(type,text,duration){
         if(timer) clearTimeout(timer);
-        toast_type = type;
-        _toast.attr('class',type).html(TEMPLATE[type].replace('{value}',text)).show();
+        var classname = type.split(/\s/);
+        toast_type = classname[0];
+        _toast.attr('class',type).html(TEMPLATE[toast_type].replace('{value}',text)).show();
         J.anim(_toast,'scaleIn');
         if(duration !== 0){//为0 不自动关闭
-            timer = setTimeout(hide,duration || TOAST_DURATION);
+            timer = setTimeout(hide,duration || J.settings.toastDuration);
         }
     }
     var _subscribeCloseTag = function(){
@@ -870,8 +874,7 @@ J.Transition = (function($){
         //触发 beforepageshow 事件
         $target.trigger('beforepageshow',[isBack]);
         var c_class = transitionName[0]||'empty' ,t_class = transitionName[1]||'empty';
-        $current.bind('webkitAnimationEnd.jingle', _finishTransition);
-        $current.addClass('anim '+ c_class);
+        $current.bind('webkitAnimationEnd.jingle', _finishTransition).addClass('anim '+ c_class);
         $target.addClass('anim animating '+ t_class);
     }
     var _finishTransition = function() {
@@ -881,11 +884,8 @@ J.Transition = (function($){
         $current.attr('class','');
         $target.attr('class','active');
         //add custom events
-        if(!$target.data('init')){
-            //触发pageinit事件
-            $target.trigger('pageinit');
-            $target.data('init',true);
-        }
+        !$target.data('init') && $target.trigger('pageinit').data('init',true);
+        !$current.data('init') && $current.trigger('pageinit').data('init',true);
         //触发pagehide事件
         $current.trigger('pagehide',[isBack]);
         //触发pageshow事件
@@ -893,6 +893,7 @@ J.Transition = (function($){
 
         $current.find('article.active').trigger('articlehide');
         $target.find('article.active').trigger('articleshow');
+        $current = $target = null;//释放
     }
 
     /**
@@ -1340,8 +1341,8 @@ J.Popup = (function($){
         show({
             html : markup,
             pos : 'loading',
-            opacity : 0,
-            animation : false,
+            opacity :.1,
+            animation : true,
             clickMask2Close : false
         });
     }
@@ -1393,21 +1394,16 @@ J.Popup = (function($){
  * data-selected="selected" 值为高亮的样式
  */
 J.Selected = (function($){
-    var SELECTOR = '[data-selected]',
-        activeEl,timer;
+    var SELECTOR = '[data-selected]',activeEl,classname;
     var init = function(){
         $(document).on('touchstart.selected',SELECTOR,function(){
-            var $el = $(this);
-            //在滑动的时候有闪烁，添加一个延时器,防止误操作
-            timer = setTimeout(function(){
-                activeEl = $el.addClass($el.data('selected'));
-            },0);
+            classname = $(this).data('selected');
+            activeEl = $(this).addClass(classname);
 
         });
         $(document).on('touchmove.selected touchend.selected touchcancel.selected',function(){
-            timer && clearTimeout(timer);
             if(activeEl){
-                activeEl.removeClass(activeEl.data('selected'));
+                activeEl.removeClass(classname);
                 activeEl = null;
             }
         });
@@ -1732,7 +1728,10 @@ J.Cache = (function($){
      * @return {String}
      */
     calendar.prototype.format = function(date){
-        return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+        var y  = date.getFullYear(),m = date.getMonth()+1,d = date.getDate();
+        m = (m<10)?('0'+m):m;
+        d = (d<10)?('0'+d):d;
+        return y + '-' + m + '-' + d;
     }
     J.Calendar = calendar;
 })(J.$);
@@ -1799,12 +1798,12 @@ J.Cache = (function($){
             slideWidth,
             deltaX,
             autoPlay
-            interval = 3000;
+            interval = 0;
         var _this = this;
 
         if($.isPlainObject(selector)){
             wrapper = $(selector.selector);
-            showDots = selector.noDots;
+            showDots = selector.showDots;
             beforeSlide = selector.onBeforeSlide || beforeSlide;
             afterSlide = selector.onAfterSlide || afterSlide;
             autoPlay = selector.autoPlay;
@@ -1821,7 +1820,6 @@ J.Cache = (function($){
             slideNum = slides.length;
             slideWidth = wrapper.offset().width;
             container.css('width',slideNum * slideWidth);
-
             slides.css({
                     'width':slideWidth,
                     'float':'left'
@@ -1830,9 +1828,7 @@ J.Cache = (function($){
             showDots && _initDots();
             _slide(0, 0);
             afterSlide(0);
-            if(autoPlay){
-                _autoPlay();
-            }
+            autoPlay && _autoPlay();
         };
 
         var _autoPlay = function(){

@@ -419,7 +419,7 @@ window.JingleChart = JChart = {
 ;(function(_){
     function Chain(el){
         //需要返回结果的方法，这些方法将不能进行后续的链式调用
-        var needReturnValueFn = ['isPointInPath','measureText','getImageData'];
+        var needReturnValueFn = ['isPointInPath','measureText','getImageData','createLinearGradient','createPattern','createRadialGradient','isPointInPath'];
         function Canvas(){
             this.el = el = (typeof el === 'string') ? document.getElementById(el) : el;
             this.ctx = el.getContext('2d');
@@ -476,9 +476,7 @@ window.JingleChart = JChart = {
              * @return this
              */
             fill : function (color) {
-                if (typeof color === 'string') {
-                    this.set('fillStyle', color);
-                }
+                color && this.set('fillStyle', color);
                 this.ctx.fill();
                 return this;
             },
@@ -488,7 +486,7 @@ window.JingleChart = JChart = {
              * @return this
              */
             stroke : function (color,width) {
-                if (typeof color === 'string') {
+                if (color) {
                     this.set('strokeStyle', color);
                     width && this.set('lineWidth',width);
                 }
@@ -531,11 +529,17 @@ window.JingleChart = JChart = {
              * @return this
              */
             clear : function (x, y, w, h) {
+                var c = this.el;
                 x = x || 0;
                 y = y || 0;
-                w = w || this.width;
-                h = h || this.height;
+                w = w || this.el.width;
+                h = h || this.el.height;
                 this.ctx.clearRect(x, y, w, h);
+                //android4.1+下经常会出现clear无效，大多数情况出现在loop函数中
+                c.style.opacity = 0.99;
+                setTimeout(function() {
+                    c.style.opacity = 1;
+                }, 1);
                 return this;
             },
             /**
@@ -726,6 +730,9 @@ window.JingleChart = JChart = {
             }
             this.width = canvas.width;
             this.height = canvas.height;
+            //设置canvas背景颜色
+            canvas.style.background = this.config.bgColor;
+
             //High pixel density displays - multiply the size of the canvas height/width by the device pixel ratio, then scale.
             //如果设备为视网膜屏，将canvas按照设备像素比放大像素，然后再等比缩小
             if (window.devicePixelRatio) {
@@ -737,12 +744,7 @@ window.JingleChart = JChart = {
             }
             this.bindTouchEvents();
             this.bindEvents();
-            this.setBg();
         };
-        this.setBg = function(){
-            this.ctx.set('fillStyle',this.config.bgColor);
-            this.ctx.fillRect(0,0,this.width,this.height);
-        }
         this.resize = function(w,h){
 
         },
@@ -751,7 +753,6 @@ window.JingleChart = JChart = {
          */
         this.clear = function(){
             this.ctx.clear();
-            this.setBg();
         };
         /**
          * 重新刷新图表
@@ -1776,7 +1777,10 @@ window.JingleChart = JChart = {
             //网格线颜色
             gridLineColor : "rgba(0,0,0,.1)",
             //网格线宽度
-            gridLineWidth : 1
+            gridLineWidth : 1,
+            //水平线{value : 50,color : #fff,width : 1}
+            horizonLine : null
+
         });
         //数据偏移量-已经偏移
         this.dataOffset = 0;
@@ -1956,6 +1960,12 @@ window.JingleChart = JChart = {
                 cfg.showGridLine && ctx.line(scale.x,y,scale.x + scale.xWidth,y, true);
                 cfg.showScaleLabel && ctx.fillText(scale.yScaleValue.labels[j],scale.x-P_Y/2,y);
             }
+            //绘制水平线
+            if(cfg.horizonLine){
+                var y = scale.y - this.calcOffset(cfg.horizonLine.value,scale.yScaleValue,scale.yHop);
+                ctx.line(scale.x,y,scale.x + scale.xWidth,y, cfg.horizonLine.color || '#E74C3C',cfg.horizonLine.width||1);
+            }
+
         }
 
         this.initScale = function(showX){
