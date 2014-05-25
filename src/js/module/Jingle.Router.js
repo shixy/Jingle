@@ -17,7 +17,7 @@ J.Router = (function($){
                 return false;
             }
         });
-        $(document).on('tap','a',_targetHandler);
+        $(document).on('tap','a[data-target]',_targetHandler);
         _initIndex();
     }
 
