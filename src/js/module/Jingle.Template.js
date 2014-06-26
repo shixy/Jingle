@@ -41,7 +41,7 @@ J.Template = (function($){
         if($.type(data) == 'array' && data.length == 0 ){
             no_result(el);
         }else{
-            var html = $(template(templateId,data));
+            var html = template(templateId,data);
             if(type == 'replace'){
                 el.html(html);
             }else{
