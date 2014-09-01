@@ -54,6 +54,5 @@ var Jingle = J = {
         this.Element.initControlGroup();
         this.Router.init();
         this.Menu.init();
-        this.Selected.init();
     }
 };
