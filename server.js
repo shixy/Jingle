@@ -7,9 +7,9 @@
 var http = require('http');
 var path = require('path');
 var urlparse = require('url').parse;
-var connect = require('connect');
+var express = require('express');
 
-var app = connect();
+var app = express();
 app.use("/proxy", function (req, res) {
     var url = req.url.substr(5);
     var target = urlparse(url);
@@ -54,8 +54,7 @@ app.use("/proxy", function (req, res) {
     });
 });
 
-app.use(connect.static(path.join(__dirname, "demo"), { maxAge: 0 }));
-
+app.use(express.static(__dirname + '/demo'));
 
 app.listen(3000);
 console.log("Server is launching at http://localhost:3000");
