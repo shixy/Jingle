@@ -54,7 +54,6 @@ var Jingle = J = {
         this.Element.initControlGroup();
         this.Router.init();
         this.Menu.init();
-        this.Selected.init();
     }
 };
 
@@ -416,7 +415,7 @@ J.Router = (function($){
                 return false;
             }
         });
-        $(document).on('tap','a',_targetHandler);
+        $(document).on('tap','a[data-target]',_targetHandler);
         _initIndex();
     }
 
@@ -781,7 +780,7 @@ J.Template = (function($){
         if($.type(data) == 'array' && data.length == 0 ){
             no_result(el);
         }else{
-            var html = $(template(templateId,data));
+            var html = template(templateId,data);
             if(type == 'replace'){
                 el.html(html);
             }else{
@@ -797,6 +796,7 @@ J.Template = (function($){
         no_result : no_result
     }
 })(J.$);
+
 /**
  *  消息组件
  */
@@ -1030,91 +1030,93 @@ J.Welcome = (function($){
         hide : hideWelcome
     }
 })(J.$);
-/*
- * alias func
- * 简化一些常用方法的写法
- ** /
-/**
- * 完善zepto的动画函数,让参数变为可选
- */
-J.anim  =  function(el,animName,duration,ease,callback){
-    var d, e,c;
-    var len = arguments.length;
-    for(var i = 2;i<len;i++){
-        var a = arguments[i];
-        var t = $.type(a);
-        t == 'number'?(d=a):(t=='string'?(e=a):(t=='function')?(c=a):null);
+(function($){
+    /*
+     * alias func
+     * 简化一些常用方法的写法
+     ** /
+    /**
+     * 完善zepto的动画函数,让参数变为可选
+     */
+    J.anim  =  function(el,animName,duration,ease,callback){
+        var d, e,c;
+        var len = arguments.length;
+        for(var i = 2;i<len;i++){
+            var a = arguments[i];
+            var t = $.type(a);
+            t == 'number'?(d=a):(t=='string'?(e=a):(t=='function')?(c=a):null);
+        }
+        $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
     }
-    $(el).animate(animName,d|| J.settings.transitionTime,e||J.settings.transitionTimingFunc,c);
-}
-/**
- * 显示loading框
- * @param text
- */
-J.showMask = function(text){
-    J.Popup.loading(text);
-}
-/**
- * 关闭loading框
- */
-J.hideMask = function(){
-    J.Popup.close(true);
-}
-/**
- *  显示消息
- * @param text
- * @param type toast|success|error|info
- * @param duration 持续时间，为0则不自动关闭
- */
-J.showToast = function(text,type,duration){
-    type = type || 'toast';
-    J.Toast.show(type,text,duration);
-}
-/**
- * 关闭消息提示
- */
-J.hideToast = function(){
-    J.Toast.hide();
-}
-J.alert = function(title,content){
-    J.Popup.alert(title,content);
-}
-J.confirm = function(title,content,okCall,cancelCall){
-    J.Popup.confirm(title,content,okCall,cancelCall);
-}
-/**
- * 弹出窗口
- * @param options
- */
-J.popup = function(options){
-    J.Popup.show(options);
-}
-/**
- * 关闭窗口
- */
-J.closePopup = function(){
-    J.Popup.close();
-}
-/**
- * 带箭头的弹出框
- * @param html [可选]
- * @param pos [可选]  位置
- * @param arrowDirection [可选] 箭头方向
- * @param onShow [可选] 显示之前执行
- */
-J.popover = function(html,pos,arrowDirection,onShow){
-    J.Popup.popover(html,pos,arrowDirection,onShow);
-}
-/**
- * 自动渲染模板并填充到页面
- * @param containerSelector 欲填充的容器
- * @param templateId 模板ID
- * @param data 数据源
- * @param type [可选] add|replace
- */
-J.tmpl = function(containerSelector,templateId,data,type){
-    J.Template.render(containerSelector,templateId,data,type);
-}
+    /**
+     * 显示loading框
+     * @param text
+     */
+    J.showMask = function(text){
+        J.Popup.loading(text);
+    }
+    /**
+     * 关闭loading框
+     */
+    J.hideMask = function(){
+        J.Popup.close(true);
+    }
+    /**
+     *  显示消息
+     * @param text
+     * @param type toast|success|error|info
+     * @param duration 持续时间，为0则不自动关闭
+     */
+    J.showToast = function(text,type,duration){
+        type = type || 'toast';
+        J.Toast.show(type,text,duration);
+    }
+    /**
+     * 关闭消息提示
+     */
+    J.hideToast = function(){
+        J.Toast.hide();
+    }
+    J.alert = function(title,content){
+        J.Popup.alert(title,content);
+    }
+    J.confirm = function(title,content,okCall,cancelCall){
+        J.Popup.confirm(title,content,okCall,cancelCall);
+    }
+    /**
+     * 弹出窗口
+     * @param options
+     */
+    J.popup = function(options){
+        J.Popup.show(options);
+    }
+    /**
+     * 关闭窗口
+     */
+    J.closePopup = function(){
+        J.Popup.close();
+    }
+    /**
+     * 带箭头的弹出框
+     * @param html [可选]
+     * @param pos [可选]  位置
+     * @param arrowDirection [可选] 箭头方向
+     * @param onShow [可选] 显示之前执行
+     */
+    J.popover = function(html,pos,arrowDirection,onShow){
+        J.Popup.popover(html,pos,arrowDirection,onShow);
+    }
+    /**
+     * 自动渲染模板并填充到页面
+     * @param containerSelector 欲填充的容器
+     * @param templateId 模板ID
+     * @param data 数据源
+     * @param type [可选] add|replace
+     */
+    J.tmpl = function(containerSelector,templateId,data,type){
+        J.Template.render(containerSelector,templateId,data,type);
+    }
+})(J.$);
 /**
  * 弹出框组件
  */
@@ -1390,28 +1392,31 @@ J.Popup = (function($){
 })(J.$);
 /**
  * 高亮组件
- * 最开始是通过css3伪类 :active来实现触摸高亮，但当手指滑动时会出高亮的地方与手指触摸的地方脱节,故通过js来实现
- * data-selected="selected" 值为高亮的样式
+ * 在zepto的tap事件里注入了一个延时器，来实现点击态
  */
 J.Selected = (function($){
-    var SELECTOR = '[data-selected]',activeEl,classname;
-    var init = function(){
-        $(document).on('touchstart.selected',SELECTOR,function(){
-            classname = $(this).data('selected');
-            activeEl = $(this).addClass(classname);
-
-        });
-        $(document).on('touchmove.selected touchend.selected touchcancel.selected',function(){
-            if(activeEl){
-                activeEl.removeClass(classname);
-                activeEl = null;
+    var DELAY = 100,SELECTOR='[data-selected]';
+    var _trigger = $.fn.trigger;
+    $.fn.trigger = function (event) {
+        var $this = $(this), args = arguments, classname;
+        if (event === 'tap' || event.type === 'tap') {
+            var match = $this.closest(SELECTOR).get(0);
+            if(match){
+                match = $(match);
+                classname = match.data('selected');
+                match.addClass(classname);
+                setTimeout(function () {
+                    match.removeClass(classname);
+                    _trigger.apply($this, args);
+                    $this = match = null;
+                }, DELAY);
+                return this;
             }
-        });
+        }
+        _trigger.apply($this, args);
+        return this;
     }
-    return {
-        init : init
-    }
-})(J.$)
+})(J.$);
 /**
  * 数据缓存
  * todo  对数据进行加密
