@@ -38,7 +38,7 @@ var App = (function(){
         });
 		J.Transition.add('flip','slideLeftOut','flipOut','slideRightOut','flipIn');
         Jingle.launch({
-            showWelcome : true,
+            showWelcome : false,
             welcomeSlideChange : function(i){
                 switch(i){
                     case 0 :
