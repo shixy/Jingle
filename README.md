@@ -1,4 +1,6 @@
 ##提示##
+
+[![Join the chat at https://gitter.im/shixy/Jingle](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/shixy/Jingle?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 > 因为工作的原因，一直都没有时间去维护和更新的Jingle，后面很长一段时间内可能都没有太多的业务时间。
 > 在这里对关注和使用Jingle的同学说一声抱歉！其实源码也不多，需要用到实际项目的同学建议通读源码，这样才能更好为项目服务，也能提升自己的能力不是？
 > 当然，后续我也会尽量抽出时间来对Jingle做一些重构和规划，只是时间点上不太确定，再次说一声抱歉~
